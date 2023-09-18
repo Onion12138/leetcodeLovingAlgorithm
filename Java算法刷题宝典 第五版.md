@@ -1,5 +1,5 @@
 # Java算法刷题宝典 第五版
-版本号1.0.3 20230917更新
+版本号1.0.4 20230918更新
 [TOC]
 ## 第五版序言
 
@@ -2299,6 +2299,10 @@ class Solution {
 
 时间复杂度：$O(n)$
 
+真题链接：字节跳动20230820笔试 https://codefun2000.com/p/P1474
+
+提示：排序数组，分别去掉最大值或者最小值，然后让数组都变为中位数。
+
 刚才的例题，顺带讨论了无序数组如何快速寻找中位数，如果是两个有序数组，如何快速找到其归并后的数组的中位数？
 
 例题：[4. 寻找两个正序数组的中位数](https://leetcode.cn/problems/median-of-two-sorted-arrays/)
@@ -2620,7 +2624,7 @@ class Solution {
 
 >  双向扩展法
 
-双向扩展法是一种能够快速计算回文子串的算法。其核心思想是从一个中心向左右两边扩散，当左右两边字符相同时。
+双向扩展法是一种能够快速计算回文子串的算法。其核心思想是从一个中心向左右两边扩展，当左右两边字符相同时。
 
 例题：[647. 回文子串](https://leetcode.cn/problems/palindromic-substrings/)
 
@@ -3480,52 +3484,115 @@ class Solution {
 
 单调栈的使用场景总结
 
-| 场景                               | 栈类型     |
-| ---------------------------------- | ---------- |
-| 寻找右侧第一个比当前元素更大的元素 | 单调递减栈 |
-| 寻找右侧第一个比当前元素更小的元素 | 单调递增栈 |
+| 场景                               | 栈类型     | 循环顺序 |
+| ---------------------------------- | ---------- | -------- |
+| 寻找右侧第一个比当前元素更大的元素 | 单调递减栈 | 从右到左 |
+| 寻找右侧第一个比当前元素更小的元素 | 单调递增栈 | 从右到左 |
+| 寻找左侧第一个比当前元组更小的元素 | 单调递增栈 | 从左到右 |
 
-例题：[84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/)
+需要考虑的细节
 
-分析：寻找每个高度最多能向右扩散多远，即寻找右侧第一个比当前元素更小的元素，使用单调递增栈。
+1. 是否是严格大于？等号怎么写？
+2. 栈中存储下标还是元素值。
+
+模版：寻找右侧第一个比当前元素严格更大的元素
 
 ```java
 class Solution {
-    public int largestRectangleArea(int[] heights) {
-        int ans = 0;
+    public int[] nextGreaterElements(int[] nums) {
         Stack<Integer> stack = new Stack<>();
-        for(int i = 0; i <= heights.length; i ++) {
-            while(!stack.isEmpty() && (i == heights.length || heights[stack.peek()] > heights[i])) {
-                int index = stack.pop();
-                ans = Math.max(ans, heights[index] * (stack.isEmpty() ? i : i - stack.peek() - 1));
+        int n = nums.length;
+        int[] right = new int[n];
+        for(int i = n - 1; i >= 0; i --) {  // 从右向左遍历
+            while(!stack.isEmpty() && stack.peek() <= nums[i]) {  // 用小于等于，严格更大
+                stack.pop();
             }
-            stack.push(i);   // 每一个元素都入栈一次
+            right[i] = stack.isEmpty() ? -1 : stack.peek(); // 不存在时，根据实际情况赋值。本题赋值为-1。
+            stack.push(nums[i]);  // 存储元素值
         }
-        return ans;
+        return right;
     }
 }
 ```
 
-以测试用例2，1，5，6，2，3为例，分析单调栈的过程
+模版2：寻找每个元素能够左右扩展的边界。(扩展定义为，以当前元素为区间最小值，向左向右能扩展的区间范围)
 
-| 当前访问元素 | 单调栈存储下标 | 对应元素 |
-| ------------ | -------------- | -------- |
-| 2            | [0]            | [2]      |
-| 1            | [1]            | [1]      |
-| 5            | [1,2]          | [1,5]    |
-| 6            | [1,2,3]        | [1,5,6]  |
-| 2            | [1,4]          | [1,2]    |
-| 3            | [1,4,5]        | [1,2,3]  |
+组合一下向左和向右的模版即可。
 
-每一次元素出栈，对应某个下标$i$，代表出栈的元素遇到了右侧更小的元素，对出栈元素对应的高的面积进行一次计算。
+对于每一个元素$arr[i]$，能扩展的区间为$(left[i], right[i])$，注意是开区间。
+```java
+        Stack<Integer> stack = new Stack<>();
+        int n = arr.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        for(int i = 0; i < n; i++) {
+            while(!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {  // 维护单调递增栈，从左到右，寻找左侧第一个严格小于当前元素的下标。
+                stack.pop();
+            }
+            left[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
+        }
+        stack.clear();
+        for(int i = n - 1; i >= 0; i--) {  // 维护单调递增栈，从右到左，寻找右侧第一个小于等于当前元素的下标。
+            while(!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+                stack.pop();
+            }
+            right[i] = stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
+        }
+```
 
-高度：$height[i]$
+优化1：两趟遍历优化为一趟遍历，从左往右计算$left[i]$时，也可以同时计算$right$数组。
 
-宽度：$stack.isEmpty()?i : i - stack.peek() - 1$
+```java
+for(int i = 0; i < n; i++) {
+    while(!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+        right[stack.pop()] = i;
+    }
+    left[i] = stack.isEmpty() ? -1 : stack.peek();
+    stack.push(i);
+}
+```
 
-最后一次循环，是将栈中所有元素出队，最终确保每个高度都能被计算一次。
+优化2：不显示指定left数组和right数组，从以下例题中学习。
 
-时间复杂度：$O(n)$
+例题：[907. 子数组的最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/)
+
+```java
+class Solution {
+    public int sumSubarrayMins(int[] arr) {
+        long ans = 0;
+        Stack<Integer> stack = new Stack<>();
+        int n = arr.length, mod = 10000_00007;
+        for(int r = 0; r <= n; r ++) {  // 循环到n
+            while(!stack.isEmpty() && (r == n || arr[stack.peek()] >= arr[r])) {
+                int i = stack.pop();  // 当前元素i找到右侧可扩展的最远边界
+                // 利用贡献法计算答案
+                ans += (long) arr[i] * (stack.isEmpty() ? i + 1 : i - stack.peek()) * (r - i); 
+                // 此时的栈顶表示i到左侧可扩展的最远边界，不存在为-1，均为开区间
+            }
+            stack.push(r);
+        }
+        return (int) (ans % mod);
+    }
+}
+```
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点                         |
+| ------------------------------------------------------------ | ---- | ------------------------------ |
+| [496. 下一个更大元素 I](https://leetcode.cn/problems/next-greater-element-i/) | 简单 | 模版题                         |
+| [503. 下一个更大元素 II](https://leetcode.cn/problems/next-greater-element-ii/) | 中等 | 模版+环形数组                  |
+| [739. 每日温度](https://leetcode.cn/problems/daily-temperatures/) | 中等 | 模版题                         |
+| [84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) | 困难 | 模版题(左右扩展)               |
+| [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle/) | 困难 | 建模为84题                     |
+| [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) | 中等 | 前缀和、单调栈、贡献法         |
+| [2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/) | 中等 | 单调栈、贡献法                 |
+| [1950. 所有子数组最小值中的最大值](https://leetcode.cn/problems/maximum-of-minimum-values-in-all-subarrays/) | 中等 | 单调栈、贡献法、思维           |
+| 选做[2281. 巫师的总力量和](https://leetcode.cn/problems/sum-of-total-strength-of-wizards/) | 困难 | 前缀和的前缀和、单调栈、贡献法 |
+
+单调栈还可以用于优化状态转移方程，如以下例题。
 
 例题：[42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/)
 
@@ -3611,15 +3678,6 @@ class Solution {
     }
 }
 ```
-
-练习题单
-
-| 题号                                                         | 难度 |
-| ------------------------------------------------------------ | ---- |
-| [496. 下一个更大元素 I](https://leetcode.cn/problems/next-greater-element-i/) | 简单 |
-| [503. 下一个更大元素 II](https://leetcode.cn/problems/next-greater-element-ii/) | 中等 |
-| [739. 每日温度](https://leetcode.cn/problems/daily-temperatures/) | 中等 |
-| [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle/) | 困难 |
 
 ### 队列
 
@@ -9287,6 +9345,7 @@ class Solution {
 | 题号                                                         | 难度 |
 | ------------------------------------------------------------ | ---- |
 | [1373. 二叉搜索子树的最大键值和](https://leetcode.cn/problems/maximum-sum-bst-in-binary-tree/) | 困难 |
+| [979. 在二叉树中分配硬币](https://leetcode.cn/problems/distribute-coins-in-binary-tree/) | 中等 |
 
 #### 换根DP
 
@@ -9348,11 +9407,65 @@ class Solution {
 ```
 时间复杂度：$O(n)$
 
-练习题单（todo）
+变式：[310. 最小高度树](https://leetcode.cn/problems/minimum-height-trees/)
+
+```java
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        ds = new int[n];
+        ds2 = new int[n];
+        g = new List[n];
+        Arrays.setAll(g, k -> new ArrayList<>());
+        for(int[] edge : edges) {
+            g[edge[0]].add(edge[1]);
+            g[edge[1]].add(edge[0]);
+        }
+        dfs(0, 0);
+        reroot(0, 0);
+        int min = Arrays.stream(ds2).min().getAsInt();
+        return IntStream.range(0, n).filter(e -> ds2[e] == min).boxed().toList();
+    }
+
+    private int[] ds;  // 记录每个节点为根往下的最大深度
+    private int[] ds2; // 记录每个节点为根的最小高度
+    private List<Integer>[] g;
+
+    private int dfs(int u, int p) {
+        for(int v : g[u]) {
+            if(v != p) {
+                ds[u] = Math.max(ds[u], dfs(v, u) + 1);
+            }
+        }
+        return ds[u];
+    }
+
+    private void reroot(int u, int p) {
+        int first = -1, second = -1;  // 子树中最高的高度和次高的高度。
+        for(int v : g[u]) {
+            if(ds[v] > first) {
+                second = first;
+                first = ds[v];
+            }else if(ds[v] > second) {
+                second = ds[v];
+            }
+        }
+        ds2[u] = first + 1;
+        for(int v : g[u]) {
+            if(v != p) {
+                ds[u] = (ds[v] == first ? second : first) + 1;
+                reroot(v, u);
+            }
+        }
+    }
+}
+```
+
+
+练习题单
 
 | 题号 | 难度 |
 | -------- | -------- |
-| [100041. 可以到达每一个节点的最少边反转次数](https://leetcode.cn/problems/minimum-edge-reversals-so-every-node-is-reachable/) |困难|
+| [2858. 可以到达每一个节点的最少边反转次数](https://leetcode.cn/problems/minimum-edge-reversals-so-every-node-is-reachable/) |困难|
 | [2581. 统计可能的树根数目](https://leetcode.cn/problems/count-number-of-possible-root-nodes/) |困难|
 #### 区间DP
 
