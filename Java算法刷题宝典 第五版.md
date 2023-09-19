@@ -1,5 +1,5 @@
 # Java算法刷题宝典 第五版
-版本号1.0.4 20230918更新
+版本号1.0.5 20230919更新
 [TOC]
 ## 第五版序言
 
@@ -171,10 +171,9 @@ Java语言特有的易产生难以排查的bug总结（血泪史555）
 | ------------------------------------------------------------ |
 | 参数是List\<Integer>，进行值比较一定用equals，大于127后用==判断会出错。 |
 | 递归与回溯时，向List<List\<Integer>>中添加答案时一定要添加List的拷贝。（参见递归、回溯与分治78题) |
+| 优先队列、TreeMap，传入比较器时，采用如下写法可能出错 Queue\<Integer\> queue = new PriorityQueue<>((a, b) -> a - b); 如果a-b产生数据溢出，优先级比较可能出错。建议使用Comparator.comparingInt的方式 |
 |                                                              |
 
-
-例题：
 ### 第一章：数学
 
 #### 位运算
@@ -1061,12 +1060,53 @@ class NumMatrix {
     }
 }
 ```
+真题链接：美团20230812笔试 https://codefun2000.com/p/P1443
+
+> 计数前缀和
+
+定义前缀和数组$pre[i][c]$表示数组$a[0...i-1]$中包含元素$c$的个数，则区间$[l...r]$中$c$的个数为$pre[r+1][c]-pre[l][c]$。
+
+注意：通常来说，若$c$的取值范围需要很小，否则容易超时。
+
+例题：[1906. 查询差绝对值的最小值](https://leetcode.cn/problems/minimum-absolute-difference-queries)
+
+```java
+class Solution {
+    public int[] minDifference(int[] nums, int[][] queries) {
+        int n = nums.length, m = queries.length;
+        int[][] presum = new int[n+1][101];
+        for(int i = 0; i < n; i ++) {
+            for(int c = 1; c <= 100; c ++) {
+                presum[i+1][c] += presum[i][c] + (nums[i] == c ? 1 : 0);
+            }
+        }
+        int[] ret = new int[m];
+        for(int i = 0; i < m; i ++) {
+            int[] q = queries[i];
+            int l = q[0], r = q[1];
+            int pre = 0, ans = Integer.MAX_VALUE;
+            for(int c = 1; c <= 100; c ++) {
+                if(presum[r+1][c] - presum[l][c] > 0) {
+                    if(pre != 0) {
+                        ans = Math.min(ans, c - pre);
+                    }
+                    pre = c;
+                }
+            }
+            ret[i] = ans == Integer.MAX_VALUE ? -1 : ans;
+        }
+        return ret;
+    }
+}
+```
+时间复杂度：$O(cn),c=100$
+
+真题链接：字节跳动20230827笔试 https://codefun2000.com/p/P1505
 
 #### 树状数组
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
-| 低       | 中       |
-例题1中，由于数组元素不会改变，只需要计算前缀后一次，后续就能高效地计算子数组的和。
+| 低 | 中 |
 
 如果数组可修改呢？每一次修改元素，前缀和数组就需要重新计算，重新计算的时间复杂度为O(n)。
 
@@ -7448,6 +7488,40 @@ for(int i = 0; i+1 < index.length; i++) {
 
 上述代码仍然不够一般化，因为最后是将索引$i$赋值给$nums$数组，倘若需要排序的不是整型数组，则需要辅助数组，并根据$index[i]$将其放在对应的位置。定义循环不变量$index[i]$表示$i$的起始索引，每当将其放置在对应位置之后，$index[i]$进行自增。可以看出，计数算法是稳定的。该算法的具体实现，参见下一节LSD基数排序。
 
+例题：[2653. 滑动子数组的美丽值](https://leetcode.cn/problems/sliding-subarray-beauty/)
+
+```java
+class Solution {
+    public int[] getSubarrayBeauty(int[] nums, int k, int x) {
+        int offset = 50, n = nums.length;
+        int[] count = new int[offset], ret = new int[n - k + 1];
+        for(int i = 0; i < k - 1; i ++) {
+            if(nums[i] < 0) {
+                count[nums[i] + offset] ++;
+            }
+        }
+        for(int i = k - 1; i < n; i ++) {
+            if(nums[i] < 0) {
+                count[nums[i] + offset] ++;
+            }
+            int order = x;
+            for(int j = 0; j < offset; j ++) {
+                order -= count[j];
+                if(order <= 0) {
+                    ret[i - k + 1] = j - offset;
+                    break;
+                }
+            }
+            if(nums[i - k + 1] < 0) {
+                count[nums[i - k + 1] + offset] --;
+            }
+        }
+        return ret;
+    }
+}
+```
+
+
 > LSD基数排序
 
 LSD(Least Significant Digit)基数排序对字符串排序，要求字符串长度相等，从末位向前排序。
@@ -8269,11 +8343,60 @@ second: [x2,y2], [x4,y4]
 | [759. 员工空闲时间](https://leetcode.cn/problems/employee-free-time/) | 困难 |
 | [57. 插入区间](https://leetcode.cn/problems/insert-interval/) | 中等 |
 
-#### 最少次数问题
+#### 覆盖问题
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 中       |
+
+覆盖问题是一系列问题：给定一个区间范围和若干个子区间，选择尽可能少的区间，使得区间能够完全覆盖整个区间。
+
+可以采用动态规划的解法，假设$dp[i]$表示将区间$[0...i)$覆盖所需的最小子区间数量，区间$[a_j,b_j)$满足$a_j<i\le b_j$，则有：
+
+$dp[i]=\min\{dp[j]\}+1$，其中$(a_j<i\le b_j)$
+
+时间复杂度：$O(m·n)$，$m$为区间长度，$n$为子区间个数。
+
+该问题采用贪心算法求解更优。对于左端点相同的子区间，右端点越远越有利。用一个数组记录每个位置的左端点能到达的最远右端点，从以下例题中学习贪心解法。
+
+例题：[1024. 视频拼接](https://leetcode.cn/problems/video-stitching/)
+
+```java
+class Solution {
+    public int videoStitching(int[][] clips, int time) {
+        int[] rightMost = new int[time];
+        for(int[] clip : clips) {
+            if(clip[0] < time) {
+                rightMost[clip[0]] = Math.max(rightMost[clip[0]], clip[1]);
+            }
+        }
+        int last = 0, ans = 0, pre = 0;
+        for(int i = 0; i < time; i ++) {  // 只遍历到time - 1
+            last = Math.max(last, rightMost[i]);  // last表示当前能覆盖到的最远右端点
+            if(i == last) {
+                return -1;
+            }
+            if(i == pre) {   // pre表示上一个被使用的子区间结束位置
+                ans ++;
+                pre = last;
+            }
+        }
+        return ans;
+    }
+}
+```
+时间复杂度：$O(m+n)$
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点           |
+| ------------------------------------------------------------ | ---- | ---------------- |
+| [45. 跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/) | 中等 | 同例题           |
+| [134. 加油站](https://leetcode.cn/problems/gas-station/)     | 中等 | 需要一定思维转化 |
+| [55. 跳跃游戏](https://leetcode.cn/problems/jump-game/)      | 中等 | 同例题           |
+| [1326. 灌溉花园的最少水龙头数目](https://leetcode.cn/problems/minimum-number-of-taps-to-open-to-water-a-garden/) | 困难 | 同例题           |
+
+如果$m$的取值特别大，此时得采用优先队列进行优化。见如下例题。
 
 例题：[871. 最低加油次数](https://leetcode.cn/problems/minimum-number-of-refueling-stops/)
 
@@ -8300,12 +8423,10 @@ class Solution {
     }
 }
 ```
-练习题单
 
-| 题号                                                         | 难度 |
-| ------------------------------------------------------------ | ---- |
-| [45. 跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/) | 中等 |
-| [134. 加油站](https://leetcode.cn/problems/gas-station/)     | 中等 |
+时间复杂度：$O(n\log n)$
+
+思考：如何用优先队列的方法解决例题1024？
 
 #### 最大数字问题
 
