@@ -110,6 +110,9 @@ int sum = Arrays.stream(arr).sum();  // 求和
 int max = Arrays.stream(arr).max().getAsInt();  // 求最大值
 Arrays.sort(arr);  // 排序
 Arrays.sort(arr2, Comparator.comparingInt(a -> a[0]));  // 自定义排序规则
+Arrays.sort(arr2, (a, b) -> Integer.compare(b[0], a[0]))  // 逆序
+// 注意点1. 基础数据类型的数组，如int[]，无法自定义排序器，只能升序。
+// 注意点2. 降序排序时，尽量避免写成 (a, b) -> b - a，防止数据溢出时导致排序出错，使用Integer.compare(b, a)的方式。
 Arrays.fill(arr, 1);  // 赋值
 List<Integer[]>[] graph = new List[n];
 // Arrays.setAll和Arrays.fill的区别
@@ -6655,6 +6658,104 @@ class Solution {
     }
 }
 ```
+#### 桥和割点
+
+#### 哈密尔顿路径
+
+#### 欧拉路径
+
+| 面试概率 | 笔试概率 |
+| -------- | -------- |
+| 低       | 低       |
+
+欧拉回路：从一个点出发，沿着边行走，经过每一个边恰好一次，最后回到出发点。
+
+欧拉路径：从一个点出发，沿着边行走，经过每一个边恰好一次，起始点和终止点可以不同。
+
+著名的七桥问题本质就是寻找是否存在欧拉回路。
+
+对于无向连通图，欧拉回路存在的充分必要条件是每个点的度是偶数。
+
+对于无向连通图，欧拉路径存在的充分必要条件是除了两个点每个点的度是偶数。
+
+Hierholzer算法用于在连通图中寻找欧拉路径，其流程如下：
+1. 从起点出发进行深度优先遍历。
+2. 每次沿着某条边从某个顶点移动到另一个顶点时，删除该边。
+3. 如果没有可以移动的路径，则将所在节点加入到栈中并返回。
+
+对于步骤3，如果顺序思考，很难判断当前节点哪一个分支会走入死胡同。
+
+采用逆向思维，遍历完一个节点相连的所有节点后才将该节点入栈。对于当前节点，从它每一个非死胡同分支出发进行深度优先遍历都能搜回到当前节点，从它每一个死胡同分支出发则不会搜回当前节点，会先于非死胡同分支入栈。最后的路径将栈中节点逆序即可。
+
+例题：[332. 重新安排行程](https://leetcode.cn/problems/reconstruct-itinerary/)
+
+```java
+class Solution {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        Map<String, Queue<String>> g = new HashMap<>();
+        for(List<String> ticket : tickets) {
+            String from = ticket.get(0), to = ticket.get(1);
+            g.computeIfAbsent(from, k -> new PriorityQueue<>()).offer(to);
+        }
+        dfs("JFK", g);
+        Collections.reverse(ret);
+        return ret;
+    }
+
+    private List<String> ret = new ArrayList<>();
+
+    public void dfs(String str, Map<String, Queue<String>> g) {
+        while((g.get(str) != null && !g.get(str).isEmpty())) {
+            String next = g.get(str).poll();
+            dfs(next, g);
+        }
+        ret.add(str);
+    }
+}
+```
+时间复杂度：$O(m\log m),m$为边的数量。
+
+从下一道例题看实际问题怎么用欧拉回路问题建模。
+
+例题：[753. 破解保险箱](https://leetcode.cn/problems/cracking-the-safe/)
+
+分析：将所有$n-1$位数看作节点，共有$k^{n-1}$个节点，每个节点有$k$跳入边和出边。
+例如，如果当前节点对应$a_1a_2...a_{n-1}$，则其第$x$条出边连接$a_2...a_{n-1}x$节点，相当于输入了$x$。
+
+每个节点都能用这样方式形成$k$个$n$位数，总共$k^{n-1}*k=k^n$个$n$位数，正好对应所有可能的密码。
+
+由于图中每个节点都有$k$条入边和出边，一定存在一个欧拉回路，用Hierholzer算法求解即可。
+
+```java
+class Solution {
+    public String crackSafe(int n, int k) {
+        this.k = k;
+        this.mod = (int)Math.pow(10, n - 1);
+        dfs(0);
+        ans.append("0".repeat(n - 1));  // 从n-1个0出发，最后放入，逆不逆序均可
+        return ans.toString();
+    }
+
+    private Set<Integer> visited = new HashSet<>();
+    private StringBuilder ans = new StringBuilder();
+    private int k, mod;
+
+    private void dfs(int u) {
+        for(int i = 0; i < k; i ++) {
+            int v = u * 10 + i;
+            if(visited.contains(v)) {
+                continue;
+            }
+            visited.add(v);
+            dfs(v % mod);
+            ans.append(i);
+        }
+    }
+}
+```
+时间复杂度：$O(n\times k^n)$
+
+
 #### 网络流
 
 | 面试概率 | 笔试概率 |
@@ -8600,6 +8701,48 @@ q = {1,3,5,5,8,8}
 ans += 6 - 1; q = {3,5,5,6,6,8,8}
 
 思考：深入理解本题和122问题的异同。
+
+例题：[630. 课程表 III](https://leetcode.cn/problems/course-schedule-iii)
+
+分析：假设已完成前$n-1$门课程，则有：
+
+$t_1+t_2+...t_{n-1} < d_{n-1}$
+
+如果无法学习第$n$门课程，则有：
+
+$t_1+t_2+...+t_{n-1}+t_n>d_n$
+
+移除掉$\max\{t_1,t_2,...t_{n-1}\}$中最大值$t_i,(t_i>t_n)$，则有：
+
+$t_1+t_2+...+t_{n-1}+t_n-t_i<d_{n-1}<d_n$，
+此时课程$n$一定能学习。(前提：已经按照结束时间$d_i$排序)
+
+```java
+class Solution {
+    public int scheduleCourse(int[][] courses) {
+        Arrays.sort(courses, Comparator.comparingInt(a -> a[1]));  // 按照截止日期排序
+        Queue<Integer> queue = new PriorityQueue<>((a, b) -> Integer.compare(b, a));
+        int day = 0;
+        for(int[] c : courses) {
+            int duration = c[0], lastDay = c[1];
+            if(day + duration <= lastDay) {
+                day += duration;
+                queue.offer(duration);
+            }else if(!queue.isEmpty() && duration < queue.peek()) {
+                day -= queue.poll() - duration;  // 反悔，选择duration小的课程
+                queue.offer(duration);
+            }
+        }
+        return queue.size();
+    }
+}
+```
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点        |
+| ------------------------------------------------------------ | ---- | ------------- |
+| [1642. 可以到达的最远建筑](https://leetcode.cn/problems/furthest-building-you-can-reach/) | 中等 | 反悔贪心+优先队列 |
 
 ### 动态规划
 
