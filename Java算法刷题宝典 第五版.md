@@ -6658,10 +6658,121 @@ class Solution {
     }
 }
 ```
-#### 桥和割点
 
 #### 哈密尔顿路径
+| 面试概率 | 笔试概率 |
+| -------- | -------- |
+| 低       | 低       |
 
+哈密尔顿回路：从一个点出发，沿着边行走，经过每一个顶点恰好一次，最后回到出发点。
+
+哈密尔顿路径：从一个点出发，沿着边行走，经过每一个顶点恰好一次，最后回到出发点。
+
+哈密尔顿路径求解是一个NP难问题。
+
+例题：[980. 不同路径 III](https://leetcode.cn/problems/unique-paths-iii/)
+
+```java
+class Solution {
+    public int uniquePathsIII(int[][] grid) {
+        m = grid.length; 
+        n = grid[0].length;
+        int startX = -1, startY = -1, mask = 0;
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                if(grid[i][j] == 1) {
+                    startX = i;
+                    startY = j;
+                }else if(grid[i][j] < 0) {
+                    mask |= (1 << (i * n + j));
+                }
+            }
+        }
+        memo = new int[m*n][1<<(m*n)];
+        for(int[] arr : memo) {
+            Arrays.fill(arr, -1);
+        }
+        return dfs(grid, startX, startY, mask);
+    }
+
+    private int m;
+    private int n;
+    private int[][] memo;
+
+    private int dfs(int[][] grid, int x, int y, int mask) {
+        int id = x * n + y;
+        // 越界判断 + 重复访问判断
+        if(x < 0 || x >= m || y < 0 || y >= n || (mask >> id & 1) > 0) {
+            return 0;
+        }
+        // 设置已访问
+        mask |= 1 << id;
+        // 终止条件判断
+        if(grid[x][y] == 2) {
+            return mask == (1 << m * n) - 1 ? 1 : 0;
+        }
+        // 重复计算判断
+        if(memo[id][mask] != -1) {
+            return memo[id][mask];
+        }
+        // 四方向递归
+        int ans = dfs(grid, x - 1, y, mask) + dfs(grid, x + 1, y, mask) + dfs(grid, x, y - 1, mask) + dfs(grid, x, y + 1, mask);
+        return memo[id][mask] = ans;
+    }
+}
+```
+时间复杂度：$O(mn\times 2^{mn})$
+
+可以采用哈希表进行记忆化：
+
+
+```java
+int key = (id << m * n) | mask;  // mask最多m*n个比特
+if(memo.containsKey(key)) {
+    return memo.get(key);
+}
+```
+
+也可采用回溯算法求解：
+
+```java
+class Solution {
+    public int uniquePathsIII(int[][] grid) {
+        m = grid.length; 
+        n = grid[0].length;
+        int startX = -1, startY = -1, count = 0;
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                if(grid[i][j] == 0) {
+                    count ++;
+                }else if(grid[i][j] == 1) {
+                    startX = i;
+                    startY = j;
+                }
+            }
+        }
+        return dfs(grid, startX, startY, count + 1);
+    }
+
+    private int m;
+    private int n;
+
+    private int dfs(int[][] grid, int x, int y, int left) {
+        if(x < 0 || x >= m || y < 0 || y >= n || grid[x][y] < 0) {
+            return 0;
+        }
+        if(grid[x][y] == 2) {
+            return left == 0 ? 1 : 0;
+        }
+        grid[x][y] = -1;
+        int ans = dfs(grid, x - 1, y, left - 1) + dfs(grid, x + 1, y, left - 1) + dfs(grid, x, y - 1, left - 1) + dfs(grid, x, y + 1, left - 1);
+        grid[x][y] = 0;
+        return ans;
+    }
+}
+```
+
+时间复杂度：$O(3^{mn})$，由于不能重复访问同一个格子，实际执行效率比记忆化搜索更快。
 #### 欧拉路径
 
 | 面试概率 | 笔试概率 |
@@ -7986,6 +8097,7 @@ class Solution {
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 高       | 高       |
+
 先从一个经典问题进行引入：给定升序数组$arr[i]$，查找目标元素target，返回其下标。不存在返回-1。
 
 三段式二分查找：
