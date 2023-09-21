@@ -2352,6 +2352,20 @@ class Solution {
 
 分析：该解法用到了**二分查找**章节的知识。
 
+假设两个数组的长度为$m,n$，假设有一条分割线，将两个数组分为左右两半部分。其中$nums1$有$i$个元素，$nums2$有$j$个元素。$i + j = \lceil (m+n)/2\rceil$。
+
+对于$nums1$，左侧边界为$nums1[i-1]$，右侧边界为$nums1[i]$；
+
+对于$nums2$，左侧边界为$nums2[j-1]$，右侧边界为$nums2[j]$；
+
+如果满足$nums1[i-1]<nums2[j],nums2[j-1]<nums1[i]$，则此时左边界元素的最大值小于右边界元素的最小值。
+
+元素个数为奇数的情况下，取$\max(nums1[i-1], nums2[j-1])$即可；
+
+元素个数为偶数的情况下，取$(\max(nums1[i-1], nums2[j-1])+\min(nums1[i], nums2[j]))/2$即可。
+
+使用二分查找寻找分界线的边界。
+
 ```java
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -2364,7 +2378,7 @@ class Solution {
         while(left < right) {
             int i = left + right >> 1;
             int j = half - i;
-            if(nums1[i] < nums2[j-1]) {
+            if(nums1[i] < nums2[j-1]) {  // 不用担心j-1<0越界。i在循环中，最大取到m-1，j最小取到1。
                 left = i + 1;
             }else {
                 right = i;
@@ -4399,6 +4413,138 @@ private void dfs(int v, int p, List<Integer>[] graph) {
     }
 }
 ```
+
+#### 树的直径
+
+树的直径，定义为树中任意两个节点之间最长路径的长度。
+
+先从一个简单的例题入手。
+
+例题：[543. 二叉树的直径](https://leetcode.cn/problems/diameter-of-binary-tree/)
+
+分析：本题代码量虽然少，且难度标为简单，但实际上有一定思维量。注意递归语义。
+
+```java
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        dfs(root);
+        return ans - 1;
+    }
+
+    private int ans = 0;
+
+    private int dfs(TreeNode root) {  // 递归语义：以root为根节点的最大深度
+        if(root == null) {
+            return 0;
+        }
+        int left = dfs(root.left);
+        int right = dfs(root.right);
+        ans = Math.max(ans, left + right + 1);
+        return Math.max(left, right) + 1;
+    }
+}
+```
+
+思考1：如果要寻找最大路径和，应该怎么求解？
+
+例题：[124. 二叉树中的最大路径和
+](https://leetcode.cn/problems/binary-tree-maximum-path-sum/)
+
+分析：其本质就是带权的二叉树直径问题。
+
+```java
+class Solution {
+    public int maxPathSum(TreeNode root) {
+        dfs(root);
+        return ans;
+    }
+
+    private int ans = Integer.MIN_VALUE;
+
+    private int dfs(TreeNode root) {
+        if(root == null) {
+            return 0;
+        }
+        int left = Math.max(dfs(root.left), 0);
+        int right = Math.max(dfs(root.right), 0);
+        ans = Math.max(ans, left + right + root.val);
+        return Math.max(left, right) + root.val;
+    }
+}
+```
+
+思考2：如果不是二叉树，而是一颗无根树，如何找出路径最长的两个叶子节点？
+
+1. 以任意节点p出发，利用DFS或BFS寻找最长路径的终点x。
+2. 从x出发，找到最长路径的终点y。
+3. x到y之间的路径即为最长路径。
+
+证明参考算法导论习题解答9-1。
+
+有了以上知识的铺垫，可以求解以下例题。
+
+例题：[310. 最小高度树
+](https://leetcode.cn/problems/minimum-height-trees/)
+
+分析：找出树中距离最远的两个节点，求出路径。路径的中点即为树的根节点。
+
+```java
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        List<Integer> res = new ArrayList<>();
+        if(n == 1) {
+            res.add(0);
+            return res;
+        }
+        List<Integer>[] g = new List[n];
+        Arrays.setAll(g, k -> new ArrayList<>());
+        for(int[] edge : edges) {
+            g[edge[0]].add(edge[1]);
+            g[edge[1]].add(edge[0]);
+        }
+        int[] pre = new int[n];
+        Arrays.fill(pre, -1);
+        int x = findLongestNode(0, pre, g);
+        int y = findLongestNode(x, pre, g);
+        List<Integer> path = new ArrayList<>();
+        pre[x] = -1;
+        while(y != -1) {
+            path.add(y);
+            y = pre[y];
+        }
+        int m = path.size();
+        if(m % 2 == 0) {
+            res.add(path.get(m / 2 - 1));
+        }
+        res.add(path.get(m / 2));
+        return res;
+    }
+
+    public int findLongestNode(int u, int[] pre, List<Integer>[] g) {
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[g.length];
+        queue.offer(u);
+        visited[u] = true;
+        int ans = -1;
+        while(!queue.isEmpty()) {
+            ans = queue.poll();
+            for(int v : g[ans]) {
+                if(!visited[v]) {
+                    visited[v] = true;
+                    pre[v] = ans;
+                    queue.offer(v);
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+在动态规划章节，还会继续介绍**换根DP**的解法
+
+在图章节，还会继续介绍**拓扑排序**的解法。
+
 
 #### 多叉树
 
@@ -6658,6 +6804,62 @@ class Solution {
     }
 }
 ```
+
+更难一些的题目，需要分析出为何拓扑排序是正确的。
+
+例题：[310. 最小高度树
+](https://leetcode.cn/problems/minimum-height-trees/)
+
+```java
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        List<Integer> res = new ArrayList<>();
+        if(n == 1) {
+            res.add(0);
+            return res;
+        }
+        List<Integer>[] g = new List[n];
+        Arrays.setAll(g, k -> new ArrayList<>());
+        int[] degree = new int[n];
+        for(int[] edge : edges) {
+            g[edge[0]].add(edge[1]);
+            g[edge[1]].add(edge[0]);
+            degree[edge[0]] ++;
+            degree[edge[1]] ++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i = 0; i < n; i ++) {
+            if(degree[i] == 1) {
+                queue.offer(i);
+            }
+        }
+        List<Integer> ret = new ArrayList<>();
+        while(!queue.isEmpty()) {
+            ret = new ArrayList<>();
+            int size = queue.size();
+            for(int i = 0; i < size; i ++) {
+                int cur = queue.poll();
+                ret.add(cur);
+                for(int v : g[cur]) {
+                    degree[v] --;
+                    if(degree[v] == 1) {
+                        queue.offer(v);
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+}
+```
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点                              |
+| ------------------------------------------------------------ | ---- | ----------------------------------- |
+| [2603. 收集树中金币](https://leetcode.cn/problems/collect-coins-in-a-tree/) | 中等 | 拓扑排序，310题基础上再深入思考一点 |
+
+
 
 #### 哈密尔顿路径
 | 面试概率 | 笔试概率 |
