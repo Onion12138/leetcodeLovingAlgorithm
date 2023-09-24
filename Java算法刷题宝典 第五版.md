@@ -1,5 +1,5 @@
 # Java算法刷题宝典 第五版
-版本号1.0.5 20230919更新
+版本号1.0.6 20230924更新
 [TOC]
 ## 第五版序言
 
@@ -852,6 +852,23 @@ class Solution {
             res = res * (-- n) / i;
         }
         return res % mod;
+    }
+}
+```
+
+#### 素数
+筛法求素数模版：预处理[0...max]之间的素数。
+```java
+private static int max = (int)1e5;
+private static boolean[] np = new boolean[max + 1];
+static {
+    np[1] = true;
+    for(int i = 2; i * i <= max; i ++) {
+        if(!np[i]) {
+            for(int j = i * i; j <= max; j += i) {
+                np[j] = true;
+            }
+        }
     }
 }
 ```
@@ -3877,6 +3894,45 @@ class Solution {
 ```
 
 时间复杂度：$O(mn\log mn)$
+
+例题：[1383. 最大的团队表现值](https://leetcode.cn/problems/maximum-performance-of-a-team/)
+
+分析：先按照效率降序排序，遍历数组efficiency，枚举效率值中的最小值。维护一个speed数组的最大堆，其容量最大为k，累加最大堆中的元素，二者相乘即可。
+
+```java
+class Solution {
+    public int maxPerformance(int n, int[] speed, int[] efficiency, int k) {
+        int[][] pair = new int[n][2];
+        for(int i = 0; i < n; i ++) {
+            pair[i][0] = speed[i];
+            pair[i][1] = efficiency[i];
+        }
+        Arrays.sort(pair, (a, b) -> Integer.compare(b[1], a[1]));
+        Queue<Integer> queue = new PriorityQueue<>();
+        long sum = 0, ans = 0;
+        for(int i = 0; i < n; i ++) {
+            queue.offer(pair[i][0]);
+            int min = pair[i][1];
+            sum += pair[i][0];
+            ans = Math.max(ans, sum * min);
+            if(queue.size() == k) {
+                sum -= queue.poll();
+            }
+        }
+        return (int)(ans % 10000_00007);
+    }
+}
+```
+
+思考：如果最多$k$名工程师，改为恰好$k$名工程师，又该如何解决？
+
+提示：最大堆的容量必须为$k$。
+
+| 题号                                                         | 难度 | 知识点          |
+| ------------------------------------------------------------ | ---- | --------------- |
+| [2542. 最大子序列的分数](https://leetcode.cn/problems/maximum-subsequence-score/) | 中等 | 排序，TOP K问题 |
+
+
 
 ### 树
 
@@ -7305,6 +7361,109 @@ class Solution {
 解法四：基于备忘录+BFS
 
 参考题解：https://leetcode.cn/problems/path-with-minimum-effort/solutions/460667/javasi-chong-jie-fa-zui-duan-lu-zui-xiao-sheng-che/
+
+### 数据结构设计
+#### LRU
+例题：[146. LRU 缓存](https://leetcode.cn/problems/lru-cache)
+
+分析：
+
+使用双向链表 + 哈希表，实现O(1)时间复杂度。
+
+get操作，存在缓存中，使用HashMap获取，同时更新key的最近使用，将其移动到链表头部。
+
+get操作，不存在缓存中，返回-1即可。
+
+put操作，存在缓存中，使用HashMap更新，同时更新key的最近使用，将其移动到链表头部。
+
+put操作，不存在缓存中，缓存未满，往链表头部添加节点；缓存已满，删除链表尾部节点，往链表头部添加节点。
+
+辅助方法：
+
+1. 删除链表尾部节点removeTail()
+2. 移动节点到头部move2head()，本质是删除该节点，再调用add2head
+3. 添加节点到头部add2head()
+
+```java
+public class LRUCache {
+    private class ListNode {
+        int key;
+        int value;
+        ListNode pre;
+        ListNode post;
+        public ListNode(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    private int capacity;
+    private Map<Integer, ListNode> map;
+    private ListNode head;
+    private ListNode tail;
+
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        this.map = new HashMap<>();
+        this.head = new ListNode(-1, -1);
+        this.tail = new ListNode(-1, -1);
+        head.post = tail;
+        tail.pre = head;
+    }
+
+    public int get(int key) {
+        if (map.containsKey(key)) {
+            ListNode node = map.get(key);
+            move2head(node);
+            return node.value;
+        }
+        return -1;
+    }
+
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            ListNode node = map.get(key);
+            node.value = value;
+            move2head(node);
+        } else {
+            if (map.size() == capacity) {
+                ListNode node = removeTail();
+                map.remove(node.key);
+            }
+            ListNode node = new ListNode(key, value);
+            map.put(key, node);
+            add2head(node);
+        }
+    }
+    
+    private ListNode removeTail() {
+        ListNode oldTail = tail.pre;
+        ListNode newTail = oldTail.pre;
+        newTail.post = tail;
+        tail.pre = newTail;
+        oldTail.pre = null;
+        oldTail.post = null; 
+        return oldTail;
+    }
+
+    private void move2head(ListNode node) {
+        node.pre.post = node.post;
+        node.post.pre = node.pre;
+        node.pre = null;
+        node.post = null;
+        add2head(node);
+    }
+    
+    private void add2head(ListNode node) {
+        ListNode headPost = head.post;
+        headPost.pre = node;
+        node.post = headPost;
+        node.pre = head;
+        head.post = node;
+    }
+}
+```
+#### LFU
 
 ## Part 3 算法
 
@@ -10808,6 +10967,17 @@ Deque<Integer> group2 = IntStream.range(0, n).filter(e -> !path[target].contains
 | [416. 分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/) | 中等 | 模版题               |
 | [494. 目标和](https://leetcode.cn/problems/target-sum/)      | 中等 | 如何建模成背包问题？ |
 
+> 分组背包
+
+分组背包，物品被分为若干组，每组最多只能选一个/恰好选择一个，根据题意而定。
+
+该部分较为容易，读者可以选择以下题目练习。
+
+| 题号                                                         | 难度 | 提示                 |
+| ------------------------------------------------------------ | ---- | -------------------- |
+| [2585. 获得分数的方法数](https://leetcode.cn/problems/number-of-ways-to-earn-points/) | 困难 | 分组背包               |
+| [1981. 最小化目标值与所选元素的差](https://leetcode.cn/problems/minimize-the-difference-between-target-and-chosen-elements/)      | 中等 | 分组背包 |
+| [2218. 从栈中取出 K 个硬币的最大面值和](https://leetcode.cn/problems/maximum-value-of-k-coins-from-piles/)      | 困难 | 分组背包，前缀和 |
 
 
 #### 数位DP
