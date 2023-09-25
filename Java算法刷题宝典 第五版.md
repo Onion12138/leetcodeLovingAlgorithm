@@ -1,5 +1,5 @@
 # Java算法刷题宝典 第五版
-版本号1.0.6 20230924更新
+版本号1.0.7 20230925更新
 [TOC]
 ## 第五版序言
 
@@ -66,7 +66,7 @@
 10. 二分查找尽量使用二段式，并按照二分查找章节的规范书写。
 11. 可以用Stream流或者lambda表达式简化的尽量简化书写。
 12. 不使用var语法。
-
+13. Java推荐用双端队列模拟Stack的功能，但本书为了简便，依然采用Stack类进行书写。
 ## Part 1 基础
 
 ### 第〇章：Java常用库函数
@@ -1207,7 +1207,7 @@ private int lowbit(int x) {
 | $c[5]$   | 0101   | $a[5]$                | 1      |
 | $c[6]$   | 0110   | $a[5]+a[6]$           | 2      |
 | $c[7]$   | 0111   | $a[7]$                | 1      |
-| $c[8]$   | 1000   | $a[1]+...a[8]$        | 8      |
+| $c[8]$   | 1000   | $a[1]+...+a[8]$        | 8      |
 
 > 前驱和后继
 
@@ -3581,10 +3581,40 @@ class Solution {
             while(!stack.isEmpty() && stack.peek() <= nums[i]) {  // 用小于等于，严格更大
                 stack.pop();
             }
+            // 在循环外更新，此时 stack.peek() > nums[i]
             right[i] = stack.isEmpty() ? -1 : stack.peek(); // 不存在时，根据实际情况赋值。本题赋值为-1。
             stack.push(nums[i]);  // 存储元素值
         }
         return right;
+    }
+}
+```
+
+思考：如果需要寻找右侧第一个比当前元素更大的元素，但是无法从右到左遍历（例如，只给了头节点的单向链表），应该怎么改写代码？
+
+例题：[1019. 链表中的下一个更大节点](https://leetcode.cn/problems/next-greater-node-in-linked-list/)
+
+分析：此时需要一个变量，记录每个元素入栈的下标。
+
+```java
+class Solution {
+    public int[] nextLargerNodes(ListNode head) {
+        Stack<int[]> stack = new Stack<>();
+        ListNode cur = head;
+        List<Integer> ret = new ArrayList<>();
+        int index = 0;
+        while(cur != null) {
+            ret.add(0);
+            while(!stack.isEmpty() && stack.peek()[0] < cur.val) {
+                // 在循环内更新 栈里元素寻找到下一个更大节点
+                int[] pop = stack.pop();
+                ret.set(pop[1], cur.val);
+            }
+            stack.push(new int[]{cur.val, index});
+            cur = cur.next;
+            index ++;
+        }
+        return ret.stream().mapToInt(e -> e).toArray();
     }
 }
 ```
@@ -3752,6 +3782,48 @@ class Solution {
     }
 }
 ```
+
+另外一种非典型的单调栈，用于求解如下问题：
+
+下标$i,j$，满足$i<j,s[i]<s[j]$，要最大化$j-i$的值。
+
+对于左端点$j$，维护一个单调递减的栈（仅入队）。
+
+对于右端点$i$，倒序遍历，一旦$s[j]>s[i]$，则更新答案并出栈。
+
+例题：[962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/)
+
+```java
+class Solution {
+    public int maxWidthRamp(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        for(int i = 0; i < nums.length; i ++) {
+            if(stack.isEmpty() || nums[stack.peek()] > nums[i]) {
+                stack.push(i);
+            }
+        }
+        int ans = 0;
+        for(int r = nums.length - 1; r > 0; r --) {
+            while(!stack.isEmpty() && nums[r] >= nums[stack.peek()]) {
+                ans = Math.max(ans, r - stack.pop());
+            }
+        }
+        return ans;
+    }
+}
+```
+
+时间复杂度：$O(n)$
+
+思考：本题还有一种非常巧妙的思路，将数组按照值排序，转换为买卖股票问题。时间复杂度：$O(n \log n)$，读者可以尝试求解。
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ------ |
+| [1124. 表现良好的最长时间段](https://leetcode.cn/problems/longest-well-performing-interval/) | 中等 | 前缀和 |
+
+
 
 ### 队列
 
@@ -7465,6 +7537,94 @@ public class LRUCache {
 ```
 #### LFU
 
+例题：[460. LFU 缓存](https://leetcode.cn/problems/lfu-cache/)
+
+分析：
+
+增加一个Node节点，记录key和value，以及访问的频率。
+
+get操作，key不存在，返回-1。
+
+get操作，key存在，返回value，更新频率。用一个Map记录每一个频率下包含哪些Node，使用LinkedHashSet，既能高效删除节点，又能维持节点的插入顺序（利用了Java现成的集合，也可以采用LRU中双端链表+哈希表的方法）。
+
+更新频率时，将节点频率加一，同时从旧频率下的HashSet中移除，添加到新频率下的HashSet。特别的，用一个变量记录全局最低频率。
+
+put操作，key存在，返回value，更新频率。
+
+put操作，key不存在，进行添加。如果缓存容量已满，则根据最低频率找到LinkedHashSet，去除头节点。添加节点后，最低频率更新为1。
+
+```java
+class LFUCache {
+
+    private Map<Integer, Node> map;
+    private Map<Integer, LinkedHashSet<Node>> freqMap;
+
+    private int capacity;
+    private int minFreq;
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        this.map = new HashMap<>();
+        this.freqMap = new HashMap<>();
+    }
+
+    class Node {
+        int value;
+        int freq;
+        int key;
+        Node(int key, int value, int freq) {
+            this.value = value;
+            this.freq = freq;
+            this.key = key;
+        }
+    }
+    
+    public int get(int key) {
+        if(map.containsKey(key)) {
+            Node node = map.get(key);
+            updateFreq(node);
+            return node.value;
+        }else {
+            return -1;
+        }
+    }
+
+    private void updateFreq(Node node) {
+        int freq = node.freq;
+        LinkedHashSet<Node> set = freqMap.get(freq);
+        set.remove(node);
+        if(freq == minFreq && set.size() == 0) {
+            minFreq ++;
+        }
+        node.freq ++;
+        freqMap.computeIfAbsent(freq + 1, k -> new LinkedHashSet<>()).add(node);
+    }
+
+    private void discard() {
+        LinkedHashSet<Node> set = freqMap.get(minFreq);
+        Node removeNode = set.iterator().next();
+        set.remove(removeNode);
+        map.remove(removeNode.key);
+    }
+    
+    public void put(int key, int value) {
+        if(map.containsKey(key)) {
+            Node node = map.get(key);
+            node.value = value;
+            updateFreq(node);
+        }else {
+            if(map.size() == capacity) {
+                discard();
+            }
+            Node node = new Node(key, value, 1);
+            minFreq = 1;
+            map.put(key, node);
+            freqMap.computeIfAbsent(minFreq, k -> new LinkedHashSet<>()).add(node);
+        }
+    }
+}
+```
+
 ## Part 3 算法
 
 ### 数据规模与时间复杂度
@@ -7510,7 +7670,52 @@ class Solution {
 }
 ```
 
+#### 优化算法
 
+##### 利用单调栈/队列优化
+例题：[2866. 美丽塔 II](https://leetcode.cn/problems/beautiful-towers-ii/)
+
+分析：采用暴力，枚举山顶的位置，时间复杂度$O(n^2)$，会超时，采用单调栈优化。
+
+```java
+class Solution {
+    public long maximumSumOfHeights(List<Integer> maxHeights) {
+        int n = maxHeights.size();
+        long[] suffix = new long[n+1];  // suffix[i]表示以i最为山顶，i+1往后的最大高度值。
+        Stack<Integer> stack = new Stack<>();
+        stack.push(n);  // 哨兵，避免对栈的空判断。
+        long sum = 0, pre = 0, ans = 0;
+        // pre[i]表示以i为山顶，区间[0...i]的最大高度值，包含i，优化为一个变量。
+        for(int i = n - 1; i >= 0; i --) {
+            while(stack.size() > 1 && maxHeights.get(stack.peek()) >= maxHeights.get(i)) { //注意不是stack.isEmpty()，栈底有元素n。
+                int j = stack.pop();
+                // 假设j右侧有索引k，且h[k]是右侧第一个小于h[j]的下标，之前j为山顶时，区间[k+1...j]的值全为h[j]。
+                sum -= (long)maxHeights.get(j) * (stack.peek() - j);
+            }
+            // 此时栈顶元素假设为j，h[j] < h[i]。区间[i...j-1]的元素都更新为h[i]，总共j-1-i+1=j-i个。
+            sum += (long)maxHeights.get(i) * (stack.peek() - i);
+            suffix[i] = sum;
+            stack.push(i);
+        }
+        stack.clear();
+        stack.push(-1);
+        for(int i = 0; i < n; i ++) {
+            while(stack.size() > 1 && maxHeights.get(stack.peek()) >= maxHeights.get(i)) {
+                int j = stack.pop();
+                pre -= (long)maxHeights.get(j) * (j - stack.peek());
+            }
+            pre += (long)maxHeights.get(i) * (i - stack.peek());
+            ans = Math.max(ans, pre + suffix[i+1]);
+            stack.push(i);
+        }
+        return ans;
+    }
+}
+```
+时间复杂度：$O(n)$
+##### 利用二分优化
+##### 利用线段树优化
+##### 利用哈希表优化
 
 ### 双指针
 
