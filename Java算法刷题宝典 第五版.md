@@ -1,7 +1,7 @@
-# Java算法刷题宝典 第五版
-版本号1.0.7 20230925更新
+# Algorithm Handbook - The Fifth Edition
+版本号1.0.8 20231002更新
 [TOC]
-## 第五版序言
+## Preface to the Fifth Edition
 
 > 第五版更新内容如下
 
@@ -50,7 +50,7 @@
 
 因作者水平有限，错误疏漏在所难免，如有错误，还请多多指教。
 
-## 编码风格
+## Coding Style
 
 本题解中，所有代码基本遵循如下规范。
 
@@ -67,9 +67,9 @@
 11. 可以用Stream流或者lambda表达式简化的尽量简化书写。
 12. 不使用var语法。
 13. Java推荐用双端队列模拟Stack的功能，但本书为了简便，依然采用Stack类进行书写。
-## Part 1 基础
+## Part 1 Basic Knowledge
 
-### 第〇章：Java常用库函数
+### 1.1 Java Common Library Functions
 
 注意：JDK要求大于等于8
 
@@ -177,9 +177,9 @@ Java语言特有的易产生难以排查的bug总结（血泪史555）
 | 优先队列、TreeMap，传入比较器时，采用如下写法可能出错 Queue\<Integer\> queue = new PriorityQueue<>((a, b) -> a - b); 如果a-b产生数据溢出，优先级比较可能出错。建议使用Comparator.comparingInt的方式 |
 |                                                              |
 
-### 第一章：数学
+### 1.2 Math
 
-#### 位运算
+#### 1.2.1 Bit Manipulation
 
 位运算与集合
 
@@ -359,7 +359,7 @@ class Solution {
 | [1457. 二叉树中的伪回文路径](https://leetcode.cn/problems/pseudo-palindromic-paths-in-a-binary-tree/) | 中等 |
 
 
-#### 向上取整
+#### 1.2.2 Round Up
 
 求x/y向上取整的代码
 
@@ -369,11 +369,11 @@ x / y + (x % y == 0 ? 0 : 1);
 (x + y - 1) / y;
 ```
 
-#### 进制
+#### 1.2.3 Base
 
 该部分待补充（todo）
 
-#### 最大公因数
+#### 1.2.4 Greatest Common Divisor
 
 ```java
 public int gcd(int x, int y) {  // 最大公因数
@@ -384,7 +384,7 @@ public int lcm(int a, int b) {  // 最小公倍数
 }
 ```
 
-#### 高精度计算
+#### 1.2.5 High Precision Computation
 
 例题：[43. 字符串相乘](https://leetcode.cn/problems/multiply-strings/)
 
@@ -424,13 +424,13 @@ class Solution {
 | [66. 加一](https://leetcode.cn/problems/plus-one/)           | 简单 |
 | [369. 给单链表加一](https://leetcode.cn/problems/plus-one-linked-list/) | 中等 |
 
-#### 取模
+#### 1.2.6 Modulo
 
 $(a+b) \bmod m=((a\bmod m)+(b\bmod m))\bmod m$
 
 $(a*b)\bmod m = ((a\bmod m)*(b\bmod m))\bmod m$
 
-#### 快速幂
+#### 1.2.7 Fast Power
 
 例题：[50. Pow(x, n)](https://leetcode.cn/problems/powx-n/)
 
@@ -512,7 +512,7 @@ class Solution {
 }
 ```
 
-#### 排列组合
+#### 1.2.8 Permutation and Combination
 
 > 下一个排列
 
@@ -856,7 +856,7 @@ class Solution {
 }
 ```
 
-#### 素数
+#### 1.2.9 Prime
 筛法求素数模版：预处理[0...max]之间的素数。
 ```java
 private static int max = (int)1e5;
@@ -873,9 +873,9 @@ static {
 }
 ```
 
-### 第二章：数组
+### 1.3 Array
 
-#### 循环不变量
+#### 1.3.1 Loop Invariant
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -939,7 +939,7 @@ class Solution {
 | [283. 移动零](https://leetcode.cn/problems/move-zeroes/)     | 简单 |
 | [27. 移除元素](https://leetcode.cn/problems/remove-element/) | 简单 |
 
-#### 前缀和数组
+#### 1.3.2 Prefix Sum Array
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -1123,7 +1123,7 @@ class Solution {
 
 真题链接：字节跳动20230827笔试 https://codefun2000.com/p/P1505
 
-#### 树状数组
+#### 1.3.3 Binary Index Tree
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 低 | 中 |
@@ -1370,7 +1370,7 @@ class Solution {
 }
 ```
 
-#### 差分数组
+#### 1.3.4 Differential Array
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -1466,7 +1466,7 @@ class Solution {
 | [2772. 使数组中的所有元素都等于零](https://leetcode.cn/problems/apply-operations-to-make-all-array-elements-equal-to-zero/) | 中等 |
 | [253. 会议室 II](https://leetcode.cn/problems/meeting-rooms-ii/) | 中等 |
 
-#### 数组归并
+#### 1.3.5 Merge Array
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -1746,7 +1746,7 @@ class Solution {
 | [719. 找出第 K 小的数对距离](https://leetcode.cn/problems/find-k-th-smallest-pair-distance/) | 困难(可能超时) |
 | [264. 丑数 II](https://leetcode.cn/problems/ugly-number-ii/) | 中等           |
 
-#### 数组划分
+#### 1.3.6 Array Partition
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -1926,7 +1926,7 @@ class Solution {
 }
 ```
 
-#### 分块分桶
+#### 1.3.7 Blocks and Buckets
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2119,7 +2119,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [621. 任务调度器](https://leetcode.cn/problems/task-scheduler/) | 中等 |
 
-#### 旋转数组
+#### 1.3.8 Rotating Array
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2291,7 +2291,7 @@ class Solution {
 }
 ```
 
-#### 数组中位数
+#### 1.3.9 Median of Array
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2450,9 +2450,9 @@ class MedianFinder {
 }
 ```
 
-### 第三章：字符串
+### 1.4 String
 
-#### 子串匹配
+#### 1.4.1 Substring Matching
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2690,7 +2690,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [187. 重复的DNA序列](https://leetcode.cn/problems/repeated-dna-sequences/) | 中等 |
 
-#### 回文串
+#### 1.4.2 Palindrome String
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2837,7 +2837,7 @@ class Solution {
 }
 ```
 
-#### 重复子串
+#### 1.4.3 Repeated Substring
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2955,11 +2955,11 @@ class Solution {
 }
 ```
 
-## Part 2 数据结构
+## Part 2 Data Structure
 
-### 链表
+### 2.1 Linked List
 
-#### 链表与递归
+#### 2.1.1 Linked List and Recursion
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2987,7 +2987,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [82. 删除排序链表中的重复元素 II](https://leetcode.cn/problems/remove-duplicates-from-sorted-list-ii/) | 中等 |
 
-#### 链表反转
+#### 2.1.2 Linked List Inversion
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -3055,7 +3055,7 @@ private ListNode reverseN(ListNode head, int n) {
 | [92. 反转链表 II](https://leetcode.cn/problems/reverse-linked-list-ii/) | 中等 |
 | [25. K 个一组翻转链表](https://leetcode.cn/problems/reverse-nodes-in-k-group/) | 困难 |
 
-#### 链表归并
+#### 2.1.3 Merge Linked List
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -3144,7 +3144,7 @@ class Solution {
 
 时间复杂度：$O(kn\log k)$
 
-#### 快慢指针
+#### 2.1.4 Fast and Slow Pointers
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -3291,7 +3291,7 @@ lass Solution {
 | ------------------------------------------------------------ | ---- |
 | [234. 回文链表](https://leetcode.cn/problems/palindrome-linked-list/) | 简单 |
 
-#### 链表排序
+#### 2.1.5 Sort Linked List
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -3340,11 +3340,11 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [147. 对链表进行插入排序](https://leetcode.cn/problems/insertion-sort-list/) | 简单 |
 
-### 栈
+### 2.2 Stack 
 
-#### 栈经典问题
+#### 2.2.1 Classic Problems of Stack
 
-##### 计算器问题
+##### 2.2.1.1 Calculator
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -3511,7 +3511,7 @@ class Solution {
 | [224. 基本计算器](https://leetcode.cn/problems/basic-calculator/) | 困难 |
 | [227. 基本计算器 II](https://leetcode.cn/problems/basic-calculator-ii/) | 中等 |
 
-##### 括号匹配问题
+##### 2.2.1.2 Parenthesis Matching
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -3550,117 +3550,106 @@ class Solution {
 
 
 
-#### 单调栈
+#### 2.2.2 Monotonic Stack
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 低       | 中       |
 
-单调栈的使用场景总结
+先从一个简单的问题出发，学习单调栈。
 
-| 场景                               | 栈类型     | 循环顺序 |
-| ---------------------------------- | ---------- | -------- |
-| 寻找右侧第一个比当前元素更大的元素 | 单调递减栈 | 从右到左 |
-| 寻找右侧第一个比当前元素更小的元素 | 单调递增栈 | 从右到左 |
-| 寻找左侧第一个比当前元组更小的元素 | 单调递增栈 | 从左到右 |
+例题：https://www.nowcoder.com/practice/2a2c00e7a88a498693568cef63a4b7bb
 
-需要考虑的细节
+采用暴力的做法，时间复杂度$O(n^2)$，显然不是最优的。使用单调栈，能够在$O(n)$时间内求解每一个元素左侧和右侧第一个比当前元素更小的位置。
 
-1. 是否是严格大于？等号怎么写？
-2. 栈中存储下标还是元素值。
+对于本问题，首先维护一个严格单调递减栈（从栈顶往栈底看）。其中，栈中单调性的维护满足如下几点要求。
 
-模版：寻找右侧第一个比当前元素严格更大的元素
+1. 所有元素都会入栈一次。
+2. 若栈内没有元素，直接入栈。
+3. 若栈内有元素，且当前元素严格大于栈顶元素，则入栈，否则弹出栈顶元素，直至栈为空或者当前元素严格大于栈顶元素。在出栈的过程中进行结算。
+4. 栈中的元素为数组的下标而非数组的元素值。
+
+给出单调栈的模版。
+
+```java
+// 返回二维数组ret，其中
+// ret[i][0]表示第i个元素左侧第一个比arr[i]小的元素下标
+// ret[i][1]表示第i个元素右侧第一个比arr[i]小的元素下标
+public int[][] findFirstSmallerElement(int[] arr) {
+    Stack<Integer> stack = new Stack<>();
+    int[] left = new int[n], right = new int[n];
+    for(int i = 0; i < n; i ++) {
+        while(!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+            int j = stack.pop();
+            // 栈顶元素严格大于栈底，所以左侧第一个比arr[j]小的元素下标一定为当前栈顶元素。
+            left[j] = stack.isEmpty() ? -1 : stack.peek();
+            // 此时arr[i] >= arr[j]，非严格大于，所以还需要答案修复阶段
+            right[j] = i;
+        }
+        stack.push(i);  // 所有元素都需要入队一次
+    }
+    // 栈中还未结算的元素
+    while(!stack.isEmpty()) {
+        int j = stack.pop();
+        left[j] = stack.isEmpty() ? -1 : stack.peek();
+        right[j] = -1;  
+    }
+    // 答案修复
+    for(int i = n - 2; i >= 0; i --) {
+        if(right[i] != -1 && arr[i] == arr[right[i]]) {
+            right[i] = right[right[i]];
+        }
+    }
+}
+```
+时间复杂度：O(n)，采用一次遍历即可完成统计。
+
+对于不包含重复元素的数组，可以不需要答案修复的过程，另外，对于有重复元素的数组，需要根据实际情况分析是否需要答案修复的过程。
+
+模版代码，由于栈中保证了严格递减，所以left[j]的答案不需要修复，而right[j]需要答案修复。如果只需要求解右侧严格小于的第一个元素下标，可以将循环条件的等号去掉，即栈中的元素非严格递减，在结算时，right[j]的答案就无需修复了。
+
+例题：[84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/)
+
+分析：使用模版，找到每个元素向左向右能够扩展的最大宽度，乘上当前节点的高度即可。在实际代码书写时有一些技巧和细节。
+
+1. 循环i==n，用于处理栈中还未出栈的元素的结算逻辑。
+2. 栈提前填入元素-1，避免结算过程中对栈是否为空的判断。注意循环的条件为stack.size() > 1而非stack.isEmpty()。
 
 ```java
 class Solution {
-    public int[] nextGreaterElements(int[] nums) {
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length, ans = 0;
         Stack<Integer> stack = new Stack<>();
-        int n = nums.length;
-        int[] right = new int[n];
-        for(int i = n - 1; i >= 0; i --) {  // 从右向左遍历
-            while(!stack.isEmpty() && stack.peek() <= nums[i]) {  // 用小于等于，严格更大
-                stack.pop();
+        stack.push(-1);
+        for(int i = 0; i <= n; i ++) {
+            while(stack.size() > 1 && (i == n || heights[stack.peek()] >= heights[i])) {
+                int j = stack.pop();
+                int width = i - stack.peek() - 1;
+                int height = heights[j];
+                ans = Math.max(ans, width * height);
             }
-            // 在循环外更新，此时 stack.peek() > nums[i]
-            right[i] = stack.isEmpty() ? -1 : stack.peek(); // 不存在时，根据实际情况赋值。本题赋值为-1。
-            stack.push(nums[i]);  // 存储元素值
-        }
-        return right;
-    }
-}
-```
-
-思考：如果需要寻找右侧第一个比当前元素更大的元素，但是无法从右到左遍历（例如，只给了头节点的单向链表），应该怎么改写代码？
-
-例题：[1019. 链表中的下一个更大节点](https://leetcode.cn/problems/next-greater-node-in-linked-list/)
-
-分析：此时需要一个变量，记录每个元素入栈的下标。
-
-```java
-class Solution {
-    public int[] nextLargerNodes(ListNode head) {
-        Stack<int[]> stack = new Stack<>();
-        ListNode cur = head;
-        List<Integer> ret = new ArrayList<>();
-        int index = 0;
-        while(cur != null) {
-            ret.add(0);
-            while(!stack.isEmpty() && stack.peek()[0] < cur.val) {
-                // 在循环内更新 栈里元素寻找到下一个更大节点
-                int[] pop = stack.pop();
-                ret.set(pop[1], cur.val);
-            }
-            stack.push(new int[]{cur.val, index});
-            cur = cur.next;
-            index ++;
-        }
-        return ret.stream().mapToInt(e -> e).toArray();
-    }
-}
-```
-
-模版2：寻找每个元素能够左右扩展的边界。(扩展定义为，以当前元素为区间最小值，向左向右能扩展的区间范围)
-
-组合一下向左和向右的模版即可。
-
-对于每一个元素$arr[i]$，能扩展的区间为$(left[i], right[i])$，注意是开区间。
-```java
-        Stack<Integer> stack = new Stack<>();
-        int n = arr.length;
-        int[] left = new int[n];
-        int[] right = new int[n];
-        for(int i = 0; i < n; i++) {
-            while(!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {  // 维护单调递增栈，从左到右，寻找左侧第一个严格小于当前元素的下标。
-                stack.pop();
-            }
-            left[i] = stack.isEmpty() ? -1 : stack.peek();
             stack.push(i);
         }
-        stack.clear();
-        for(int i = n - 1; i >= 0; i--) {  // 维护单调递增栈，从右到左，寻找右侧第一个小于等于当前元素的下标。
-            while(!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
-                stack.pop();
-            }
-            right[i] = stack.isEmpty() ? n : stack.peek();
-            stack.push(i);
-        }
-```
-
-优化1：两趟遍历优化为一趟遍历，从左往右计算$left[i]$时，也可以同时计算$right$数组。
-
-```java
-for(int i = 0; i < n; i++) {
-    while(!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
-        right[stack.pop()] = i;
+        return ans;
     }
-    left[i] = stack.isEmpty() ? -1 : stack.peek();
-    stack.push(i);
 }
 ```
 
-优化2：不显示指定left数组和right数组，从以下例题中学习。
+思考：对于相同元素，为何没有答案修复的过程？
+
+看如下示例：[6,7,6,8,6,2]
+
+在计算下标为0的6时，由于弹出规则，此时结算的面积为6*2=12，因为下标为2的6会让下标为0的6出栈并进行结算，宽度计算为2-(-1)-1=2。
+
+在计算下标为2的6时，此时结算的面积为6*4=24，因为下标为4的6会让下标为2的6出栈并进行结算，下标为2的6左侧为-1，宽度计算为4-(-1)-1=4。
+
+在计算下标为4的6时，此时结算的面积为6*5=30，因为下标为5的2会让下标为4的6出栈并进行结算，下标为4的6左侧为-1，宽度计算为5-(-1)-1=5。
+
+单调栈还可以结合贡献法进行考察：
 
 例题：[907. 子数组的最小值之和](https://leetcode.cn/problems/sum-of-subarray-minimums/)
+
+分析：使用模版计算以arr[j]为最小值最大能向左向右扩展多远的距离。对于j位置，以arr[j]为最小值向左的子数组共有j - stack.peek()个，以arr[j]为最小值向右的子数组有i - j个，根据乘法原理，arr[j]对答案的贡献即为arr[j]\*(j-stack.peek())\*(i-j)。
 
 ```java
 class Solution {
@@ -3668,14 +3657,13 @@ class Solution {
         long ans = 0;
         Stack<Integer> stack = new Stack<>();
         int n = arr.length, mod = 10000_00007;
-        for(int r = 0; r <= n; r ++) {  // 循环到n
-            while(!stack.isEmpty() && (r == n || arr[stack.peek()] >= arr[r])) {
-                int i = stack.pop();  // 当前元素i找到右侧可扩展的最远边界
-                // 利用贡献法计算答案
-                ans += (long) arr[i] * (stack.isEmpty() ? i + 1 : i - stack.peek()) * (r - i); 
-                // 此时的栈顶表示i到左侧可扩展的最远边界，不存在为-1，均为开区间
+        stack.push(-1);
+        for(int i = 0; i <= n; i ++) {
+            while(stack.size() > 1 && (i == n || arr[stack.peek()] >= arr[i])) {
+                int j = stack.pop();
+                ans += (long) arr[j] * (j - stack.peek()) * (i - j);
             }
-            stack.push(r);
+            stack.push(i);
         }
         return (int) (ans % mod);
     }
@@ -3686,43 +3674,58 @@ class Solution {
 
 | 题号                                                         | 难度 | 知识点                         |
 | ------------------------------------------------------------ | ---- | ------------------------------ |
-| [496. 下一个更大元素 I](https://leetcode.cn/problems/next-greater-element-i/) | 简单 | 模版题                         |
-| [503. 下一个更大元素 II](https://leetcode.cn/problems/next-greater-element-ii/) | 中等 | 模版+环形数组                  |
-| [739. 每日温度](https://leetcode.cn/problems/daily-temperatures/) | 中等 | 模版题                         |
-| [84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) | 困难 | 模版题(左右扩展)               |
-| [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle/) | 困难 | 建模为84题                     |
+| [496. 下一个更大元素 I](https://leetcode.cn/problems/next-greater-element-i/) | 简单 | 右侧更大                         |
+| [503. 下一个更大元素 II](https://leetcode.cn/problems/next-greater-element-ii/) | 中等 | 右侧更大+环形数组                  |
+| [739. 每日温度](https://leetcode.cn/problems/daily-temperatures/) | 中等 | 右侧更大           
+| [1019. 链表中的下一个更大节点](https://leetcode.cn/problems/next-greater-node-in-linked-list/) | 中等 | 右侧更大 + 链表             |          |
+| [42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/) | 困难 | 左右第一个更大
+| [85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle/) | 困难 | 左右第一个更小，建模为84题                     |
 | [1856. 子数组最小乘积的最大值](https://leetcode.cn/problems/maximum-subarray-min-product/) | 中等 | 前缀和、单调栈、贡献法         |
 | [2104. 子数组范围和](https://leetcode.cn/problems/sum-of-subarray-ranges/) | 中等 | 单调栈、贡献法                 |
 | [1950. 所有子数组最小值中的最大值](https://leetcode.cn/problems/maximum-of-minimum-values-in-all-subarrays/) | 中等 | 单调栈、贡献法、思维           |
-| 选做[2281. 巫师的总力量和](https://leetcode.cn/problems/sum-of-total-strength-of-wizards/) | 困难 | 前缀和的前缀和、单调栈、贡献法 |
+| [2281. 巫师的总力量和](https://leetcode.cn/problems/sum-of-total-strength-of-wizards/) | 困难 | 前缀和的前缀和、单调栈、贡献法 |
 
-单调栈还可以用于优化状态转移方程，如以下例题。
+单调栈还有一种用法，用于维持求解答案的可能性。单调栈中所有对象按照一定单调性进行组织，某个对象进入单调栈时，会从栈顶开始依次淘汰栈中对后续答案求解没有帮助的对象。
 
-例题：[42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/)
+例题：[962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/)
 
-分析：本题需要寻找凹槽，对于每个元素，需要快速找到其右边第一个比它大的元素，使用单调递减栈。
+分析：下标$i,j$，满足$i<j,s[i]<s[j]$，要最大化$j-i$的值。
+
+对于左端点$j$，从左到右遍历下标，维护一个单调递减的栈（仅入队），因为靠右且更大的元素对答案没有贡献。
+
+对于右端点$i$，倒序遍历，一旦$s[j]>s[i]$，则更新答案并出栈，因为栈顶元素已经计算出了最大宽度，后续的答案不会更优。
 
 ```java
 class Solution {
-    public int trap(int[] height) {
+    public int maxWidthRamp(int[] nums) {
         Stack<Integer> stack = new Stack<>();
-        int ans = 0;
-        for(int i = 0; i < height.length; i ++) {
-            while(!stack.isEmpty() && height[stack.peek()] < height[i]) {
-                int low = stack.pop();
-                if(!stack.isEmpty()) {
-                    int leftIndex = stack.peek();
-                    int width = i - leftIndex - 1;
-                    int h = Math.min(height[leftIndex], height[i]);
-                    ans += width * (h - height[low]);
-                }
+        for(int i = 0; i < nums.length; i ++) {
+            if(stack.isEmpty() || nums[stack.peek()] > nums[i]) {
+                stack.push(i);
             }
-            stack.push(i);
+        }
+        int ans = 0;
+        for(int r = nums.length - 1; r > 0; r --) {
+            while(!stack.isEmpty() && nums[r] >= nums[stack.peek()]) {
+                ans = Math.max(ans, r - stack.pop());
+            }
         }
         return ans;
     }
 }
 ```
+
+时间复杂度：$O(n)$
+
+思考：本题还有一种非常巧妙的思路，将数组按照值排序，转换为买卖股票问题。时间复杂度：$O(n \log n)$，读者可以尝试求解。
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ------ |
+| [1124. 表现良好的最长时间段](https://leetcode.cn/problems/longest-well-performing-interval/) | 中等 | 前缀和 |
+
+从以下例题，学习如何用数组模拟栈和单调栈。
 
 例题：[321. 拼接最大数](https://leetcode.cn/problems/create-maximum-number/)
 
@@ -3783,51 +3786,10 @@ class Solution {
 }
 ```
 
-另外一种非典型的单调栈，用于求解如下问题：
 
-下标$i,j$，满足$i<j,s[i]<s[j]$，要最大化$j-i$的值。
+### 2.3 Queue
 
-对于左端点$j$，维护一个单调递减的栈（仅入队）。
-
-对于右端点$i$，倒序遍历，一旦$s[j]>s[i]$，则更新答案并出栈。
-
-例题：[962. 最大宽度坡](https://leetcode.cn/problems/maximum-width-ramp/)
-
-```java
-class Solution {
-    public int maxWidthRamp(int[] nums) {
-        Stack<Integer> stack = new Stack<>();
-        for(int i = 0; i < nums.length; i ++) {
-            if(stack.isEmpty() || nums[stack.peek()] > nums[i]) {
-                stack.push(i);
-            }
-        }
-        int ans = 0;
-        for(int r = nums.length - 1; r > 0; r --) {
-            while(!stack.isEmpty() && nums[r] >= nums[stack.peek()]) {
-                ans = Math.max(ans, r - stack.pop());
-            }
-        }
-        return ans;
-    }
-}
-```
-
-时间复杂度：$O(n)$
-
-思考：本题还有一种非常巧妙的思路，将数组按照值排序，转换为买卖股票问题。时间复杂度：$O(n \log n)$，读者可以尝试求解。
-
-练习题单
-
-| 题号                                                         | 难度 | 知识点 |
-| ------------------------------------------------------------ | ---- | ------ |
-| [1124. 表现良好的最长时间段](https://leetcode.cn/problems/longest-well-performing-interval/) | 中等 | 前缀和 |
-
-
-
-### 队列
-
-#### 单调队列
+#### 2.3.1 Monotonic Queue
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -3860,7 +3822,7 @@ class Solution {
 }
 ```
 
-#### 优先队列
+#### 2.3.2 Priority Queue
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -4006,9 +3968,9 @@ class Solution {
 
 
 
-### 树
+### 2.4 Tree
 
-#### 树与递归
+#### 2.4.1 Tree and Recursion
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -4147,8 +4109,7 @@ class Solution {
 | [112. 路径总和](https://leetcode.cn/problems/path-sum/)      | 简单 |
 | [113. 路径总和 II](https://leetcode.cn/problems/path-sum-ii/) | 中等 |
 
-#### 树的性质
-
+#### 2.4.2 Properties of Trees
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 中       |
@@ -4272,7 +4233,7 @@ class Solution {
 }
 ```
 
-#### 树的遍历
+#### 2.4.3 Tree Traversal
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -4542,7 +4503,7 @@ private void dfs(int v, int p, List<Integer>[] graph) {
 }
 ```
 
-#### 树的直径
+#### 2.4.4 The Diameter of the Tree
 
 树的直径，定义为树中任意两个节点之间最长路径的长度。
 
@@ -4674,7 +4635,7 @@ class Solution {
 在图章节，还会继续介绍**拓扑排序**的解法。
 
 
-#### 多叉树
+#### 2.4.5 Multiple Tree
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -4721,7 +4682,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [386. 字典序排数](https://leetcode.cn/problems/lexicographical-numbers/) | 中等 |
 
-#### 公共祖先问题
+#### 2.4.6 Lowest Common Ancestor
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -4767,7 +4728,7 @@ class Solution {
 
 如果树的结构未知，只有边的信息，则需要使用树上倍增求解最近公共祖先问题。
 
-#### 树上倍增
+#### 2.4.7 Tree Doubling
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -4925,9 +4886,9 @@ class Solution {
 ```
 
 
-#### 树形数据结构
+#### 2.4.8 Tree Data Structure
 
-##### 线段树
+##### 2.4.8.1 Segment Tree
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -5359,7 +5320,7 @@ public class SegmentTreeDynamic {
 
 
 
-##### 字典树
+##### 2.4.8.2 Trie
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 低       |
@@ -5499,7 +5460,7 @@ class Solution {
 
 
 
-##### 并查集
+##### 2.4.8.3 Union Find
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -5783,7 +5744,7 @@ class Solution {
 | [547. 省份数量](https://leetcode.cn/problems/number-of-provinces/) | 中等 |
 | [1697. 检查边长度限制的路径是否存在](https://leetcode.cn/problems/checking-existence-of-edge-length-limited-paths/) | 困难 |
 
-##### 哈夫曼树
+##### 2.4.8.4 Huffman Tree
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -5856,7 +5817,7 @@ D - 110
 
 需要二进制长度为$80*1+10*2+2*3+8*3=130$bit
 
-##### 树堆
+##### 2.4.8.5 Treap
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -6037,11 +5998,11 @@ class Treap {
 }
 ```
 
-### 图
+### 2.5 Graph Theroy
 
-#### 图的遍历
+#### 2.5.1 Graph Traversal
 
-##### 深度优先遍历
+##### 2.5.1.1 Depth First Search
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -6267,7 +6228,7 @@ class Solution {
 | [802. 找到最终的安全状态](https://leetcode.cn/problems/find-eventual-safe-states/) | 中等 |
 | [417. 太平洋大西洋水流问题](https://leetcode.cn/problems/pacific-atlantic-water-flow/) | 中等 |
 
-##### 广度优先遍历
+##### 2.5.1.2 Breadth First Search
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -6495,7 +6456,7 @@ class Solution {
 | [279. 完全平方数](https://leetcode.cn/problems/perfect-squares/) | 中等 |
 | [752. 打开转盘锁](https://leetcode.cn/problems/open-the-lock/) | 中等 |
 
-#### 最小生成树
+#### 2.5.2 Minimum Spanning Tree
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -6504,7 +6465,7 @@ class Solution {
 
 例题：[1584. 连接所有点的最小费用](https://leetcode.cn/problems/min-cost-to-connect-all-points/)
 
-##### Kruskal算法
+##### 2.5.2.1 Kruskal
 Kruskal算法需要依赖并查集进行快速环检测。
 ```java
 class Solution {
@@ -6560,7 +6521,7 @@ class Solution {
 }
 ```
 判断是否联通：通过并查集计算联通分量判断。
-##### Prim算法
+##### 2.5.2.2 Prim
 
 ```java
 class Solution {
@@ -6598,7 +6559,7 @@ class Solution {
 ```
 判断是否联通：遍历visited数组，查看每个元素是否访问到。
 
-#### 带权图最短路径
+#### 2.5.3 Shortest Path of Weighted Graph
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -6617,7 +6578,7 @@ class Solution {
 
 例题：[743. 网络延迟时间](https://leetcode.cn/problems/network-delay-time/)
 
-##### Dijkstra算法
+##### 2.5.3.1 Dijkstra
 
 采用邻接表方式实现
 
@@ -6656,7 +6617,7 @@ class Solution {
 }
 ```
 
-##### BellmanFord算法
+##### 2.5.3.2 BellmanFord
 
 Bellan核心是松弛操作。
 
@@ -6748,7 +6709,7 @@ class Solution {
 }
 ```
 
-##### SPFA算法
+##### 2.5.3.3 SPFA
 
 SPFA是一种优化后的BellmanFord算法，类似于BFS，但每个节点可能入队出队多次。
 
@@ -6815,7 +6776,7 @@ class Solution {
 
 以上代码，如果图中存在负权环，则while循环可能一直无法退出。解决方案，用一个count数组记录每个节点入队次数，若入队次数大于$n$，说明存在负权环（见被注释的代码）。
 
-##### Floyed算法
+##### 2.5.3.4 Floyed
 ```java
 class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
@@ -6846,7 +6807,7 @@ class Solution {
 ```
 Floyed算法检测负权环：松弛完毕后，若发现$dis[v][v]<0$，说明存在负权环。
 
-#### 拓扑排序
+#### 2.5.4 Topological Sort
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -6987,9 +6948,231 @@ class Solution {
 | ------------------------------------------------------------ | ---- | ----------------------------------- |
 | [2603. 收集树中金币](https://leetcode.cn/problems/collect-coins-in-a-tree/) | 中等 | 拓扑排序，310题基础上再深入思考一点 |
 
+#### 2.5.5 Cycle Detection
+
+| 面试概率 | 笔试概率 |
+| -------- | -------- |
+| 中       | 中       |
+
+对于无向图的环检测，在深度优先遍历中已经进行了介绍。同时，也可以采用并查集进行解决。
+
+对于有向图的环检测，可以基于拓扑排序实现，采用深度优先遍历，则需要额外记录遍历的信息。
+
+例题：[207. 课程表](https://leetcode.cn/problems/course-schedule/)
+
+分析：新增一个onPath数组，用于标识当前节点是否已经在访问路径中出现，若出现，说明存在环，此时无法完成所有课程的学习。
+
+```java
+class Solution {
+    private List<Integer>[] g;
+    private boolean[] visited;
+    private boolean[] onPath;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        g = new List[numCourses];
+        visited = new boolean[numCourses];
+        onPath = new boolean[numCourses];
+        Arrays.setAll(g, k -> new ArrayList<>());
+        for(int[] pre : prerequisites) {
+            g[pre[1]].add(pre[0]);
+        }
+        for(int i = 0; i < numCourses; i ++) {
+            if(!visited[i] && dfs(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int u) {  // 以u出发是否存在环
+        visited[u] = true;
+        onPath[u] = true;   // visited[u] = 1
+        for(int v : g[u]) {
+            if(!visited[v]) {  // visited[v] == 0
+                if(dfs(v)) {
+                    return true;
+                }
+            }else if(onPath[v]) {  // visited[v] == 1
+                return true;
+            }
+        }
+        onPath[u] = false;  // visited[u] = 2;
+        return false;
+    }
+}
+```
+
+也可以优化visited数组和onPath数组为一个visited的整型数组。
+
+visited[u] = 0，说明u节点未曾访问。
+
+visited[u] = 1，说明u节点正在访问中(对应onPath[u]=true)。 
+
+visited[u] = 2，说明u节点已经访问完毕(对应onPath[u]=false)。
+
+#### 2.5.6 Bridge and Cutting Point
+
+| 面试概率 | 笔试概率 |
+| -------- | -------- |
+| 低       | 低       |
+
+桥：对于无向图，如果删除一条边后，图的连通分量数量发生了变化，则这一条边是桥。
+
+割点：对于无向图，如果删除了一个顶点（顶点邻边也删除），图的连通分量数量发生了变化，则这个点是割点。
+
+求解桥的算法为Tarjan算法，其核心思想如下：
+
+判断u到v的边是不是桥？看能否通过v从另一条路回到u，或者u之前的顶点。若存在路径，说明u-v边不是桥。
+
+使用数组ord[v]，表示顶点v在DFS中的访问顺序。
+
+使用数组low[v]表示DFS过程中顶点v能到达的最小ord值。
+
+例题：[1192. 查找集群内的关键连接](https://leetcode.cn/problems/critical-connections-in-a-network/)
+
+```java
+class Solution {
+    private List<Integer>[] g;
+    private boolean[] visited;
+    private int[] ord;
+    private int[] low;
+    private int id;
+    private List<List<Integer>> ret;
+
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+        g = new List[n];
+        visited = new boolean[n];
+        ord = new int[n];
+        low = new int[n];
+        ret = new ArrayList<>();
+        Arrays.setAll(g, k -> new ArrayList<>());
+        for(List<Integer> con : connections) {
+            g[con.get(0)].add(con.get(1));
+            g[con.get(1)].add(con.get(0));
+        }
+        for(int i = 0; i < n; i ++) {
+            if(!visited[i]) {
+                dfs(i, i);
+            }
+        }
+        return ret;
+    }
+
+    private void dfs(int u, int p) {
+        visited[u] = true;
+        ord[u] = id ++;
+        low[u] = ord[u];
+        for(int v : g[u]) {
+            if(!visited[v]) {
+                dfs(v, u);
+                low[u] = Math.min(low[u], low[v]);
+                if(low[v] > ord[u]) {
+                    ret.add(Arrays.asList(u, v));
+                }
+            }else if(v != p){
+                low[u] = Math.min(low[u], low[v]);
+            }
+        }
+    }
+}
+```
+
+如果点u有一个孩子节点v，满足low[v] >= ord[u]，则u是割点。对于根节点，需要特殊判断。根节点如果有1个以上的孩子，则根节点是割点。其中孩子定义为DFS遍历树上的节点。
+
+```java
+public void dfs(int u, int p, List<Integer>[] g) {
+    visited[u] = true;
+    low[u] = ord[u] = count++;
+    int child = 0;
+    for(int v : g[u]) {
+        if(!visited[v]) {
+            dfs(v, u, g);
+            low[u] = Math.min(low[u], low[v]);
+            if(v != p && low[v] >= ord[u]) {
+                ret.add(u);
+            }
+            child ++;
+            if(u == p && child > 1) {
+                ret.add(u);
+            }
+        }else if(v != p) {
+            low[u] = Math.min(low[u], low[v]);
+        }
+    }
+}
+```
 
 
-#### 哈密尔顿路径
+#### 2.5.7 Connected Component
+
+无向图的连通分量，可以采用DFS/BFS/并查集进行求解。
+
+有向图的连通分量，可以基于Tarjan算法进行求解。Tarjan算法的思想在桥和割点章节已经进行了介绍。
+
+当ord[u] == low[u]时，u的子树可以构成一个强连通分量。
+
+例题：[2360. 图中的最长环](https://leetcode.cn/problems/longest-cycle-in-a-graph/)
+
+分析：图中的每一个环即为一个强连通分量。使用Tarjan算法求出所有连通分量即可。
+
+```java
+class Solution {
+    private int[] ord;
+    private int[] low;
+    private int[] visited;
+    private int[] edges;
+    private int id;
+    private int ans;
+    private LinkedList<Integer> path;
+
+    public int longestCycle(int[] edges) {
+        int n = edges.length;
+        visited = new int[n];
+        ord = new int[n];
+        low = new int[n];
+        this.edges = edges;
+        path = new LinkedList<>();
+        for(int i = 0; i < n; i ++) {
+            if(visited[i] == 0) {
+                dfs(i);
+            }
+        }
+        return ans == 1 ? -1 : ans;
+    }
+
+    private void dfs(int u) {
+        ord[u] = low[u] = id ++;
+        visited[u] = 1;
+        path.addLast(u);
+        if(edges[u] != -1) {
+            int v = edges[u];
+            if(visited[v] == 0) {
+                dfs(v);
+                low[u] = Math.min(low[u], low[v]);
+            }else if(visited[v] == 1) {
+                low[u] = Math.min(low[u], low[v]);
+            }
+        }
+        if(ord[u] == low[u]) {
+            int count = 1;
+            int v = path.removeLast();
+            visited[v] = 2;
+            while(v != u) {
+                count ++;
+                v = path.removeLast();
+                visited[v] = 2;
+            }
+            ans = Math.max(ans, count);
+        }
+    }
+}
+```
+
+
+
+
+
+#### 2.5.8 Hamiltonian Path
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 低       | 低       |
@@ -7103,7 +7286,7 @@ class Solution {
 ```
 
 时间复杂度：$O(3^{mn})$，由于不能重复访问同一个格子，实际执行效率比记忆化搜索更快。
-#### 欧拉路径
+#### 2.5.9 Eulerian Path
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -7196,8 +7379,101 @@ class Solution {
 ```
 时间复杂度：$O(n\times k^n)$
 
+#### 2.5.10 Base Ring Tree
 
-#### 网络流
+| 面试概率 | 笔试概率 |
+| -------- | -------- |
+| 低       | 中       |
+
+对于有$n$个节点的树，必定有$n-1$条边；反之由$n-1$条无向边组成的连通图必定是一颗树。若有$n$个节点$n$条边的无向连通图，则必定是在一棵树上的任意两点直接连接一条边构成的。$n$个节点$n$条边的无向连通图，称之为基环树。
+
+基环树森林可以看作是许多基环树的集合，同样是$n$个节点$n$条边，但不一定保证连通。
+
+内向树和外向树：可以视作有向图的基环树，同样是$n$个节点$n$条边，对于内向树，每个点仅有一条出边；对于外向树，每个点仅有一条入边。
+
+例题：[2127. 参加会议的最多员工数](https://leetcode.cn/problems/maximum-employees-to-be-invited-to-a-meeting/)
+
+分析：可以分析出，每个连通块必定有且仅有一个环。若环大小大于2，则圆桌的最大员工数即为最大的基环大小。若环的大小等于2，则沿着成环的两个节点反向进行深度优先遍历，找出最长的链，拼成一个圆。
+
+遍历基环，可以从拓扑排序后入度为1的节点出发在图上搜索。
+
+遍历树枝，可以从基环与树枝的连接处为起点，顺着反图搜索树枝（入度为0的点）。
+
+```java
+class Solution {
+    private List<Integer>[] rg;  // 反图
+    private int[] deg;
+
+    public int maximumInvitations(int[] favorite) {
+        int n = favorite.length;
+        rg = new List[n];
+        deg = new int[n];
+        Arrays.setAll(rg, e -> new ArrayList<>());
+        for(int i = 0; i < n; i ++) {
+            int v = favorite[i];
+            rg[v].add(i);
+            ++deg[v]; 
+        }
+        // 拓扑排序，剪掉树枝
+        Queue<Integer> queue = new ArrayDeque<>();
+        for(int i = 0; i < n; i ++) {
+            if(deg[i] == 0) {
+                queue.offer(i);
+            }
+        }
+        while(!queue.isEmpty()) {
+            int u = queue.poll();
+            int v = favorite[u];
+            deg[v] --;
+            if(deg[v] == 0) {
+                queue.offer(v);
+            }
+        }
+        int maxRingSize = 0, sumChainSize = 0;
+        for(int i = 0; i < n; i ++) {
+            if(deg[i] <= 0) {
+                continue;
+            }
+            // 遍历基环上的点(拓扑排序后入度大于0)
+            deg[i] = -1;
+            int ringSize = 1;
+            for(int v = favorite[i]; v != i; v = favorite[v]) {
+                deg[v] = -1;  // 避免重复访问
+                ringSize ++;
+            }
+            if(ringSize == 2) {
+                sumChainSize += rdfs(i) + rdfs(favorite[i]); // 累加两条最长链
+            }else{
+                maxRingSize = Math.max(maxRingSize, ringSize);
+            }
+        }
+        return Math.max(maxRingSize, sumChainSize);
+    }
+
+    private int rdfs(int u) {
+        int depth = 1;
+        for(int v : rg[u]) {
+            if(deg[v] == 0) {
+                depth = Math.max(depth, rdfs(v) + 1);
+            }
+        }
+        return depth;
+    }
+}
+```
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点                     |
+| ------------------------------------------------------------ | ---- | -------------------------- |
+| [2359. 找到离给定两个节点最近的节点](https://leetcode.cn/problems/find-closest-node-to-given-two-nodes/) | 中等 | 基环树+枚举距离            |
+| [2360. 图中的最长环](https://leetcode.cn/problems/longest-cycle-in-a-graph/) | 困难 | 基环树+求环/Tarjan连通分量 |
+| [2836. 在传球游戏中最大化函数值](https://leetcode.cn/problems/maximize-value-of-function-in-a-ball-passing-game/) | 困难 | 基环树/树上倍增            |
+| [2876. 有向图访问计数](https://leetcode.cn/problems/count-visited-nodes-in-a-directed-graph/) | 困难 | 基环树                     |
+
+
+
+#### 2.5.11 Network Flow
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -7341,7 +7617,7 @@ public class Solution {
 }
 ```
 
-#### 匹配问题
+#### 2.5.12 Bipartite Matching
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -7419,7 +7695,35 @@ class Solution {
     }
 }
 ```
-#### 图论总结
+#### 2.5.13 Summarization
+
+| 算法/问题      | 无向/有向  | 无权/带权  | 思想/方法                      | 时间复杂度   |
+| -------------- | ---------- | ---------- | ------------------------------ | ------------ |
+| 无向图连通分量 | 无向       | 无影响     | DFS/BFS/并查集                 | $O(m+n)$     |
+| 无向图环检测   | 无向       | 无影响     | DFS/BFS/并查集                 | $O(m+n)$     |
+| 二分图检测     | 无向       | 无影响     | DFS/BFS                        | $O(m+n)$     |
+| 单源路径       | 均可       | 无影响     | DFS/BFS(最短)                  | $O(m+n)$     |
+| 桥和割点       | 无向       | 无影响     | Tarjan算法：ord,low数组        | $O(m+n)$     |
+| 哈密尔顿路径   | 无向       | 无影响     | DFS+状态压缩                   | $O(n·2^n)$   |
+| 欧拉路径       | 均可       | 无影响     | DFS+删边                       | $O(m+n)$     |
+| 洪水填充       | 无向       | 无影响     | DFS+BFS                        | $O(m+n)$     |
+| 最小生成树     | 无向       | 带权       | Kruskal(并查集)/Prim(优先队列) | $O(m\log m)$ |
+| 无权图最短路径 | 均可       | 无权       | BFS                            | $O(m+n)$     |
+| 带权图最短路径 | 均可       | 带权       | Dijkstra+优先队列              | $O(m\log m)$ |
+|                |            |            | BellmanFord                    | $O(mn)$      |
+|                |            |            | SPFA                           | $O(km)$      |
+|                |            |            | Floyed                         | $O(n^3)$     |
+| 有向图环检测   | 有向       | 无影响     | DFS+onPath/拓扑排序            | $O(m+n)$     |
+| 拓扑排序       | 有向       | 无影响     | BFS/DFS逆序                    | $O(m+n)$     |
+| 有向图连通分量 | 有向       | 无影响     |                                |              |
+| 网络流         | 有向       | 权值为流量 |                                |              |
+| 匹配           | 有向二分图 | 权值为1    | 匈牙利算法                     |              |
+|                |            |            |                                |              |
+|                |            |            |                                |              |
+|                |            |            |                                |              |
+|                |            |            |                                |              |
+
+
 以一道综合题，串联图论知识。
 
 例题：[1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/)
@@ -7434,8 +7738,8 @@ class Solution {
 
 参考题解：https://leetcode.cn/problems/path-with-minimum-effort/solutions/460667/javasi-chong-jie-fa-zui-duan-lu-zui-xiao-sheng-che/
 
-### 数据结构设计
-#### LRU
+### 2.6 Data Structure Design
+#### 2.6.1 LRU
 例题：[146. LRU 缓存](https://leetcode.cn/problems/lru-cache)
 
 分析：
@@ -7535,7 +7839,7 @@ public class LRUCache {
     }
 }
 ```
-#### LFU
+#### 2.6.2 LFU
 
 例题：[460. LFU 缓存](https://leetcode.cn/problems/lfu-cache/)
 
@@ -7625,9 +7929,9 @@ class LFUCache {
 }
 ```
 
-## Part 3 算法
+## Part 3 Algorithm
 
-### 数据规模与时间复杂度
+### 3.1 Data Scale and Time Complexity
 
 | 时间复杂度     | 数据规模      | 常见算法                  |
 | -------------- | ------------- | ------------------------- |
@@ -7670,9 +7974,9 @@ class Solution {
 }
 ```
 
-#### 优化算法
+#### 3.1 Optimization Algorithm
 
-##### 利用单调栈/队列优化
+##### 3.1.1 Using Monotonic Stack/Queue
 例题：[2866. 美丽塔 II](https://leetcode.cn/problems/beautiful-towers-ii/)
 
 分析：采用暴力，枚举山顶的位置，时间复杂度$O(n^2)$，会超时，采用单调栈优化。
@@ -7713,17 +8017,17 @@ class Solution {
 }
 ```
 时间复杂度：$O(n)$
-##### 利用二分优化
-##### 利用线段树优化
-##### 利用哈希表优化
+##### 3.1.2 Using Binary Search
+##### 3.1.3 Using Segment Tree
+##### 3.1.4 Using Hashtable
 
-### 双指针
+### 3.2 Two Pointers 
 
-#### 快慢指针
+#### 3.2.1 Fast and Slow Pointers
 
 参考链表**快慢指针**章节
 
-#### 首尾指针
+#### 3.2.2 Head and Tail Pointers
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -7801,7 +8105,7 @@ class Solution {
 | [16. 最接近的三数之和](https://leetcode.cn/problems/3sum-closest/) | 中等 |
 | [11. 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water/) | 中等 |
 
-#### 滑动窗口
+#### 3.2.3 Sliding Window
 
 滑动窗口的核心：两个不回退的指针顺序遍历数组。
 
@@ -7909,7 +8213,7 @@ class Solution {
 }
 ```
 
-#### 指针计数
+#### 3.2.4 Pointer Counting
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -7942,7 +8246,7 @@ class Solution {
 
 时间复杂度：$O(n^2)$
 
-### 排序
+### 3.3 Sorting Algorithm
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -8410,7 +8714,7 @@ public void bucketSort(int[] nums, int interval) {
 | ------------------------------------------------------------ | ---- |
 | [912. 排序数组](https://leetcode.cn/problems/sort-an-array/) | 中等 |
 
-### 递归、回溯与分治
+### 3.4 Recursive, Backtracking and Divide and Conquer
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -8658,7 +8962,7 @@ class Solution {
 | [169. 多数元素](https://leetcode.cn/problems/majority-element/) | 简单 |
 | [23. 合并 K 个升序链表](https://leetcode.cn/problems/merge-k-sorted-lists/) | 困难 |
 
-### 二分查找
+### 3.5 Binary Search
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -8995,11 +9299,11 @@ class Solution {
 | [1011. 在 D 天内送达包裹的能力](https://leetcode.cn/problems/capacity-to-ship-packages-within-d-days/) | 中等 |
 | [1552. 两球之间的磁力](https://leetcode.cn/problems/magnetic-force-between-two-balls/) | 中等 |
 
-### 贪心
+### 3.6 Greedy Algorithm
 
 贪心算法在求解时，总是做出在当前看来是最好的选择，把求解的问题分成若干个子问题。对每个子问题求解，得到子问题的局部最优解。子问题的局部最优解合成原来问题的一个解。贪心算法正确性的关键在于证明贪心选择性质，即一个问题的整体最优解可以通过一系列局部最优解的选择达到。
 
-#### 区间安排问题
+#### 3.6.1 Interval Arrangement
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -9122,7 +9426,7 @@ second: [x2,y2], [x4,y4]
 | [759. 员工空闲时间](https://leetcode.cn/problems/employee-free-time/) | 困难 |
 | [57. 插入区间](https://leetcode.cn/problems/insert-interval/) | 中等 |
 
-#### 覆盖问题
+#### 3.6.2 Covering Problem
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -9207,7 +9511,7 @@ class Solution {
 
 思考：如何用优先队列的方法解决例题1024？
 
-#### 最大数字问题
+#### 3.6.3 Maximum Number Problem
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -9248,7 +9552,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [316. 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/) | 中等 |
 
-#### 配对问题
+#### 3.6.4 Pairing Problem
 例题：[2576. 求出最多标记下标](https://leetcode.cn/problems/find-the-maximum-number-of-marked-indices/)
 
 分析：若$2*nums[i]\le nums[j]$，称$nums[i]$和$nums[j]$匹配。将数组从小到大排序后，如果存在$k$对匹配，一定能让最小的$k$个数和最大的$k$个数匹配。
@@ -9322,7 +9626,7 @@ class Solution {
 | [2856. 删除数对后的最小数组长度](https://leetcode.cn/problems/minimum-array-length-after-pair-removals/) | 中等 | 例题结论运用 |
 
 
-#### 反悔贪心
+#### 3.6.5 Regret-based Greedy
 
 在例题[122. 买卖股票的最佳时机 II](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii/)中，我们采用了贪心算法，由于可以在同一天出售，且限制了最多同时持有一只股票，贪心策略为，只要$arr[i]>arr[i-1]$，我们就进行卖出。
 
@@ -9422,9 +9726,9 @@ class Solution {
 | ------------------------------------------------------------ | ---- | ------------- |
 | [1642. 可以到达的最远建筑](https://leetcode.cn/problems/furthest-building-you-can-reach/) | 中等 | 反悔贪心+优先队列 |
 
-### 动态规划
+### 3.7 Dynamic Programming
 
-#### 记忆化搜索与动态规划
+#### 3.7.1 Memory-based Search
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -9494,14 +9798,14 @@ class Solution {
 }
 ```
 
-#### 线性DP
+#### 3.7.2 Linear Dynamic Programming
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 高       |
 
 
-##### 最大子数组和
+##### 3.7.2.1 Maximum Sum of Subarray
 
 例题：[53. 最大子数组和](https://leetcode.cn/problems/maximum-subarray/)
 
@@ -9590,13 +9894,37 @@ class Solution {
 
 时间复杂度：$O(m^2n)$
 
-##### 买卖股票系列问题
+##### 3.7.2.2 Series of Problems Related to Buying and Selling Stocks
 
 > 只能买卖一次
 
 例题：[121. 买卖股票的最佳时机](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock/)
 
 分析：用一变量记录买股票的最低价格$minPrice$，初始化为$price[0]$。一变量记录遍历过程中$price[i]-minPrice$的最大值，初始化为0。
+
+进阶：在本题基础上增加难度，请看例题。
+
+例题：[2874. 有序三元组中的最大值 II](https://leetcode.cn/problems/maximum-value-of-an-ordered-triplet-ii/)
+
+分析：
+
+枚举$j$，预处理$j$左侧元素的最大值和右侧元素的最大值。
+
+枚举$k$，则需要维护$k$左侧$nums[i]-nums[j]$的最大值。
+
+```java
+class Solution {
+    public long maximumTripletValue(int[] nums) {
+        long ans = 0, maxDiff = 0, preMax = 0;
+        for(int num : nums) {
+            ans = Math.max(ans, maxDiff * num);
+            maxDiff = Math.max(maxDiff, preMax - num);
+            preMax = Math.max(preMax, num);
+        }
+        return ans;
+    }
+}
+```
 
 > 无限次买卖股票
 
@@ -9706,7 +10034,8 @@ class Solution {
 | [309. 买卖股票的最佳时机含冷冻期](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-with-cooldown/) | 中等 |
 | [552. 学生出勤记录 II](https://leetcode.cn/problems/student-attendance-record-ii/) | 困难 |
 
-##### 打家劫舍系列问题
+##### 3.7.2.3 Series of Problems Related to House Robber
+
 
 例题：[198. 打家劫舍](https://leetcode.cn/problems/house-robber/)
 
@@ -9811,12 +10140,12 @@ class Solution {
 | [2008. 出租车的最大盈利](https://leetcode.cn/problems/maximum-earnings-from-taxi/) | 中等 |
 | [2830. 销售利润最大化](https://leetcode.cn/problems/maximize-the-profit-as-the-salesman/) | 中等 |
 
-#### 序列DP
+#### 3.7.3 Sequence Dynamic Programming
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 中       |
-##### 最长上升子序列
+##### 3.7.3.1 Longest Increasing Subsequence
 
 例题：[300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/)
 
@@ -9914,7 +10243,7 @@ class Solution {
 | [873. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/length-of-longest-fibonacci-subsequence/) | 中等 |
 | [673. 最长递增子序列的个数](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/) | 中等 |
 
-##### 最长公共子序列
+##### 3.7.3.2 Longest Common Subsequence
 
 例题：[1143. 最长公共子序列](https://leetcode.cn/problems/longest-common-subsequence/)
 
@@ -10065,7 +10394,7 @@ class Solution {
 | [1216. 验证回文字符串 III](https://leetcode.cn/problems/valid-palindrome-iii/) | 困难 |
 |                                                              |      |
 
-##### 模式匹配
+##### 3.7.3.3 Pattern Matching
 
 例题：[10. 正则表达式匹配](https://leetcode.cn/problems/regular-expression-matching/)
 
@@ -10104,7 +10433,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [44. 通配符匹配](https://leetcode.cn/problems/wildcard-matching/) | 困难 |
 
-#### 路径问题
+#### 3.7.4 Path 
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -10202,7 +10531,7 @@ class Solution {
 | [931. 下降路径最小和](https://leetcode.cn/problems/minimum-falling-path-sum/) | 中等 |
 
 
-#### 树形DP
+#### 3.7.5 Tree Dynamic Programming
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -10289,7 +10618,7 @@ class Solution {
 | [1373. 二叉搜索子树的最大键值和](https://leetcode.cn/problems/maximum-sum-bst-in-binary-tree/) | 困难 |
 | [979. 在二叉树中分配硬币](https://leetcode.cn/problems/distribute-coins-in-binary-tree/) | 中等 |
 
-#### 换根DP
+#### 3.7.6 Reroot Dynamic Programming
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -10409,7 +10738,7 @@ class Solution {
 | -------- | -------- |
 | [2858. 可以到达每一个节点的最少边反转次数](https://leetcode.cn/problems/minimum-edge-reversals-so-every-node-is-reachable/) |困难|
 | [2581. 统计可能的树根数目](https://leetcode.cn/problems/count-number-of-possible-root-nodes/) |困难|
-#### 区间DP
+#### 3.7.7 Interval Dynamic Programming
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -10533,7 +10862,7 @@ class Solution {
 | [664. 奇怪的打印机](https://leetcode.cn/problems/strange-printer/) | 困难 |
 | [471. 编码最短长度的字符串](https://leetcode.cn/problems/encode-string-with-shortest-length/) | 困难 |
 
-#### 状态压缩DP
+#### 3.7.8 State Compression Dynamic Programming
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -10770,7 +11099,7 @@ class Solution {
 }
 ```
 
-#### 极大化极小问题
+#### 3.7.9 Maximize-Minimize Problem
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -10917,7 +11246,7 @@ class Solution {
 | [877. 石子游戏](https://leetcode.cn/problems/stone-game/)    | 中等 |
 | [1406. 石子游戏 III](https://leetcode.cn/problems/stone-game-iii/) | 困难 |
 
-#### 背包问题
+#### 3.7.10 Knapsack Problem
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -11185,7 +11514,7 @@ Deque<Integer> group2 = IntStream.range(0, n).filter(e -> !path[target].contains
 | [2218. 从栈中取出 K 个硬币的最大面值和](https://leetcode.cn/problems/maximum-value-of-k-coins-from-piles/)      | 困难 | 分组背包，前缀和 |
 
 
-#### 数位DP
+#### 3.7.11 Digital Dynamic Planning
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -11305,7 +11634,7 @@ class Solution {
 | [788. 旋转数字](https://leetcode.cn/problems/rotated-digits/) | 中等 |
 | [1067. 范围内的数字计数](https://leetcode.cn/problems/digit-count-in-range/) | 困难 |
 
-### 状态机
+###  3.8 State Machine
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -11369,12 +11698,12 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [8. 字符串转换整数 (atoi)](https://leetcode.cn/problems/string-to-integer-atoi/) | 中等 |
 
-### 随机算法
+### 3.9 Random Algorithm
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 低       | 低       |
-#### 随机采样
+#### 3.9.1 Random Sampling
 
 例题：[528. 按权重随机选择](https://leetcode.cn/problems/random-pick-with-weight/)
 
@@ -11420,7 +11749,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [497. 非重叠矩形中的随机点](https://leetcode.cn/problems/random-point-in-non-overlapping-rectangles/) | 中等 |
 
-#### 拒绝采样
+#### 3.9.2 Rejection Sampling
 
 给你一个函数rand10，可以生成1～10之间的随机数，写一个函数rand7，生成1～7之间的随机数。
 
@@ -11455,7 +11784,7 @@ class Solution extends SolBase {
 | ------------------------------------------------------------ | ---- |
 | [478. 在圆内随机生成点](https://leetcode.cn/problems/generate-random-point-in-a-circle/) | 中等 |
 
-#### 多次采样
+#### 3.9.3 Fisher–Yates Shuffle
 
 例题：[384. 打乱数组](https://leetcode.cn/problems/shuffle-an-array/)
 
@@ -11492,7 +11821,7 @@ class Solution {
 
 等概率抽取三名不同的获奖用户？执行上述代码三步，取最后3个元素。
 
-#### 蓄水池采样
+#### 3.9.4 Reservoir Sampling
 
 从数据流中抽取$k$个元素，使得数据流中每一个元素能够被等概率抽取。
 
