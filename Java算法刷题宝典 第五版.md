@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.8 20231002更新
+版本号1.0.9 20231003更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -6580,7 +6580,57 @@ class Solution {
 
 ##### 2.5.3.1 Dijkstra
 
-采用邻接表方式实现
+分析：dijkstra算法用于求解不包含负权边的单源最短路径问题，其思想如下。
+
+定义dist[v]表示从起点s到v的最短路径。
+
+初始化dist数组Integer.MAX_VALUE, 然后dist[s]赋值为0。
+
+每一轮，遍历dist数组中未访问过的最小距离，假设找到节点v，此时dist[v]一定是从s到v的最短路径（不包含负权边，从其他节点出发的权值一定大于dist[v]）。
+
+将dist[v]设置为已访问，遍历v的相邻节点u，如果从v到u的距离更短，即(dist[v] + d < dist[u])，则更新dist[u]。
+
+所有节点都更新后，退出循环。
+
+```java
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        int[] dist = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[--k] = 0;
+        boolean[] visited = new boolean[n];
+        List<int[]>[] g = new List[n];
+        Arrays.setAll(g, e -> new ArrayList<>());
+        for(int[] t : times) {
+            g[t[0]-1].add(new int[]{t[1]-1, t[2]});
+        }
+        while(true) {
+            int minDis = Integer.MAX_VALUE, minV = -1;
+            for(int i = 0; i < n; i ++) {
+                if(!visited[i] && dist[i] < minDis) {
+                    minDis = dist[i];
+                    minV = i;
+                }
+            }
+            if(minV == -1) {
+                break;
+            }
+            visited[minV] = true;
+            for(int[] adj : g[minV]) {
+                int u = adj[0], d = adj[1];
+                if(!visited[u] && dist[minV] + d < dist[u]) {
+                    dist[u] = dist[minV] + d;
+                }
+            }
+        }
+        int max = Arrays.stream(dist).max().getAsInt();
+        return max == Integer.MAX_VALUE ? -1 : max;
+    }
+}
+```
+时间复杂度：$O(V^2)$
+
+继续分析，上述代码的性能瓶颈在于，每次需要遍历出dist数组未访问过的最小dist值，可以通过优先队列进行优化。
 
 ```java
 class Solution {
@@ -6599,7 +6649,7 @@ class Solution {
         dist[k] = 0;
         while(!queue.isEmpty()) {
             int cur = queue.poll()[0];
-            if(visited[cur]) {
+            if(visited[cur]) {  // 每一个顶点可能会入队多次
                 continue;
             }
             visited[cur] = true;
@@ -6616,7 +6666,51 @@ class Solution {
     }
 }
 ```
+时间复杂度：$O(E\log E)$，优先队列中最多有E个元素。
 
+如果图为稠密图，采用未优化过的Dijstra算法性能可能更高。
+
+例题：[2662. 前往目标的最小代价](https://leetcode.cn/problems/minimum-cost-of-a-path-with-special-roads/)
+
+分析：由于是二维，采用位运算压缩的方式，使用哈希表来记录最短路径。对于坐标(x, y)，用一个long类型数据x << 32 | y 表示。
+
+```java
+class Solution {
+    public int minimumCost(int[] start, int[] target, int[][] specialRoads) {
+        long end = (long) target[0] << 32 | target[1];
+        Map<Long, Integer> dis = new HashMap<>();
+        dis.put(end, Integer.MAX_VALUE);
+        dis.put((long) start[0] << 32 | start[1], 0);
+        Set<Long> visited = new HashSet<>();
+        while(true) {
+            long v = -1;
+            int minD = Integer.MAX_VALUE;
+            for(Map.Entry<Long, Integer> entry : dis.entrySet()) {
+                if(!visited.contains(entry.getKey()) && (entry.getValue() < minD)) {
+                    v = entry.getKey();
+                    minD = entry.getValue();
+                }
+            }
+            if(v == end) {
+                return minD;
+            }
+            visited.add(v);
+            int vx = (int) (v >> 32), vy = (int) (v & Integer.MAX_VALUE);
+            dis.merge(end, minD + Math.abs(target[0] - vx) + Math.abs(target[1] - vy), Math::min);
+            for(int[] road : specialRoads) {
+                int d = minD + Math.abs(road[0] - vx) + Math.abs(road[1] - vy) + road[4];
+                long u = (long) road[2] << 32 | road[3];
+                if(d < dis.getOrDefault(u, Integer.MAX_VALUE)) {
+                    dis.put(u, d);
+                }
+            }
+        }
+    }
+}
+```
+时间复杂度：$O(n^2)$，$n$为specialRoads的长度。
+
+思考：体会BFS算法和Dijkstra算法的异同。
 ##### 2.5.3.2 BellmanFord
 
 Bellan核心是松弛操作。
