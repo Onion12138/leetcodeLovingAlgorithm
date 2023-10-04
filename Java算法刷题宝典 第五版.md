@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.9 20231003更新
+版本号1.0.10 20231004更新
 [TOC]
 ## Preface to the Fifth Edition
 
