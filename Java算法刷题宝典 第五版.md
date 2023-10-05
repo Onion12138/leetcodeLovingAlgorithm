@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.11 20231005更新
+版本号1.0.12 20231005更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -322,6 +322,90 @@ public class Solution {
 - 自反性：$A \oplus B \oplus B = A$
 - $a \oplus b = c \to a \oplus c = b$
 
+应用一：利用异或交换a, b：
+```java
+a = a ^ b
+b = a ^ b
+a = a ^ b
+```
+
+应用二：利用异或寻找缺失数字
+
+例题：[268. 丢失的数字](https://leetcode.cn/problems/missing-number/)
+
+```java
+class Solution {
+    public int missingNumber(int[] nums) {
+        int all = 0, missing = 0;
+        for(int i = 0; i < nums.length; i ++) {
+            all ^= i;
+            missing ^= nums[i];
+        }
+        all ^= nums.length;
+        return all ^ missing;
+    }
+}
+```
+
+应用三：找出出现特殊次数的数字
+
+类型1：仅一个元素出现奇数次，其余元素出现偶数次，找出出现奇数次的元素。
+
+例题：[136. 只出现一次的数字](https://leetcode.cn/problems/single-number/)
+
+思路：0与所有元素异或，异或完的结果即为答案，代码略。
+
+类型2：有两个元素出现奇数次，其余元素出现偶数次，找出出现奇数次的两个元素。
+
+例题：[260. 只出现一次的数字 III](https://leetcode.cn/problems/single-number-iii/)
+
+分析：将所有元素异或，得到a^b，其中a,b为出现次数为奇数的元素。a与b不相同，异或的结果一定有一位存在1，根据该位是否为1，可以将a,b分到不同的组中。
+
+```java
+class Solution {
+    public int[] singleNumber(int[] nums) {
+        int eor1 = 0, eor2 = 0;
+        for(int num : nums) {
+            eor1 ^= num;      // a ^ b
+        }
+        int rightOne = eor1 & (-eor1);
+        for(int num : nums) {
+            if((num & rightOne) == 0) {
+                eor2 ^= num;  // 要么为a，要么为b
+            }
+        }
+        return new int[]{eor2, eor1 ^ eor2};
+    }
+}
+```
+类型3：除一个元素出现次数小于m次外，其他元素都出现了恰好m次，找出该数。
+
+例题：[137. 只出现一次的数字 II](https://leetcode.cn/problems/single-number-ii/)
+
+分析：本题和异或无关，因为知识连续性放在一起。可以统计每一位出现1的次数，对m取模，如果模不为0，则该位一定是特殊元素所在的位。
+
+```java
+class Solution {
+    public int singleNumber(int[] nums) {
+        int[] cnt = new int[32];
+        for(int num : nums) {
+            for(int i = 0; i < 32; i ++) {
+                cnt[i] += (num >> i) & 1;
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i < 32; i ++) {
+            if(cnt[i] % 3 != 0) {
+                ans |= 1 << i;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+应用四：利用异或自反性
+
 下一例题结合了异或的性质和前缀和数组，读者可以在学习完**前缀和数组**知识之后再学习这道例题。
 
 例题：[1542. 找出最长的超赞子字符串](https://leetcode.cn/problems/find-longest-awesome-substring/)
@@ -381,6 +465,35 @@ public int gcd(int x, int y) {  // 最大公因数
 }
 public int lcm(int a, int b) {  // 最小公倍数
 	return a * b / gcd(a, b);
+}
+```
+
+例题：[878. 第 N 个神奇数字](https://leetcode.cn/problems/nth-magical-number/)
+
+```java
+class Solution {
+    public int nthMagicalNumber(int n, int a, int b) {
+        long l = Math.min(a, b), r = (long) n * Math.min(a, b);
+        int c = lcm(a, b);
+        while(l < r) {
+            long mid = l + r >> 1;
+            long cnt = mid / a + mid / b - mid / c;
+            if(cnt < n) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        return (int)(l % 10000_00007);
+    }
+
+    private int lcm(int a, int b) {
+        return a * b / gcd(a, b);
+    }
+
+    private int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
 }
 ```
 
@@ -949,6 +1062,8 @@ class Solution {
 
 例题：[303. 区域和检索 - 数组不可变](https://leetcode.cn/problems/range-sum-query-immutable/)
 
+分析：定义presum[i]表示原数组nums[0...i-1]的累加和。区间nums[left...right]的和为presum[right+1] - presum[left]。
+
 ```java
 class NumArray {
     private int[] presum;
@@ -1052,6 +1167,10 @@ $pre[j] - kj = pre[i] - ki$
 | [523. 连续的子数组和](https://leetcode.cn/problems/continuous-subarray-sum/) | 中等 |
 | [525. 连续数组](https://leetcode.cn/problems/contiguous-array/) | 中等 |
 | [2845. 统计趣味子数组的数目](https://leetcode.cn/problems/count-of-interesting-subarrays/) | 中等 |
+| [325. 和等于 k 的最长子数组长度](https://leetcode.cn/problems/maximum-size-subarray-sum-equals-k/) | 中等 |
+| [1124. 表现良好的最长时间段](https://leetcode.cn/problems/longest-well-performing-interval/) | 中等 |
+| [1590. 使数组和能被 P 整除](https://leetcode.cn/problems/make-sum-divisible-by-p/) | 中等 |
+| [1371. 每个元音包含偶数次的最长子字符串](https://leetcode.cn/problems/find-the-longest-substring-containing-vowels-in-even-counts/) | 中等 |
 
 > 二维前缀和
 
@@ -5375,6 +5494,7 @@ public class SegmentTreeDynamic {
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 低       |
+
 从一道例题学习字典树。
 
 例题：[211. 添加与搜索单词 - 数据结构设计](https://leetcode.cn/problems/design-add-and-search-words-data-structure/)
@@ -5499,6 +5619,8 @@ class Solution {
     }
 }
 ```
+时间复杂度：$O(m·n·4^{10})$
+
 练习题单
 
 | 题号                                                         | 难度 |
@@ -5513,7 +5635,7 @@ class Solution {
 
 ##### 2.4.8.3 Union Find
 
-| 面试概率 | 笔试概率 | 学习建议 
+| 面试概率 | 笔试概率 | 学习建议 |
 | -------- | -------- | -------- |
 | 中       | 中       | 建议掌握 |
 
@@ -5876,6 +5998,7 @@ D - 110
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 低       | 低       |
+
 树堆是一种比较简易的平衡树实现，可以收下模版。
 
 例题：[1649. 通过指令创建有序数组](https://leetcode.cn/problems/create-sorted-array-through-instructions/)
@@ -9258,6 +9381,80 @@ public void bucketSort(int[] nums, int interval) {
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 高       | 高       |
+
+> 递归经典问题之嵌套问题
+
+例题：[726. 原子的数量](https://leetcode.cn/problems/number-of-atoms/)
+
+```java
+class Solution {
+    public String countOfAtoms(String formula) {
+        Map<String, Integer> map = dfs(formula.toCharArray(), 0);
+        StringBuilder sb = new StringBuilder();
+        for(Map.Entry<String, Integer> entry : map.entrySet()) {
+            sb.append(entry.getKey());
+            if(entry.getValue() > 1) {
+                sb.append(entry.getValue());
+            }
+        }
+        return sb.toString();
+    }
+
+    private int index = 0;
+
+    public Map<String, Integer> dfs(char[] c, int i) {
+        Map<String, Integer> map = new TreeMap<>();
+        Map<String, Integer> sub = null;
+        int cnt = 0;
+        StringBuilder name = new StringBuilder();
+        while(i < c.length && c[i] != ')') {
+            if(Character.isLowerCase(c[i])) {
+                name.append(c[i]);
+                i ++;
+            }else if(Character.isDigit(c[i])) {
+                cnt = cnt * 10 + c[i] - '0';
+                i ++;
+            }else {
+                fill(map, sub, name, cnt);
+                cnt = 0;
+                name.setLength(0);
+                sub = null;
+                if(Character.isUpperCase(c[i])) {
+                    name.append(c[i]);
+                    i ++;
+                } else {
+                    sub = dfs(c, i + 1);
+                    i = index + 1;
+                }
+            }
+        }
+        index = i;
+        fill(map, sub, name, cnt);
+        return map;
+    }
+
+    private void fill(Map<String, Integer> map, Map<String, Integer> sub, StringBuilder name, int count) {
+        count = count == 0 ? 1 : count;
+        if(name.length() > 0) {
+            map.merge(name.toString(), count, Integer::sum);
+        }
+        if(sub != null) {
+            for(Map.Entry<String, Integer> entry : sub.entrySet()) {
+                map.merge(entry.getKey(), entry.getValue() * count, Integer::sum);
+            }
+        }
+    }
+}
+```
+
+练习题单
+
+
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [394. 字符串解码](https://leetcode.cn/problems/decode-string/) | 中等 |
+| [772. 基本计算器 III](https://leetcode.cn/problems/basic-calculator-iii/) | 困难 |
+
 > 回溯经典问题之子集问题
 
 例题：[78. 子集](https://leetcode.cn/problems/subsets/)
