@@ -1,7 +1,11 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.12 20231005更新
+版本号1.0.13 20231006更新
 [TOC]
 ## Preface to the Fifth Edition
+
+> 第五版介绍
+
+Java算法刷题宝典，是作者在刷Leetcode中总结出的精华，对知识点进行了系统全面的梳理，并在此之上总结出解法思路、代码模版、变式题分析、专题总结等内容，本书面向攻克Java算法面试、笔试的同学，题目难度合理，循序渐进，是一部优秀的算法学习资料。
 
 > 第五版更新内容如下
 
@@ -1199,6 +1203,42 @@ class NumMatrix {
     }
 }
 ```
+
+例题：[1139. 最大的以 1 为边界的正方形](https://leetcode.cn/problems/largest-1-bordered-square/)
+
+```java
+class Solution {
+    public int largest1BorderedSquare(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[][] sum = new int[m+1][n+1];
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                sum[i+1][j+1] = sum[i][j+1] + sum[i+1][j] - sum[i][j] + grid[i][j];
+            }
+        }
+        if(sum[m][n] == 0) {
+            return 0;
+        }
+        int ans = 1;
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                for(int a = i + ans, b = j + ans; a < m && b < n; a ++, b ++) {
+                    if(sumRegion(sum, i, j, a, b) - sumRegion(sum, i+1, j+1, a-1, b-1) == (a - i) * 4) {
+                        ans = a - i + 1;
+                    }
+                }
+            }
+        }
+        return ans * ans;
+    }
+
+    public int sumRegion(int[][]sum, int row1, int col1, int row2, int col2) {
+        return sum[row2+1][col2+1] + sum[row1][col1] - sum[row2+1][col1] - sum[row1][col2+1];
+    }
+}
+```
+时间复杂度：$O(mn\min(m,n))$
+
 真题链接：美团20230812笔试 https://codefun2000.com/p/P1443
 
 > 计数前缀和
@@ -12369,6 +12409,149 @@ class Solution {
 | [902. 最大为 N 的数字组合](https://leetcode.cn/problems/numbers-at-most-n-given-digit-set/) | 困难 |
 | [788. 旋转数字](https://leetcode.cn/problems/rotated-digits/) | 中等 |
 | [1067. 范围内的数字计数](https://leetcode.cn/problems/digit-count-in-range/) | 困难 |
+
+#### 3.7.12 Square And Rectangle Problem
+
+本章为专题，探究一系列特殊的正方形/矩形问题。部分问题可以通过动态规划解决，部分问题需要结合前面的知识点。
+
+类型1：只包含1的最大正方形
+
+例题：[221. 最大正方形](https://leetcode.cn/problems/maximal-square/)
+
+分析：动态规划，定义dp[i][j]为以i，j作为右下端点的最大正方形边长。
+
+```java
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        int m = matrix.length, n = matrix[0].length;
+        int[][] dp = new int[m][n];
+        int side = 0;
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                if(matrix[i][j] == '1') {
+                    if(i == 0 || j == 0) {
+                        dp[i][j] = 1;
+                    }else {
+                        dp[i][j] = Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1])) + 1;
+                    }
+                    side = Math.max(side, dp[i][j]);
+                }
+            }
+        }
+        return side * side;
+    }
+}
+```
+时间复杂度：$O(m·n)$
+
+类型2：边界为1的最大正方形
+
+例题：[1139. 最大的以 1 为边界的正方形](https://leetcode.cn/problems/largest-1-bordered-square/)
+
+思路：二维前缀和数组，前缀和章节有题解，代码略。
+
+类型3：只包含1的正方形计数
+
+例题：[1277. 统计全为 1 的正方形子矩阵](https://leetcode.cn/problems/count-square-submatrices-with-all-ones/)
+
+思路：动态规划，类似221题，定义dp[i][j]为以i，j作为右下端点的正方形数量，代码略。
+
+$dp[i][j]=\min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1])+1,(matrix[i][j]=1)$
+
+类型4：只包含1的最大矩形
+
+例题：[85. 最大矩形](https://leetcode.cn/problems/maximal-rectangle/)
+
+分析：单调栈。
+
+```java
+class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        int m = matrix.length, n = matrix[0].length, ans = 0;
+        int[] height = new int[n];
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                height[j] = matrix[i][j] == '0' ? 0 : height[j] + 1;
+            }
+            ans = Math.max(ans, maxArea(height));
+        }
+        return ans;
+    }
+
+    private int maxArea(int[] height) {
+        Stack<Integer> stack = new Stack<>();
+        int ans = 0, m = height.length;
+        stack.push(-1);
+        for(int i = 0; i <= m; i ++) {
+            while(stack.size() > 1 && (i == m || height[i] < height[stack.peek()])) {
+                int j = stack.pop();
+                ans = Math.max(ans, height[j] * (i - stack.peek() - 1));
+            }
+            stack.push(i);
+        }
+        return ans;
+    }
+}
+```
+
+时间复杂度：$O(mn)$
+
+类型5：只包含1的矩形计数
+
+例题：[1504. 统计全 1 子矩形](https://leetcode.cn/problems/count-submatrices-with-all-ones/)
+
+分析：单调栈，01矩阵的处理同85题，将矩阵在列方向累加，计算每个元素左侧和右侧第一个严格小于当前元素的下标。
+
+举例：[4,9,7,2]
+
+以7为例，7右侧第一个最小元素为2，下标为3；左侧第一个最小元素为4，下标为0，区间长度为 3 - 0 - 1 = 2，对应len变量。
+
+取4和2的最大值，即为4，统计高度为7，6，5的子矩形数量，长为5,6,7，宽为1的矩形2\*3个；长为5,6,7，宽为2的矩形1\*3=个，总共9个，计算公式：(7-4)\*(3\*2)/2。
+
+下面考虑存在重复元素的情况：
+
+距离：[4,9,9,2]
+
+栈依然要求严格单增，只是在计算时，第一个9先不参与计算，第二个9入栈后，由2出栈时，第二个9的左侧下标为0，此时可以正确进行结算。
+
+```java
+class Solution {
+    public int numSubmat(int[][] mat) {
+        int m = mat.length, n = mat[0].length, ans = 0;
+        int[] height = new int[n];
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                height[j] = mat[i][j] == 0 ? 0 : height[j] + 1;
+            }
+            ans += countRectangle(height);
+        }
+        return ans;
+    }
+
+    private int countRectangle(int[] height) {  // 以最后一行为底的矩形个数
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        int ans = 0, m = height.length;
+        for(int r = 0; r <= m; r ++) {
+            // 单调栈严格递增
+            while(stack.size() > 1 && (r == m || height[stack.peek()] >= height[r])) {
+                int i = stack.pop();
+                if(r == m || height[i] > height[r]) {  // 严格大于时才计数
+                    int l = stack.peek(), len = r - l - 1;
+                    int leftHeight = l == -1 ? 0 : height[l], rightHeight = r == m ? 0 : height[r];
+                    int bottom = Math.max(leftHeight, rightHeight), top = height[i];
+                    ans += (top - bottom) * len * (len + 1) / 2;
+                }
+            }
+            stack.push(r);
+        }
+        return ans;
+    }
+}
+```
+时间复杂度：$O(mn)$
+
+
 
 ###  3.8 State Machine
 
