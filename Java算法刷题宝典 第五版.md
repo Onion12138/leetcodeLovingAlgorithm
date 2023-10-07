@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.13 20231006更新
+版本号1.0.14 20231007更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -1058,9 +1058,9 @@ class Solution {
 
 #### 1.3.2 Prefix Sum Array
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 高       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 高       | 必须掌握 |
 
 从一个简单问题谈起：
 
@@ -1531,9 +1531,9 @@ class Solution {
 
 #### 1.3.4 Differential Array
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 了解 |
 
 假设原数组为$a$，差分数组$d$定义如下：
 
@@ -1624,6 +1624,53 @@ class Solution {
 | [1094. 拼车](https://leetcode.cn/problems/car-pooling/)      | 中等 |
 | [2772. 使数组中的所有元素都等于零](https://leetcode.cn/problems/apply-operations-to-make-all-array-elements-equal-to-zero/) | 中等 |
 | [253. 会议室 II](https://leetcode.cn/problems/meeting-rooms-ii/) | 中等 |
+
+> 二维差分
+
+例题：[2132. 用邮票贴满网格图](https://leetcode.cn/problems/stamping-the-grid/)
+
+分析：枚举每个grid[a][b] = 0的端点，用二维前缀和数组快速判断是否被占用。用二维差分数组对区域进行加一。将差分数组进行复原，复原后如果diff[a+1][b+1] = 0，则说明没有邮票覆盖。
+
+```java
+class Solution {
+    public boolean possibleToStamp(int[][] grid, int h, int w) {
+        int m = grid.length, n = grid[0].length;
+        int[][] sum = new int[m+1][n+1], diff = new int[m+2][n+2];
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                sum[i+1][j+1] = sum[i+1][j] + sum[i][j+1] + grid[i][j] - sum[i][j];
+            }
+        }
+        for(int a = 1, c = a + h - 1; c <= m; a ++, c ++) {
+            for(int b = 1, d = b + w - 1; d <= n; b ++, d ++) {
+                int sumRegion = sum[c][d] - sum[c][b-1] - sum[a-1][d] + sum[a-1][b-1];
+                if(sumRegion == 0) {
+                    diff[c+1][d+1] ++;
+                    diff[a][b] ++;
+                    diff[c+1][b] --;
+                    diff[a][d+1] --;
+                }
+            }
+        }
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                diff[i+1][j+1] += diff[i][j+1] + diff[i+1][j] - diff[i][j];
+                if(grid[i][j] == 0 && diff[i+1][j+1] == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+注意：diff长度为m+2,n+2，是为了后续恢复diff数组时方便，不用针对下标为0进行特殊判断。
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [LCP 74. 最强祝福力场](https://leetcode.cn/problems/xepqZ5/) | 中等 | 二维差分+离散化|
 
 #### 1.3.5 Merge Array
 
