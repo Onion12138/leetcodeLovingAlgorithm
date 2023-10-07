@@ -248,24 +248,6 @@ class Solution {
 }
 ```
 
-例题：[401. 二进制手表](https://leetcode.cn/problems/binary-watch/)
-
-```java
-class Solution {
-    public List<String> readBinaryWatch(int turnedOn) {
-        List<String> ret = new ArrayList<>();
-        for(int h = 0; h < 12; h ++) {
-            for(int m = 0; m < 60; m ++) {
-                if(Integer.bitCount(h) + Integer.bitCount(m) == turnedOn) {
-                    ret.add(h + ":" + (m < 10 ? "0" : "") + m);
-                }
-            }
-        }
-        return ret;
-    }
-}
-```
-
 枚举子集：常用于**状态压缩DP**
 
 ```java
@@ -318,6 +300,43 @@ public class Solution {
     }
 }
 ```
+
+用一道经典难题，串联位运算的知识：
+
+例题：[52. N 皇后 II](https://leetcode.cn/problems/n-queens-ii/)
+
+```java
+class Solution {
+    public int totalNQueens(int n) {
+        if(n < 1) {
+            return 0;
+        }
+        return dfs((1 << n) - 1, 0, 0, 0);
+    }
+
+    private int dfs(int limit, int col, int left, int right) {
+        // col表示列的限制，left表示左下右上对角线的限制，right表示左上右下对角线的限制
+        if(col == limit) {
+            return 1;
+        }
+        // 总限制
+        int ban = col | left | right;
+        // 差集
+        int candidate = limit & (~ban);
+        int place = 0;
+        int ans = 0;
+        while(candidate != 0) {
+            // 提取最右侧的1
+            place = candidate & (-candidate);
+            // 取差集，去掉该位的1
+            candidate ^= place;
+            ans += dfs(limit, col | place, (left | place) >> 1, (right | place) << 1);
+        }
+        return ans;
+    }
+}
+```
+时间复杂度：$O(n!)$
 
 异或的性质 
 
@@ -998,7 +1017,7 @@ static {
 | -------- | -------- |
 | 中       | 中       |
 
-循环不变量，是一组在循环体内、每一次迭代均保持为真的性质，通常用于证明程序或伪代码的正确性。
+循环不变量，是一组在循环体内、每一次迭代均保持为真的性质，通常用于证明程序或伪代码的正确性。后续讲解快速排序的划分操作时，循环不变量起到了很大的作用。
 
 从一道例题看循环不变量：
 
@@ -1019,6 +1038,26 @@ class Solution {
             }
         }
         return i;
+    }
+}
+```
+该代码还可以实现数据的离散化：
+
+```java
+class Solution {
+    public Map<Integer, Integer> discretization(int[] nums) {
+        int i = 1;
+        Arrays.sort(nums);
+        for(int j = 1; j < nums.length; j ++) {
+            if(nums[j] != nums[i - 1]) {
+                nums[i++] = nums[j];
+            }
+        }
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int j = 0; j < i; j ++) {
+            map.put(nums[j], j);
+        }
+        return map;
     }
 }
 ```
@@ -1048,6 +1087,38 @@ class Solution {
 ```
 
 思考：原地删除重复出现多次的元素，使得每个元素只出现$k$次，应该如何书写代码？
+
+例题：[41. 缺失的第一个正数](https://leetcode.cn/problems/first-missing-positive/)
+
+分析：循环不变量为nums[0...l]范围内的i满足nums[i] = i + 1，nums[0...r-1]范围内的数为最好情况下能满足nums[i] = i + 1的区间。
+
+```java
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int l = 0, r = nums.length;
+        while(l < r) {
+            if(nums[l] == l + 1) {
+                l ++;
+            }else if(nums[l] <= l || nums[l] > r ||  nums[l] == nums[nums[l] - 1]) {
+                // 进入else if条件，说明 nums[l] - 1 != l，但相等，说明存在重复数字。
+                swap(nums, l, --r);
+            }else {
+                // nums[l] 在 [l+1...r]之间，先放置到该放置的位置。
+                swap(nums, l, nums[l] - 1);
+            }
+        }
+        return l + 1;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+进阶：学习完快速排序的三路划分操作后，再结合41题进行深入理解二者共同点。
 
 练习题单
 
@@ -8732,7 +8803,31 @@ class Solution {
 
 #### 3.2.1 Fast and Slow Pointers
 
-参考链表**快慢指针**章节
+| 面试概率 | 笔试概率 |
+| -------- | -------- |
+| 中       | 低       |
+
+在链表章节，我们介绍过快慢指针用于找环，该技巧在数组中依然适用。
+
+例题：[287. 寻找重复数](https://leetcode.cn/problems/find-the-duplicate-number/)
+
+```java
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int fast = nums[nums[0]], slow = nums[0];
+        while(slow != fast) {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }
+        fast = 0;
+        while(slow != fast) {
+            fast = nums[fast];
+            slow = nums[slow];
+        }
+        return slow;
+    }
+}
+```
 
 #### 3.2.2 Head and Tail Pointers
 
@@ -8961,6 +9056,13 @@ class Solution {
 
 变式：[862. 和至少为 K 的最短子数组](https://leetcode.cn/problems/shortest-subarray-with-sum-at-least-k/)
 
+练习题单
+
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/)           | 中等 |
+| [992. K 个不同整数的子数组](https://leetcode.cn/problems/subarrays-with-k-different-integers/) | 困难 |
+
 
 #### 3.2.4 Pointer Counting
 
@@ -8997,9 +9099,9 @@ class Solution {
 
 ### 3.3 Sorting Algorithm
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 高       | 高       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 高       | 高       | 必须掌握 |
 
 十大排序算法大比较
 
@@ -10447,6 +10549,7 @@ class Solution {
 | 题号                         | 难度 | 知识点 |
 | ---------------------------- | ---- | ---------------------------- |
 | [2856. 删除数对后的最小数组长度](https://leetcode.cn/problems/minimum-array-length-after-pair-removals/) | 中等 | 例题结论运用 |
+| [881. 救生艇](https://leetcode.cn/problems/boats-to-save-people/) | 中等 |例题结论运用 |
 
 
 #### 3.6.5 Regret-based Greedy
