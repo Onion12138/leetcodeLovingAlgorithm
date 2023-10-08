@@ -257,7 +257,7 @@ for(int sub = mask; sub > 0; sub = (sub - 1) & mask) {
 
 其他位运算操作：
 
-x & -x
+得到最低位的1：x & -x
 
 该操作用于获得x二进制表示下最低位的1及其后面的0构成的数值，常用于树状数组里。
 
@@ -268,7 +268,7 @@ x & -x
 | x的补码（-x) | 0 1 1 0 0 |
 | x & -x       | 0 0 1 0 0 |
 
-x & (x - 1)
+清除最低位的1 ：x & (x - 1)
 
 该操作每执行一次，会将x最右边的一个1变为0。
 
@@ -8901,11 +8901,12 @@ class Solution {
 
 练习题单
 
-| 题号                                                         | 难度 |
-| ------------------------------------------------------------ | ---- |
-| [15. 三数之和](https://leetcode.cn/problems/3sum/)           | 中等 |
-| [16. 最接近的三数之和](https://leetcode.cn/problems/3sum-closest/) | 中等 |
-| [11. 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water/) | 中等 |
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [15. 三数之和](https://leetcode.cn/problems/3sum/)           | 中等 | 双指针
+| [16. 最接近的三数之和](https://leetcode.cn/problems/3sum-closest/) | 中等 | 双指针
+| [11. 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water/) | 中等 | 双指针+贪心
+| [923. 三数之和的多种可能](https://leetcode.cn/problems/3sum-with-multiplicity/) | 中等 | 双指针+计数/组合数
 
 #### 3.2.3 Sliding Window
 
@@ -9058,11 +9059,11 @@ class Solution {
 
 练习题单
 
-| 题号                                                         | 难度 |
-| ------------------------------------------------------------ | ---- |
-| [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/)           | 中等 |
-| [992. K 个不同整数的子数组](https://leetcode.cn/problems/subarrays-with-k-different-integers/) | 困难 |
-
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [3. 无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/)           | 中等 | 滑动窗口 + 哈希表 |
+| [992. K 个不同整数的子数组](https://leetcode.cn/problems/subarrays-with-k-different-integers/) | 困难 | 滑动窗口 + 思维 | 
+| [632. 最小区间](https://leetcode.cn/problems/smallest-range-covering-elements-from-k-lists/) | 困难 | 滑动窗口+哈希表(类似76题)/贪心+堆
 
 #### 3.2.4 Pointer Counting
 
@@ -11917,7 +11918,9 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [1879. 两个数组最小的异或值之和](https://leetcode.cn/problems/minimum-xor-sum-of-two-arrays/) | 困难 |
 | [2172. 数组的最大与和](https://leetcode.cn/problems/maximum-and-sum-of-array/) | 困难 |
-| [[1066. 校园自行车分配 II](https://leetcode.cn/problems/campus-bikes-ii/)](https://leetcode.cn/problems/maximum-compatibility-score-sum/) | 中等 |
+| [1066. 校园自行车分配 II](https://leetcode.cn/problems/campus-bikes-ii/)| 中等 |
+| [526. 优美的排列](https://leetcode.cn/problems/beautiful-arrangement/) | 中等 |
+| [1947. 最大兼容性评分和](https://leetcode.cn/problems/maximum-compatibility-score-sum/) | 中等 |
 
 > 状态压缩之球装桶问题
 
