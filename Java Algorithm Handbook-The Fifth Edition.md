@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.14 20231007更新
+版本号1.0.15 20231009更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -247,6 +247,16 @@ class Solution {
     }
 }
 ```
+时间复杂度：$O(n·2^n)$
+
+练习题单 
+
+
+| 题号                                                         | 难度 | 知识点 |
+|  ------------------------------------------------------------ | ---- |  ---- |
+| [320. 列举单词的全部缩写](https://leetcode.cn/problems/generalized-abbreviation/)     | 中等 | 枚举子集 |
+| [491. 递增子序列](https://leetcode.cn/problems/non-decreasing-subsequences/) | 中等 | 枚举子集+去重 |
+| [784. 字母大小写全排列](https://leetcode.cn/problems/letter-case-permutation/) | 中等 | 枚举子集 |
 
 枚举子集：常用于**状态压缩DP**
 
@@ -6337,7 +6347,11 @@ class Treap {
 
 本章规定，用$m$表示图中边的数量，$n$表示图中节点的数量，后文不再赘述。
 
-> 图的建立
+#### 2.5.1 Building Graph
+
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 高       | 高       | 必须掌握 |
 
 学习图论时，图有两种表示方式，分别是邻接矩阵，邻接表。
 
@@ -6455,14 +6469,13 @@ head = 5, next[5] = 0, to[5] = 2, weight[5] = 7, 找到
 (2,7)
 
 
-#### 2.5.1 Graph Traversal
-
-##### 2.5.1.1 Depth First Search
+#### 2.5.2 Graph Traversal
 
 | 面试概率 | 笔试概率 | 学习建议 |
 | -------- | -------- | -------- |
 | 高       | 高       | 必须掌握 |
-应用一：环检测
+
+##### 2.5.2.1 Depth First Search : Cycle Detection
 
 例题：[261. 以图判树](https://leetcode.cn/problems/graph-valid-tree/)
 
@@ -6510,7 +6523,7 @@ class Solution {
 }
 ```
 
-应用二：二分图检测
+##### 2.5.2.2 Depth First Search : Bipartite Detection
 
 例题：[785. 判断二分图](https://leetcode.cn/problems/is-graph-bipartite/)
 
@@ -6542,7 +6555,7 @@ class Solution {
 }
 ```
 
-应用三：求解联通分量
+##### 2.5.2.3 Depth First Search : Connnected Component
 
 例题：[323. 无向图中连通分量的数目](https://leetcode.cn/problems/number-of-connected-components-in-an-undirected-graph/)
 
@@ -6580,7 +6593,7 @@ class Solution {
 ```
 本题中，$count[i]$相同的元素属于同一个联通分量。
 
-应用四：寻找单源路径
+##### 2.5.2.4 Depth First Search : Single Source Path
 
 例题：[797. 所有可能的路径](https://leetcode.cn/problems/all-paths-from-source-to-target/)
 
@@ -6634,7 +6647,7 @@ class Solution {
     }
 }
 ```
-应用五：floodfill问题
+##### 2.5.2.5 Depth First Search : Flood Fill
 
 例题：[529. 扫雷游戏](https://leetcode.cn/problems/minesweeper/)
 
@@ -6683,7 +6696,7 @@ class Solution {
 | [802. 找到最终的安全状态](https://leetcode.cn/problems/find-eventual-safe-states/) | 中等 |
 | [417. 太平洋大西洋水流问题](https://leetcode.cn/problems/pacific-atlantic-water-flow/) | 中等 |
 
-##### 2.5.1.2 Breadth First Search
+##### 2.5.2.6 Breadth First Search : Shortest Path
 
 | 面试概率 | 笔试概率 | 学习建议 |
 | -------- | -------- | -------- |
@@ -6711,8 +6724,6 @@ while(!queue.isEmpty()) {
     level ++;   // 层数 + 1
 }
 ```
-
-应用一：无权图最短路径
 
 例题：[847. 访问所有节点的最短路径](https://leetcode.cn/problems/shortest-path-visiting-all-nodes/)
 
@@ -6823,7 +6834,7 @@ class Solution {
 | [752. 打开转盘锁](https://leetcode.cn/problems/open-the-lock/) | 中等 | 最短路径 |
 | [1162. 地图分析](https://leetcode.cn/problems/as-far-from-land-as-possible/) | 中等 | 多源最短路径+分层 |
 
-应用二：状态空间搜索
+##### 2.5.2.7 Breadth First Search : State Search
 
 例题：[139. 单词拆分](https://leetcode.cn/problems/word-break/)
 
@@ -6937,6 +6948,8 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [140. 单词拆分 II](https://leetcode.cn/problems/word-break-ii/) | 困难 |
 
+##### 2.5.2.8 Binary Breadth First Search
+
 BFS可以用于求解无权图的最短路径问题，如果是带权图，则需要使用带权图最短路径的算法。特别的，如果图中边的权值只有0和1，求源点到目标点的最短距离，可以利用BFS+双端队列实现。
 
 例题：[1368. 使网格图至少有一条有效路径的最小代价](https://leetcode.cn/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid/)
@@ -6995,8 +7008,64 @@ class Solution {
 | ------------------------------------------------------------ | ---- | ---- |
 | [2290. 到达角落需要移除障碍物的最小数目](https://leetcode.cn/problems/minimum-obstacle-removal-to-reach-corner/) | 困难 | 01BFS模版
 
+##### 2.5.2.9 Bidirectional Breadth First Search
 
-#### 2.5.2 Minimum Spanning Tree
+例题：[127. 单词接龙](https://leetcode.cn/problems/word-ladder/)
+
+```java
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> dict = new HashSet<>(wordList);
+        if(!dict.contains(endWord)) {
+            return 0;
+        }
+        Set<String> small = new HashSet<>();
+        Set<String> big = new HashSet<>();
+        Set<String> next = new HashSet<>();
+        small.add(beginWord);
+        big.add(endWord);
+        for(int len = 2; !small.isEmpty(); len ++) {
+            for(String w : small) {
+                char[] word = w.toCharArray();
+                for(int j = 0; j < word.length; j ++) {
+                    char old = word[j];
+                    for(char c = 'a'; c <= 'z'; c ++) {
+                        if(c != old) {
+                            word[j] = c;
+                            String str = String.valueOf(word);
+                            if(big.contains(str)) {
+                                return len;
+                            }
+                            if(dict.contains(str)) {
+                                dict.remove(str);
+                                next.add(str);
+                            }
+                        }
+                    }
+                    word[j] = old;
+                }
+            }
+            if(next.size() <= big.size()) {
+                // small变为next，big不变
+                Set<String> temp = small;
+                small = next;
+                next = temp;
+            } else {
+                // small变为big，big变为next
+                Set<String> temp = small;
+                small = big;
+                big = next;
+                next = temp;
+            }
+            next.clear();
+        }
+        return 0;
+    }
+}
+```
+
+
+#### 2.5.3 Minimum Spanning Tree
 
 | 面试概率 | 笔试概率 | 学习建议 
 | -------- | -------- | -------- |
@@ -7012,7 +7081,7 @@ class Solution {
 
 例题：[1584. 连接所有点的最小费用](https://leetcode.cn/problems/min-cost-to-connect-all-points/)
 
-##### 2.5.2.1 Kruskal
+##### 2.5.3.1 Kruskal
 Kruskal算法是最常用的求解最小生成树的算法，只需要对边进行排序，而无需建图。在实现过程中，需要依赖并查集进行快速环检测。
 
 1. 将所有边根据权值从小到大排序。
@@ -7074,7 +7143,7 @@ class Solution {
     }
 }
 ```
-##### 2.5.2.2 Prim
+##### 2.5.3.2 Prim
 
 Prim算法更为少见，需要建图，并且借助于优先队列这一数据结构。
 
@@ -7129,7 +7198,7 @@ class Solution {
 
 进一步思考，最小生成树生成的树还有一个性质，即使得图连通后最大边的权值在所有生成树中最小，该生成树又称为最小瓶颈树。最小生成树一定是最小瓶颈树，但最小瓶颈树不一定是最小生成树。
 
-#### 2.5.3 Shortest Path of Weighted Graph
+#### 2.5.4 Shortest Path of Weighted Graph
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -7146,7 +7215,7 @@ class Solution {
 
 例题：[743. 网络延迟时间](https://leetcode.cn/problems/network-delay-time/)
 
-##### 2.5.3.1 Dijkstra
+##### 2.5.4.1 Dijkstra
 
 分析：dijkstra算法用于求解不包含负权边的单源最短路径问题，其思想如下。
 
@@ -7279,7 +7348,7 @@ class Solution {
 时间复杂度：$O(n^2)$，$n$为specialRoads的长度。
 
 思考：体会BFS算法和Dijkstra算法的异同。
-##### 2.5.3.2 BellmanFord
+##### 2.5.4.2 BellmanFord
 
 Bellan核心是松弛操作。
 
@@ -7371,7 +7440,7 @@ class Solution {
 }
 ```
 
-##### 2.5.3.3 SPFA
+##### 2.5.4.3 SPFA
 
 SPFA是一种优化后的BellmanFord算法，类似于BFS，但每个节点可能入队出队多次。
 
@@ -7438,7 +7507,10 @@ class Solution {
 
 以上代码，如果图中存在负权环，则while循环可能一直无法退出。解决方案，用一个count数组记录每个节点入队次数，若入队次数大于$n$，说明存在负权环（见被注释的代码）。
 
-##### 2.5.3.4 Floyed
+##### 2.5.4.4 Floyed
+
+Floyed算法本身非常好理解，阅读代码即可。
+
 ```java
 class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
@@ -7469,7 +7541,7 @@ class Solution {
 ```
 Floyed算法检测负权环：松弛完毕后，若发现$dis[v][v]<0$，说明存在负权环。
 
-#### 2.5.4 Topological Sort
+#### 2.5.5 Topological Sort
 
 | 面试概率 | 笔试概率 | 学习建议 |
 | -------- | -------- | -------- |
@@ -7679,11 +7751,11 @@ class Solution {
 | ------------------------------------------------------------ | ---- | ----------------- |
 | [2050. 并行课程 III](https://leetcode.cn/problems/parallel-courses-iii/) | 困难 | 拓扑排序+动态规划 |
 
-#### 2.5.5 Cycle Detection
+#### 2.5.6 Cycle Detection
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 对于无向图的环检测，在深度优先遍历中已经进行了介绍。同时，也可以采用并查集进行解决。
 
@@ -7741,11 +7813,11 @@ visited[u] = 1，说明u节点正在访问中(对应onPath[u]=true)。
 
 visited[u] = 2，说明u节点已经访问完毕(对应onPath[u]=false)。
 
-#### 2.5.6 Bridge and Cutting Point
+#### 2.5.7 Bridge and Cutting Point
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 非竞赛可跳过 |
 
 桥：对于无向图，如果删除一条边后，图的连通分量数量发生了变化，则这一条边是桥。
 
@@ -7834,7 +7906,11 @@ public void dfs(int u, int p, List<Integer>[] g) {
 ```
 
 
-#### 2.5.7 Connected Component
+#### 2.5.8 Connected Component
+
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 了解 |
 
 无向图的连通分量，可以采用DFS/BFS/并查集进行求解。
 
@@ -7903,10 +7979,10 @@ class Solution {
 
 
 
-#### 2.5.8 Hamiltonian Path
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+#### 2.5.9 Hamiltonian Path
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 了解 |
 
 哈密尔顿回路：从一个点出发，沿着边行走，经过每一个顶点恰好一次，最后回到出发点。
 
@@ -8017,11 +8093,11 @@ class Solution {
 ```
 
 时间复杂度：$O(3^{mn})$，由于不能重复访问同一个格子，实际执行效率比记忆化搜索更快。
-#### 2.5.9 Eulerian Path
+#### 2.5.10 Eulerian Path
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 非竞赛可跳过 |
 
 欧拉回路：从一个点出发，沿着边行走，经过每一个边恰好一次，最后回到出发点。
 
@@ -8110,11 +8186,11 @@ class Solution {
 ```
 时间复杂度：$O(n\times k^n)$
 
-#### 2.5.10 Base Ring Tree
+#### 2.5.11 Base Ring Tree
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 了解 |
 
 对于有$n$个节点的树，必定有$n-1$条边；反之由$n-1$条无向边组成的连通图必定是一颗树。若有$n$个节点$n$条边的无向连通图，则必定是在一棵树上的任意两点直接连接一条边构成的。$n$个节点$n$条边的无向连通图，称之为基环树。
 
@@ -8251,11 +8327,11 @@ class Solution {
 
 
 
-#### 2.5.11 Network Flow
+#### 2.5.12 Network Flow
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 非竞赛可跳过 |
 
 最小费用最大流
 
@@ -8395,11 +8471,11 @@ public class Solution {
 }
 ```
 
-#### 2.5.12 Bipartite Matching
+#### 2.5.13 Bipartite Matching
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 非竞赛可跳过 |
 
 > 匈牙利算法
 
@@ -8473,7 +8549,7 @@ class Solution {
     }
 }
 ```
-#### 2.5.13 Summarization
+#### 2.5.14 Summarization
 
 | 算法/问题      | 无向/有向  | 无权/带权  | 思想/方法                      | 时间复杂度   |
 | -------------- | ---------- | ---------- | ------------------------------ | ------------ |
@@ -8715,7 +8791,8 @@ class LFUCache {
 | -------------- | ------------- | ------------------------- |
 | $O(n!)$        | $\le 11$      | 全排列                    |
 | $O(3^n)$       | $\le 20$      | 枚举子集                  |
-| $O(2^n)$       | $\le 25$      | 递归与回溯                |
+| $O(2^n)$       | $\le 25$      | 递归与回溯
+| $O(n·2^{\frac{n}{2}})$ | $\le 40$      | 双向状态压缩
 | $O(n^3)$       | $\le 500$     | 三重循环，如Floyed算法    |
 | $O(n^2\log n)$ | $\le 1000$    | 二分答案，BellmanFord算法 |
 | $O(n^2)$       | $\le 5000$    | 二重循环                  |
@@ -9067,13 +9144,23 @@ class Solution {
 
 #### 3.2.4 Pointer Counting
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
+
+先思考这样一个问题，给定一个升序排列的数组A，求A[i] + A[j] < limit的数对(i, j)满足i < j的数对有多少个？
+
+解法：i指针指向A开头位置，j指针指向A结尾位置，若此时A[i] + A[j] < limit，计数 ans += j - i，i指针自增。否则j指针自减。
+
+示例：参考例题259。
+
+如果是两个升序排列的数组A,B，求A[i] + B[j] < limit的数对(i, j)，其中i为A中下标，j为B中下标的数对有多少个？
+
+解法：i指针指向A开头位置，j指针指向B结尾位置，若此时A[i] + B[j] < limit，计数 ans += j + 1，i指针自增，否则j指针自减。
+
+示例：归并排序统计逆序对时指针计数。
 
 例题：[259. 较小的三数之和](https://leetcode.cn/problems/3sum-smaller/)
-
-分析：结合首尾指针的思想进行计数即可。
 
 ```java
 class Solution {
@@ -9098,6 +9185,33 @@ class Solution {
 
 时间复杂度：$O(n^2)$
 
+拓展: 最接近相关问题
+
+问题1: 给定一个升序排列的数组A，求abs(target - A[i] - A[j])的最小值，其中(i < j)。
+
+解法：i指针指向A开头位置，j指针指向A结尾位置。
+
+1. 若A[i] + A[j] = target，返回0。
+2. 若A[i] + A[j] < target, i ++。
+3. 若A[i] + A[j] > target, j --。
+
+示例：参考习题16题。
+
+问题2: 给定两个升序排列的数组A,B，求abs(target - A[i] - B[j])的最小值，其中i为A中下标，j为B中下标。
+
+解法：i指针指向A开头位置，j指针指向B结尾位置。
+
+```java
+for(int i = 0, j = B.length - 1; i < A.length; i ++) {
+    while(j > 0 && Math.abs(target - A[i] - B[j-1]) <= Math.abs(target - A[i] - B[j])) {
+        j --;
+    }
+    ans = Math.min(ans, Math.abs(target - A[i] - B[j]));
+}
+```
+
+示例：参考1755题背包问题章节解法。
+
 ### 3.3 Sorting Algorithm
 
 | 面试概率 | 笔试概率 | 学习建议 |
@@ -9119,7 +9233,7 @@ class Solution {
 | 基数排序 |              | 稳定   | LSD适用于等长字符串，数字需要补零对齐；MSD适用于不等长字符串，无法用于数字 |
 | 桶排序   |              |        | 应用：桶思想解决最大间隔问题                                 |
 
-> 选择排序
+#### 3.3.1 Selection Sort
 
 循环不变量： $arr[0...i)$是有序的，$arr[i...n)$是无序的
 
@@ -9144,12 +9258,12 @@ private static void swap(int[] arr, int i, int j) {
 }
 ```
 
-> 插入排序
+#### 3.3.2 Insertion Sort
 
 循环不变量： $arr[0...i)$是有序的，$arr[i...n)$是无序的
 
 ```java
-public void insertSort(int[] arr) {
+public void insertionSort(int[] arr) {
     for (int i = 0; i < arr.length; i++) {
         int temp = arr[i];
         int j;
@@ -9167,7 +9281,7 @@ public void insertSort(int[] arr) {
 
 插入排序：每次遍历下标$i$后，$arr[i]$的位置在后续遍历过程中还可能向后移动。
 
-> 冒泡排序
+#### 3.3.3 Bubble Sort
 
 ```java
 public void bubbleSort(int[] arr) {
@@ -9188,12 +9302,12 @@ public void bubbleSort(int[] arr) {
 }
 ```
 
-> 希尔排序
+#### 3.3.4 Shell Sort
 
 希尔排序结合了冒泡排序和插入排序的思想
 
 ```java
-public void shellSort2(int[] arr) {
+public void shellSort(int[] arr) {
     int h = arr.length / 2;
     while (h >= 1) {
         for (int i = h; i < arr.length; i++) {
@@ -9209,7 +9323,7 @@ public void shellSort2(int[] arr) {
 }
 ```
 
-> 归并排序
+#### 3.3.5 Merge Sort
 
 ```java
 public void mergeSort(int[] arr) {
@@ -9265,9 +9379,9 @@ public void mergeSortBottomUp(int[] arr) {
 }
 ```
 
-> 快速排序
+#### 3.3.6 Quick Sort
 
-经典快速排序
+##### 3.3.6.1 One Way Quick Sort
 
 ```java
 public void quickSort(int[] arr) {
@@ -9302,11 +9416,11 @@ private int partition(int[] arr, int l, int r) {
 - 当数组完全有序(正序/逆序)时，时间复杂度会退化到$O(n^2)$。解决思路：随机pivot。
 - 当数组元素完全相同时，时间复杂度会退化到$O(n^2)$。解决思路：二路快速排序/三路快速排序。
 
-二路快速排序
+##### 3.3.6.2 Two Way Quick Sort
 
 略，可参考**数组划分**章节中partition的相关实现。
 
-三路快速排序
+##### 3.3.6.3 Three Way Quick Sort
 
 ```java
 public void quickSort3ways(int[] arr) {
@@ -9339,7 +9453,7 @@ public static void quickSort3ways(int[] arr, int l, int r) {
 }
 ```
 
-> 堆排序
+#### 3.3.7 Heap Sort
 
 ```java
 public void heapSort(int[] data) {
@@ -9374,7 +9488,7 @@ public void swap(int[] data, int i, int j) {
 }
 ```
 
-> 计数排序
+#### 3.3.8 Counting Sort
 
 当已知数据范围时，可以采用计数排序。
 
@@ -9455,8 +9569,9 @@ class Solution {
 }
 ```
 
+#### 3.3.9 Radix Sort
 
-> LSD基数排序
+##### 3.3.9.1 Least Significant Digit Radix Sort
 
 LSD(Least Significant Digit)基数排序对字符串排序，要求字符串长度相等，从末位向前排序。
 
@@ -9485,7 +9600,7 @@ public void lsdSort(String[] arr, int n) {   // n = str.length()
 }
 ```
 
-> MSD基数排序
+##### 3.3.9.2 Most Significant Digit Radix Sort
 
 MSD(Most Significant Digit)基数排序，对于字符串排序，不需要字符串长度相等。
 
@@ -9534,7 +9649,7 @@ private void msdSort(String[] arr, int left, int right, int r, String[] temp) {
 }
 ```
 
-> 桶排序
+#### 3.3.10 Bucket Sort
 
 ```java
 public void bucketSort(int[] nums, int interval) {
@@ -9566,13 +9681,13 @@ public void bucketSort(int[] nums, int interval) {
 | ------------------------------------------------------------ | ---- |
 | [912. 排序数组](https://leetcode.cn/problems/sort-an-array/) | 中等 |
 
-### 3.4 Recursive, Backtracking and Divide and Conquer
+### 3.4 Recursion Algorithm
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 高       | 高       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 高       | 高       | 必须掌握 |
 
-> 递归经典问题之嵌套问题
+#### 3.4.1 Recursion
 
 例题：[726. 原子的数量](https://leetcode.cn/problems/number-of-atoms/)
 
@@ -9645,7 +9760,7 @@ class Solution {
 | [394. 字符串解码](https://leetcode.cn/problems/decode-string/) | 中等 |
 | [772. 基本计算器 III](https://leetcode.cn/problems/basic-calculator-iii/) | 困难 |
 
-> 回溯经典问题之子集问题
+#### 3.4.2 Backtracking : Subset
 
 例题：[78. 子集](https://leetcode.cn/problems/subsets/)
 
@@ -9673,23 +9788,51 @@ class Solution {
 
 时间复杂度：$O(n \times 2^n)$
 
-在位运算章节，还讲解了基于二进制掩码枚举子集的算法。
+在位运算章节，还讲解了基于二进制掩码枚举子集的算法，读者可以对照学习。
 
 如果nums中有重复元素，应该怎样去重呢？
 
-变式题：[90. 子集 II](https://leetcode.cn/problems/subsets-ii/)
+例题：[90. 子集 II](https://leetcode.cn/problems/subsets-ii/)
 
-不选时，增加如下逻辑：
+分析：下题采用了通过size和path数组存储路径，并且通过排序去重剪枝，建议学习体会。
 
 ```java
-while(i + 1 < nums.length && nums[i + 1] == nums[i]) {
-	i ++;
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        dfs(nums, 0, new int[nums.length], 0);
+        return ret;
+    }
+
+    private List<List<Integer>> ret = new ArrayList<>();
+
+    private void dfs(int[] nums, int i, int[] path, int size) {
+        if(i == nums.length) {
+            List<Integer> list = new ArrayList<>();
+            for(int j = 0; j < size; j ++) {
+                list.add(path[j]);
+            }
+            ret.add(list);
+            return;
+        }
+        int j = i + 1;
+        while(j < nums.length && nums[j] == nums[i]) {
+            j ++;
+        }
+        dfs(nums, j, path, size);  // 不选
+        for(; i < j; i ++) {
+            path[size ++] = nums[i];
+            dfs(nums, j, path, size);
+        }
+    }
 }
 ```
 
-> 回溯经典问题之排列问题
+#### 3.4.2 Backtracking : Permutation
 
 例题：[46. 全排列](https://leetcode.cn/problems/permutations/)
+
+一种比较直观的解法如下：
 
 ```java
 class Solution {
@@ -9733,7 +9876,7 @@ class Solution {
             return;
         }
         for(int j = i; j < nums.length; j ++) {
-            swap(nums, i, j);
+            swap(nums, i, j);  // 每个数都来到i位置
             dfs(nums, i + 1);
             swap(nums, i, j);
         }
@@ -9746,6 +9889,7 @@ class Solution {
     }
 }
 ```
+时间复杂度：$O(n·n!)$
 
 思考：如果包含重复数字，应该怎么解决？
 
@@ -9784,9 +9928,21 @@ class Solution {
 
 思考：基于交换的方式，如何书写代码？
 
-时间复杂度：$O(n·n!)$
+提示：
 
-> 回溯经典问题之组合问题
+```java
+Set<Integer> set = new HashSet<>();
+for(int j = i; j < nums.length; j ++) {
+    if(!set.contains(nums[j])) {
+        set.add(nums[j]);
+        swap(nums, i, j);
+        dfs(nums, i + 1);
+        swap(nums, i, j);
+    }
+}
+```
+
+#### 3.4.3 Backtracking : Combination
 
 例题：[39. 组合总和](https://leetcode.cn/problems/combination-sum/)
 
@@ -9828,7 +9984,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [40. 组合总和 II](https://leetcode.cn/problems/combination-sum-ii/) | 中等 |
 
-其他经典回溯问题，参见题单
+练习题单
 
 | 题号                                                       | 难度 |
 | ---------------------------------------------------------- | ---- |
@@ -9836,7 +9992,7 @@ class Solution {
 | [52. N 皇后 II](https://leetcode.cn/problems/n-queens-ii/) | 困难 |
 | [37. 解数独](https://leetcode.cn/problems/sudoku-solver/)  | 困难 |
 
-> 分治算法
+#### 3.4.4 Divide and Conquer
 
 快速排序算法、归并排序算法很好地体现了分治的思想。
 
@@ -10479,6 +10635,7 @@ class Solution {
 | [316. 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/) | 中等 |
 
 #### 3.6.4 Pairing Problem
+
 例题：[2576. 求出最多标记下标](https://leetcode.cn/problems/find-the-maximum-number-of-marked-indices/)
 
 分析：若$2*nums[i]\le nums[j]$，称$nums[i]$和$nums[j]$匹配。将数组从小到大排序后，如果存在$k$对匹配，一定能让最小的$k$个数和最大的$k$个数匹配。
@@ -10545,12 +10702,15 @@ class Solution {
 
 提示：$1 \le a_i + b_i \le m$，将$a$数组升序排序，$b$数组降序排序，判断是否所有的都满足$1 \le a[i]+b[i] \le m$。
 
+结论：给定序列 $A=a_1,a_2,...,a_n,B=b_1,b_2,...,b_n$，求如何排列，使得$\max_{i=1}^n{(a_i+b_i)}$ 最小？将A升序排列，将B降序排列。
+
 练习题单
 
 | 题号                         | 难度 | 知识点 |
 | ---------------------------- | ---- | ---------------------------- |
 | [2856. 删除数对后的最小数组长度](https://leetcode.cn/problems/minimum-array-length-after-pair-removals/) | 中等 | 例题结论运用 |
 | [881. 救生艇](https://leetcode.cn/problems/boats-to-save-people/) | 中等 |例题结论运用 |
+| [2895. 最小处理时间](https://leetcode.cn/problems/minimum-processing-time/) | 中等 | 例题结论运用 |
 
 
 #### 3.6.5 Regret-based Greedy
@@ -12379,8 +12539,6 @@ class Solution {
 ```
 时间复杂度：$O(n·sum)$ 
 
-基于动态规划解决零一背包问题的时间复杂度为伪多项式时间复杂度，因为复杂度和$sum$的实际值相关。
-
 也可以转换$dp$数组的定义，定义$dp[j]$表示容量为$j$的背包实际能装下的最大质量。
 
 ```java
@@ -12425,10 +12583,49 @@ Deque<Integer> group2 = IntStream.range(0, n).filter(e -> !path[target].contains
 
 练习题单：
 
-| 题号                                                         | 难度 | 提示                 |
+| 题号                                                         | 难度 | 知识点                 |
 | ------------------------------------------------------------ | ---- | -------------------- |
 | [416. 分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/) | 中等 | 模版题               |
 | [494. 目标和](https://leetcode.cn/problems/target-sum/)      | 中等 | 如何建模成背包问题？ |
+
+基于动态规划解决零一背包问题的时间复杂度为伪多项式时间复杂度，因为复杂度和$sum$的实际值相关。
+
+如果$sum$取值特别大，此时则无法使用先前介绍的方法进行求解。
+
+例题：[1755. 最接近目标值的子序列和](https://leetcode.cn/problems/closest-subsequence-sum/)
+
+分析：将数组一份为二，枚举子集并计算子集和。这部分代码写法可以参见**状态压缩动态规划**章节。对左右两侧子集和数组排序，然后用双指针章节讲解的指针计数法进行统计。
+
+```java
+class Solution {
+    public int minAbsDifference(int[] nums, int goal) {
+        int n = nums.length;
+        int mid = n >> 1;
+        int[] lsum = new int[1 << mid], rsum = new int[1 << n - mid];
+        for(int mask = 1; mask < lsum.length; mask ++) {
+            int x = Integer.numberOfTrailingZeros(mask);
+            int y = mask - (1 << x);
+            lsum[mask] = lsum[y] + nums[x];
+        }
+        for(int mask = 1; mask < rsum.length; mask ++) {
+            int x = Integer.numberOfTrailingZeros(mask);
+            int y = mask - (1 << x);
+            rsum[mask] = rsum[y] + nums[x + mid];
+        }
+        Arrays.sort(lsum);
+        Arrays.sort(rsum);
+        int ans = Integer.MAX_VALUE;
+        for(int i = 0, j = rsum.length - 1; i < lsum.length; i ++) {
+             while(j > 0 && Math.abs(goal - lsum[i] - rsum[j-1]) <= Math.abs(goal - lsum[i] - rsum[j])) {
+                j --;
+            }
+            ans = Math.min(ans, Math.abs(goal - lsum[i] - rsum[j]));
+        }
+        return ans;
+    }
+}
+```
+时间复杂度：$O(n·2^{\frac{n}{2}})$
 
 > 分组背包
 
