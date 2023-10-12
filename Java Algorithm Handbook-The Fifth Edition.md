@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.15 20231009更新
+版本号1.0.16 20231012更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -18,6 +18,15 @@ Java算法刷题宝典，是作者在刷Leetcode中总结出的精华，对知�
 - 补充了差分数组、树上倍增、SPFA算法、数位DP、最小费用最大流等内容。
 - 图论章节做了大量删减。
 - 根据作者个人理解不断加深，90%以上代码都进行了重写，代码风格统一且尽可能精简。
+
+> 这本书里有什么？
+
+- 分类知识点
+- 题解
+- 配套习题
+- 延伸思考
+- 代码模版
+- 专题总结
 
 > 第五版中作者比较满意的部分
 
@@ -2737,6 +2746,172 @@ class MedianFinder {
 }
 ```
 
+#### 1.3.10 Array Data Structure
+
+##### 1.3.10.1 Stack
+
+虽然很多语言都提供了栈的实现，对于一些空间要求较为严苛的比赛，使用语言内置的栈可能会超出内存限制。
+
+使用数组实现栈，可以根据数据范围，直接开辟相应大小的数组，避免动态扩容。
+
+```java
+public class Stack {
+    private final int MAX = 10001;
+    private int[] arr = new int[MAX];
+    private int top = -1;
+
+    public void push(int value) {
+        arr[++top] = value;
+    }
+
+    public int pop() {
+        return arr[top--];
+    }
+
+    public int getSize() {
+        return top + 1;
+    }
+
+    public int peek() {
+        return arr[top];
+    }
+    
+    public boolean isEmpty() {
+        return getSize() > 0;
+    }
+}
+```
+
+##### 1.3.10.2 Queue
+
+例题：[641. 设计循环双端队列](https://leetcode.cn/problems/design-circular-deque/)
+
+分析：
+
+front指向双端队列的队首元素。
+
+tail指向双端队列的队尾元素的下一个位置。
+
+```java
+class MyCircularDeque {
+
+    private int[] arr;
+    private int front = 0, rear = 0;
+
+    public MyCircularDeque(int k) {
+        arr = new int[k+1];
+    }
+    
+    public boolean insertFront(int value) {
+        if(isFull()) {
+            return false;
+        }
+        front = (front - 1 + arr.length) % arr.length;
+        arr[front] = value;
+        return true;
+    }
+    
+    public boolean insertLast(int value) {
+        if(isFull()) {
+            return false;
+        }
+        arr[rear] = value;
+        rear = (rear + 1) % arr.length;
+        return true;
+    }
+    
+    public boolean deleteFront() {
+        if(isEmpty()) {
+            return false;
+        }
+        front = (front + 1) % arr.length;
+        return true;
+    }
+    
+    public boolean deleteLast() {
+        if(isEmpty()) {
+            return false;
+        }
+        rear = (rear - 1 + arr.length) % arr.length;
+        return true;
+    }
+    
+    public int getFront() {
+        if(isEmpty()) {
+            return -1;
+        }
+        return arr[front];
+    }
+    
+    public int getRear() {
+        if(isEmpty()) {
+            return -1;
+        }
+        return arr[(rear - 1 + arr.length) % arr.length];
+    }
+    
+    public boolean isEmpty() {
+        return front == rear;
+    }
+    
+    public boolean isFull() {
+        return (rear + 1) % arr.length == front;
+    }
+}
+```
+
+##### 1.3.10.3 Heap
+
+本节给出二叉堆的简单实现，在Prim算法和Dijstra算法中，会讲解反向索引堆的实现。
+
+```java
+public class MaxHeap {
+    public static final int MAX = 10001;
+    private int[] data;
+    
+    public MaxHeap() {
+        data = new int[MAX];
+    }
+    
+    // 将数组调整为堆，时间复杂度：O(n)
+    public MaxHeap(int[] arr) {
+        data = Arrays.copyOf(arr, arr.length);
+        for (int i = parent(arr.length - 1); i >= 0; i--) {
+            siftDown(i);
+        }
+    }
+
+    private int parent(int index){
+        return (index - 1) / 2;
+    }
+
+    private int leftChild(int index){
+        return index * 2 + 1;
+    }
+
+    public void siftDown(int k) {
+        while (leftChild(k) < data.length) {
+            int j = leftChild(k);
+            if (j + 1 < data.length && data[j] < data[j + 1]) {
+                j ++;
+            }
+            if (data[j] <= data[k]) {
+                break;
+            }
+            swap(k, j);
+            k = j;
+        }
+    }
+    
+    private void swap(int i, int j) {
+        int temp = data[i];
+        data[i] = data[j];
+        data[j] = temp;
+    }
+
+}
+```
+
 ### 1.4 String
 
 #### 1.4.1 Substring Matching
@@ -4310,9 +4485,9 @@ class Solution {
 
 #### 2.4.1 Tree and Recursion
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 高       | 高       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 高       | 高       | 必须掌握 |
 
 从一道例题深入理解树的递归结构
 
@@ -4440,17 +4615,20 @@ class Solution {
 
 时间复杂度：$O(n)$
 
+进阶：例题437给出的是更难的情形，如果是根节点到叶子节点，题目难度会降低，读者尝试完成练习题单中的习题，再深入体会不同递归语义的区别。
+
 练习题单
 
-| 题号                                                         | 难度 |
-| ------------------------------------------------------------ | ---- |
-| [112. 路径总和](https://leetcode.cn/problems/path-sum/)      | 简单 |
-| [113. 路径总和 II](https://leetcode.cn/problems/path-sum-ii/) | 中等 |
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [112. 路径总和](https://leetcode.cn/problems/path-sum/)      | 简单 | 递归+根到叶+存在判断
+| [113. 路径总和 II](https://leetcode.cn/problems/path-sum-ii/) | 中等 | 递归+根到叶+路径还原
 
 #### 2.4.2 Properties of Trees
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 树的性质：
 
@@ -4570,12 +4748,13 @@ class Solution {
     }
 }
 ```
+时间复杂度：$\log^2 n$
 
 #### 2.4.3 Tree Traversal
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 高       | 高       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 高       | 高       | 必须掌握 |
 
 > 有根树的遍历
 
@@ -4589,7 +4768,70 @@ class Solution {
 
 层序遍历：基于队列实现，按层从左到右遍历。
 
-探究1：非递归实现
+探究1：深入理解三种递归遍历
+
+例题：[98. 验证二叉搜索树](https://leetcode.cn/problems/validate-binary-search-tree/)
+
+先序遍历：自顶向下求解问题，在某些情况下，无需递归到边界。
+
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private boolean isValidBST(TreeNode root, long min, long max) {
+        if(root == null) {
+            return true;
+        }
+        long val = root.val;
+        return val > min && val < max && isValidBST(root.left, min, val) && isValidBST(root.right,val, max);
+    }
+}
+```
+
+中序遍历：利用到二分搜索树的性质。
+
+```java
+class Solution {
+    private long pre = Long.MIN_VALUE;
+
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) {
+            return true;
+        }
+        if(!isValidBST(root.left) || root.val <= pre) {
+            return false;
+        }
+        pre = root.val;
+        return isValidBST(root.right);
+    }
+}
+```
+
+后序遍历：自底向上求解问题，和树形动态规划有紧密联系。
+
+```java
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return dfs(root)[1] != Long.MAX_VALUE;
+    }
+
+    public long[] dfs(TreeNode root) {
+        if(root == null) {
+            return new long[]{Long.MAX_VALUE, Long.MIN_VALUE};
+        }
+        long[] left = dfs(root.left);
+        long[] right = dfs(root.right);
+        if(root.val <= left[1] || root.val >= right[0]) {
+            return new long[]{Long.MIN_VALUE, Long.MAX_VALUE};
+        }
+        return new long[]{Math.min(left[0], root.val), Math.max(right[1], root.val)};
+    }
+}
+```
+
+探究2：非递归实现
 
 先序遍历的非递归实现：
 
@@ -4660,7 +4902,7 @@ public List<Integer> postOrder(TreeNode root) {
 }
 ```
 
-探究2：还原二叉树
+探究3：还原二叉树
 
 先序遍历和中序遍历的序列能够唯一确定一颗二叉树。
 
@@ -4695,7 +4937,7 @@ class Solution {
 }
 ```
 
-探究3：序列化与反序列化
+探究4：序列化与反序列化
 
 例题：[449. 序列化和反序列化二叉搜索树](https://leetcode.cn/problems/serialize-and-deserialize-bst/)
 
@@ -4734,7 +4976,7 @@ public class Codec {
 }
 ```
 
-探究4：基于递归实现层序遍历
+探究5：基于递归实现层序遍历
 
 例题：[102. 二叉树的层序遍历](https://leetcode.cn/problems/binary-tree-level-order-traversal/)
 
@@ -4761,7 +5003,7 @@ class Solution {
 }
 ```
 
-探究5：前序遍历序列判断
+探究6：前序遍历序列判断
 
 例题：[255. 验证前序遍历序列二叉搜索树](https://leetcode.cn/problems/verify-preorder-sequence-in-binary-search-tree/)
 
@@ -4787,7 +5029,7 @@ class Solution {
 }
 ```
 
-探究6：二分搜索树中序遍历性质
+探究7：二分搜索树中序遍历性质
 
 二分搜索树中序遍历的序列是有序的。可以根据这一性质求解一系列问题。
 
@@ -5022,9 +5264,9 @@ class Solution {
 
 #### 2.4.6 Lowest Common Ancestor
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 例题：[236. 二叉树的最近公共祖先](https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/)
 
@@ -6593,6 +6835,12 @@ class Solution {
 ```
 本题中，$count[i]$相同的元素属于同一个联通分量。
 
+
+练习题单
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [200. 岛屿数量](https://leetcode.cn/problems/number-of-islands/) | 中等 |
+
 ##### 2.5.2.4 Depth First Search : Single Source Path
 
 例题：[797. 所有可能的路径](https://leetcode.cn/problems/all-paths-from-source-to-target/)
@@ -6647,6 +6895,12 @@ class Solution {
     }
 }
 ```
+
+练习题单
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [1466. 重新规划路线](https://leetcode.cn/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/) | 中等 |
+| [802. 找到最终的安全状态](https://leetcode.cn/problems/find-eventual-safe-states/) | 中等 |
 ##### 2.5.2.5 Depth First Search : Flood Fill
 
 例题：[529. 扫雷游戏](https://leetcode.cn/problems/minesweeper/)
@@ -6692,9 +6946,10 @@ class Solution {
 练习题单
 | 题号                                                         | 难度 |
 | ------------------------------------------------------------ | ---- |
-| [1466. 重新规划路线](https://leetcode.cn/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/) | 中等 |
-| [802. 找到最终的安全状态](https://leetcode.cn/problems/find-eventual-safe-states/) | 中等 |
 | [417. 太平洋大西洋水流问题](https://leetcode.cn/problems/pacific-atlantic-water-flow/) | 中等 |
+| [130. 被围绕的区域](https://leetcode.cn/problems/surrounded-regions/) | 中等 |
+| [827. 最大人工岛](https://leetcode.cn/problems/making-a-large-island/) | 困难 |
+| [803. 打砖块](https://leetcode.cn/problems/bricks-falling-when-hit/) | 困难 |
 
 ##### 2.5.2.6 Breadth First Search : Shortest Path
 
@@ -6833,6 +7088,7 @@ class Solution {
 | [279. 完全平方数](https://leetcode.cn/problems/perfect-squares/) | 中等 | 最短路径/动态规划 |
 | [752. 打开转盘锁](https://leetcode.cn/problems/open-the-lock/) | 中等 | 最短路径 |
 | [1162. 地图分析](https://leetcode.cn/problems/as-far-from-land-as-possible/) | 中等 | 多源最短路径+分层 |
+| [864. 获取所有钥匙的最短路径](https://leetcode.cn/problems/shortest-path-to-get-all-keys/) | 困难 | 最短路径+状态压缩 |
 
 ##### 2.5.2.7 Breadth First Search : State Search
 
@@ -7187,6 +7443,94 @@ class Solution {
 }
 ```
 
+Prim算法可以借助反向索引堆进行优化，时间复杂度能优化到$m\log n$，适合于边数比较多的场景，如本题。
+
+```java
+class Solution {
+    public int minCostConnectPoints(int[][] points) {
+        int n = points.length, ans = 0;
+        heap = new int[n][2];
+        where = new int[n];
+        Arrays.fill(where, -1);
+        where[0] = -2;
+        for(int i = 1; i < n; i ++) {
+            addOrUpdateOrIgnore(i, getDistance(points, 0, i));
+        }
+        while(heapSize != 0) {
+            int[] cur = pop();
+            int u = cur[0], w = cur[1];
+            ans += w;
+            for(int v = 0; v < n; v ++) {
+                if(v != u) {
+                    addOrUpdateOrIgnore(v, getDistance(points, u, v));
+                }
+            }
+        }
+        return ans;
+    }
+
+    private int[][] heap;
+    private int heapSize = 0;
+    private int[] where;
+
+    private void addOrUpdateOrIgnore(int v, int w) {
+        if(where[v] == -1) {
+            heap[heapSize][0] = v;
+            heap[heapSize][1] = w;
+            where[v] = heapSize ++;
+            heapInsert(where[v]);
+        }else if(where[v] >= 0) {
+            heap[where[v]][1] = Math.min(heap[where[v]][1], w);
+            heapInsert(where[v]);
+        }
+    }
+
+    private int getDistance(int[][] points, int i, int j) {
+        return Math.abs(points[i][0] - points[j][0]) + Math.abs(points[i][1] - points[j][1]);
+    }
+
+    private void heapInsert(int i) {
+        while(heap[i][1] < heap[(i - 1) / 2][1]) {
+            swap(i, (i - 1) / 2);
+            i = (i - 1) / 2;
+        }
+    }
+
+    private int[] pop() {  
+        int[] ret = heap[0];
+        swap(0, --heapSize);
+        siftDown(0);
+        where[ret[0]] = -2;
+        return ret;
+    }
+
+    private void siftDown(int i) {
+        int l = 1;
+        while(l < heapSize) {
+            if(l + 1 < heapSize && heap[l + 1][1] < heap[l][1]) {
+                l ++;
+            }
+            if(heap[l][1] >= heap[i][1]) {
+                break;
+            }
+            swap(l, i);
+            i = l;
+            l = i * 2 + 1;
+        }
+    }
+
+    private void swap(int i, int j) {
+        int[] temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+        where[heap[i][0]] = i;
+        where[heap[j][0]] = j;
+    }
+}
+```
+
+
+
 练习题单
 
 | 题号                                                         | 难度 | 知识点                |
@@ -7205,8 +7549,10 @@ class Solution {
 | 中       | 中       |
 
 | 算法            | 时间复杂度                  | 特点                             |
-| --------------- | --------------------------- | -------------------------------- |
-| Dijkstra算法    | $O((m+n)\log m)$ 基于二叉堆 | 不能含负权边，单源最短路径       |
+| --------------- | --------------------------- | -------------------------------- 
+| Dijkstra算法    | $O(n^2)$ | 不能含负权边，单源最短路径       |
+| Dijkstra算法    | $O(m \log m)$ 基于二叉堆 | 不能含负权边，单源最短路径       |
+| Dijkstra算法    | $O(m \log n)$ 基于反向索引堆 | 不能含负权边，单源最短路径       |
 | BellmanFord算法 | $O(m*n)$                    | 可以检测负权环，单源最短路径     |
 | SPFA算法        | $O(k*m)$，$k$为平均入队次数 | 可以检测负权环，单源最短路径     |
 | Floyed算法      | $O(n^3)$                    | 可以检测负权环，所有点对最短路径 |
@@ -7265,7 +7611,7 @@ class Solution {
     }
 }
 ```
-时间复杂度：$O(V^2)$
+时间复杂度：$O(n^2)$
 
 继续分析，上述代码的性能瓶颈在于，每次需要遍历出dist数组未访问过的最小dist值，可以通过优先队列进行优化。
 
@@ -7303,7 +7649,7 @@ class Solution {
     }
 }
 ```
-时间复杂度：$O(E\log E)$，优先队列中最多有E个元素。
+时间复杂度：$O(m\log m)$，优先队列中最多有m个元素。
 
 如果图为稠密图，采用未优化过的Dijstra算法性能可能更高。
 
@@ -7348,6 +7694,111 @@ class Solution {
 时间复杂度：$O(n^2)$，$n$为specialRoads的长度。
 
 思考：体会BFS算法和Dijkstra算法的异同。
+
+进阶：使用反向索引堆优化，由于堆大小为节点数，所以时间复杂度为：$O(m\log n)$。
+
+```java
+class Solution {
+
+    private int[] heap;   // heap长度为节点数n，heap[i]表示当前堆顶的节点下标。
+    private int[] where;  // where[v] = -1表示未访问过，where[v] = -2表示已访问，where[v] = i表示v节点在heap下标为i的位置。
+    private int[] dist;
+    private int heapSize = 0;
+
+    public int networkDelayTime(int[][] times, int n, int k) {
+        int m = times.length + 1, cnt = 1;
+
+        heap = new int[n];
+        where = new int[n];
+        dist = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        Arrays.fill(where, -1);
+        k--;
+        dist[k] = 0;
+
+        int[] head = new int[n];
+        int[] next = new int[m];
+        int[] to = new int[m];
+        int[] weight = new int[m];
+
+        for(int[] time : times) {
+            int u = time[0] - 1, v = time[1] - 1, w = time[2];
+            next[cnt] = head[u];
+            to[cnt] = v;
+            weight[cnt] = w;
+            head[u] = cnt ++;
+        }
+
+        addOrUpdateOrIgnore(k, 0);
+        while(heapSize != 0) {
+            int u = pop();
+            for(int ei = head[u]; ei > 0; ei = next[ei]) {
+                addOrUpdateOrIgnore(to[ei], dist[u] + weight[ei]);
+            }
+        }
+        int max = Arrays.stream(dist).max().getAsInt();
+        return max == Integer.MAX_VALUE ? -1 : max;
+    }
+
+    private void addOrUpdateOrIgnore(int v, int c) {
+        if(where[v] == -1) {
+            heap[heapSize] = v;
+            where[v] = heapSize ++;
+            dist[v] = c;
+            heapInsert(where[v]);
+        } else if(where[v] >= 0) {
+            dist[v] = Math.min(dist[v], c);
+            heapInsert(where[v]);
+        }
+    }
+
+    private void heapInsert(int i) {
+        while(dist[heap[i]] < dist[heap[(i - 1) / 2]]) {
+            swap(i, (i - 1) / 2);
+            i = (i - 1) / 2;
+        }
+    }
+
+    private int pop() {  
+        int ret = heap[0];
+        swap(0, --heapSize);
+        siftDown(0);
+        where[ret] = -2;
+        return ret;
+    }
+
+    private void siftDown(int i) {
+        int l = 1;
+        while(l < heapSize) {
+            if(l + 1 < heapSize && dist[heap[l + 1]] < dist[heap[l]]) {
+                l ++;
+            }
+            if(dist[heap[l]] >= dist[heap[i]]) {
+                break;
+            }
+            swap(l, i);
+            i = l;
+            l = i * 2 + 1;
+        }
+    }
+
+    private void swap(int i, int j) {
+        int temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+        where[heap[i]] = i;
+        where[heap[j]] = j;
+    }
+}
+```
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点                |
+| ------------------------------------------------------------ | ---- | --------------------- |
+| [1631. 最小体力消耗路径](https://leetcode.cn/problems/path-with-minimum-effort/) | 中等 | 最小生成树/最短路径/二分查找+DFS       |
+| [778. 水位上升的泳池中游泳](https://leetcode.cn/problems/swim-in-rising-water/) | 困难 | 最短路径，类似1631题|
+
 ##### 2.5.4.2 BellmanFord
 
 Bellan核心是松弛操作。
@@ -7365,7 +7816,7 @@ if(dis[a] + ab < dis[b])
 
 对所有边进行一次松弛操作，求出到所有点经过的边数最多为$1$的最短路。
 
-松弛$V-1$次则求出所有点经过的边数最多为$V-1$的最短路。
+松弛$n-1$次则求出所有点经过的边数最多为$n-1$的最短路。
 
 本题中，采用BellmandFord算法，可以不用建图，直接遍历边。
 
@@ -7389,7 +7840,7 @@ class Solution {
     }
 }
 ```
-对于负权环的检测：在松弛完V-1轮后，如果还能松弛，说明存在负权环。
+对于负权环的检测：在松弛完n-1轮后，如果还能松弛，说明存在负权环。
 ```java
 for(int v = 0; v < n; v ++) {
     for(int w : graph[v]) {
@@ -7414,9 +7865,9 @@ for(int v = 0; v < n; v ++) {
 
 可以看出，只用了$1$轮松弛就得到了从$0\to3$的最短路径，原因在于松弛$1\to2$时，$0\to1$刚好松弛过，此时$dis[1]$不再是$inf$。$dis[j]=dis[i] + w[i][j]$时的$dis[j]$语义变为了经过($dis[i]$最短路径边数$+1$)条边到达$j$的最短路径。
 
-该松弛保证了$V-1$松弛后得出的答案一定是正确的。
+该松弛保证了$n-1$松弛后得出的答案一定是正确的。
 
-若要满足松弛$V-1$次求出所有点经过的边数最多为$V-1$的最短路，参考如下例题，使用一个clone数组记录上一次的最短路径的值，避免对第$i$条边进行更新之后，第$i+1$条边在上次更新之后的值基础之上更新。
+若要满足松弛$n-1$次求出所有点经过的边数最多为$n-1$的最短路，参考如下例题，使用一个clone数组记录上一次的最短路径的值，避免对第$i$条边进行更新之后，第$i+1$条边在上次更新之后的值基础之上更新。
 
 例题：[787. K 站中转内最便宜的航班](https://leetcode.cn/problems/cheapest-flights-within-k-stops/)
 
@@ -7540,6 +7991,51 @@ class Solution {
 }
 ```
 Floyed算法检测负权环：松弛完毕后，若发现$dis[v][v]<0$，说明存在负权环。
+
+##### 2.5.4.5 Shortest Path With Constraint 
+
+例题：[LCP 35. 电动车游城市](https://leetcode.cn/problems/DFPeFJ/)
+
+```java
+class Solution {
+    public int electricCarPlan(int[][] paths, int cnt, int start, int end, int[] charge) {
+        int n = paths.length;
+        List<int[]>[] graph = new List[n];
+        Arrays.setAll(graph, k -> new ArrayList<>());
+        for(int[] path : paths) {
+            int from = path[0], to = path[1], w = path[2];
+            graph[from].add(new int[]{to, w});
+            graph[to].add(new int[]{from, w});
+        }
+        int[][] dist = new int[n][cnt+1];
+        for(int[] d : dist) {
+            Arrays.fill(d, Integer.MAX_VALUE);
+        }
+        dist[start][0] = 0;
+        Queue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
+        queue.offer(new int[]{start, 0, 0});
+        while(!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            int u = cur[0], c = cur[1], w = cur[2];
+            if(u == end) {
+                return w;
+            }
+            if(c < cnt && dist[u][c + 1] > w + charge[u]) {
+                dist[u][c + 1] = w + charge[u];
+                queue.offer(new int[]{u, c + 1, dist[u][c + 1]});
+            }
+            for(int[] adj : graph[u]) {
+                int to = adj[0], d = adj[1];
+                if(c >= d && w + d < dist[to][c - d]) {
+                    dist[to][c - d] = w + d;
+                    queue.offer(new int[]{to, c - d, dist[to][c - d]});
+                }    
+            } 
+        }
+        return -1;
+    }
+}
+```
 
 #### 2.5.5 Topological Sort
 
@@ -11620,9 +12116,10 @@ class Solution {
 
 #### 3.7.5 Tree Dynamic Programming
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
+
 现讨论更复杂的一种打家劫舍问题。
 
 例题：[337. 打家劫舍 III](https://leetcode.cn/problems/house-robber-iii/)
