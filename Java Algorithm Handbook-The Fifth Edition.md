@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.16 20231012更新
+版本号1.0.17 20231014更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -6710,6 +6710,48 @@ head = 7, next[7] = 5, to[7] = 3, weight[7] = 6, 找到
 head = 5, next[5] = 0, to[5] = 2, weight[5] = 7, 找到
 (2,7)
 
+网格图
+
+网格图是一种特殊的图，其以二维网格的形式给出，此时有一些通用的技巧对网格进行遍历，而无需建图。
+
+场景1: 只能沿着上下左右四个方向遍历。
+
+可以定义一个数组move。
+
+```java
+int[][] grid;
+int m = grid.length, n = grid[0].length;
+int[] move = new int[]{-1, 0, 1, 0, -1};
+int x, y;  // 根据实际情况取值
+for(int i = 0; i < 4; i ++) {
+    int nx = x + move[i], ny = y + move[i+1];  // nx，ny为下一次访问的点。
+    if(0 <= nx && nx < m && 0 <= ny && ny < n) { // 合法位置
+
+    }
+}
+```
+曼哈顿距离：$|x_1-x_2|+|y_1-y_2|$
+
+场景2: 可以沿着八个方向进行遍历。
+
+```java
+int[][] grid;
+int m = grid.length, n = grid[0].length;
+int[][] dir = new int[][]{{-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1}};
+int x, y;
+for(int[] d : dir) {
+    int nx = x + d[0], ny = y + d[1];  
+    if(0 <= nx && nx < m && 0 <= ny && ny < n) { 
+    }
+}
+```
+对角线距离：$\max\{|x_1-x_2|,|y_1-y_2|\}$
+
+练习题单
+
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [2849. 判断能否在给定时间到达单元格](https://leetcode.cn/problems/determine-if-a-cell-is-reachable-at-a-given-time/) | 中等 | 对角线距离 |
 
 #### 2.5.2 Graph Traversal
 
@@ -6944,12 +6986,12 @@ class Solution {
 }
 ```
 练习题单
-| 题号                                                         | 难度 |
-| ------------------------------------------------------------ | ---- |
-| [417. 太平洋大西洋水流问题](https://leetcode.cn/problems/pacific-atlantic-water-flow/) | 中等 |
-| [130. 被围绕的区域](https://leetcode.cn/problems/surrounded-regions/) | 中等 |
-| [827. 最大人工岛](https://leetcode.cn/problems/making-a-large-island/) | 困难 |
-| [803. 打砖块](https://leetcode.cn/problems/bricks-falling-when-hit/) | 困难 |
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [417. 太平洋大西洋水流问题](https://leetcode.cn/problems/pacific-atlantic-water-flow/) | 中等 | 逆向思维
+| [130. 被围绕的区域](https://leetcode.cn/problems/surrounded-regions/) | 中等 | 逆向思维
+| [827. 最大人工岛](https://leetcode.cn/problems/making-a-large-island/) | 困难 | 连通分量
+| [803. 打砖块](https://leetcode.cn/problems/bricks-falling-when-hit/) | 困难 | 逆向思维
 
 ##### 2.5.2.6 Breadth First Search : Shortest Path
 
@@ -7960,7 +8002,7 @@ class Solution {
 
 ##### 2.5.4.4 Floyed
 
-Floyed算法本身非常好理解，阅读代码即可。
+Floyed算法本身非常好理解，阅读代码即可，注意，中间点t必须在最外层循环。
 
 ```java
 class Solution {
@@ -7993,6 +8035,8 @@ class Solution {
 Floyed算法检测负权环：松弛完毕后，若发现$dis[v][v]<0$，说明存在负权环。
 
 ##### 2.5.4.5 Shortest Path With Constraint 
+
+本节选学。
 
 例题：[LCP 35. 电动车游城市](https://leetcode.cn/problems/DFPeFJ/)
 
@@ -8036,6 +8080,60 @@ class Solution {
     }
 }
 ```
+
+##### 2.5.4.6 A Star
+
+A*算法常用于在指定源点和目标点的前提下求解源点到目标点的最短路径，和Dijsktra算法几乎一致，只是增加了当前点到终点的预估函数。
+
+预估函数要求当前点到终点的预估距离小于等于当前点到终点的真实最短距离。
+
+例如，在二维网格中，给定开始位置startX，startY，网格为0表示障碍，网格为1可通行。求到达targetX，targetY的最短路径。
+
+```java
+public class Solution {
+    public int minDistance(int[][] grid, int startX, int startY, int targetX, int targetY) {
+        if (grid[startX][startY] == 0 || grid[targetX][targetY] == 0) {
+            return -1;
+        }
+        int m = grid.length, n = grid[0].length;
+        int[][] dist = new int[m][n];
+        for(int[] d : dist) {
+            Arrays.fill(d, Integer.MAX_VALUE);
+        }
+        dist[startX][startY] = 1;
+        boolean[][] visited = new boolean[n][m];
+        Queue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
+        queue.add(new int[]{startX, startY, 1 + f(startX, startY, targetX, targetY)});
+        int[] move = new int[]{-1, 0, 1, 0, -1};
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            int x = cur[0], y = cur[1];
+            if (visited[x][y]) {
+                continue;
+            }
+            visited[x][y] = true;
+            if (x == targetX && y == targetY) {
+                return dist[x][y];
+            }
+            for (int i = 0; i < 4; i++) {
+                int nx = x + move[i], ny = y + move[i + 1];
+                if (nx >= 0 && nx < n && ny >= 0 && ny < m && grid[nx][ny] == 1 && !visited[nx][ny] && dist[x][y] + 1 < dist[nx][ny]) {
+                    dist[nx][ny] = dist[x][y] + 1;
+                    queue.add(new int[]{nx, ny, dist[x][y] + 1 + f(nx, ny, targetX, targetY)});
+                }
+            }
+        }
+        return -1;
+    }
+
+    private int f(int x1, int y1, int x2, int y2) {
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+    }
+}
+```
+
+如果可以沿着八个方向遍历，则可以将f改为对角线距离。若依然使用曼哈顿距离，则不满足小于等于当前点到终点的真实最短距离这一条件，此时用A*算法会出错。Dijkstra算法可以看作f恒为0的特例。通常来说，A\*算法搜索效率会更高。
+
 
 #### 2.5.5 Topological Sort
 
@@ -9189,6 +9287,11 @@ public class LRUCache {
     }
 }
 ```
+练习题单
+
+| 题号                                                         | 难度 | 知识点                |
+| ------------------------------------------------------------ | ---- | --------------------- |
+| [432. 全 O(1) 的数据结构](https://leetcode.cn/problems/all-oone-data-structure/) | 困难 | 双向链表+哈希表       |
 #### 2.6.2 LFU
 
 例题：[460. LFU 缓存](https://leetcode.cn/problems/lfu-cache/)
@@ -9278,6 +9381,11 @@ class LFUCache {
     }
 }
 ```
+练习题单
+
+| 题号                                                         | 难度 | 知识点                |
+| ------------------------------------------------------------ | ---- | --------------------- |
+| [895. 最大频率栈](https://leetcode.cn/problems/maximum-frequency-stack/) | 困难 | 哈希表       |
 
 ## Part 3 Algorithm
 
