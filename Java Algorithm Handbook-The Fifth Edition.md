@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.17 20231014更新
+版本号1.0.18 20231015更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -1762,7 +1762,45 @@ class Solution {
 | ------------------------------------------------------------ | ---- | ---- |
 | [LCP 74. 最强祝福力场](https://leetcode.cn/problems/xepqZ5/) | 中等 | 二维差分+离散化|
 
-#### 1.3.5 Merge Array
+#### 1.3.5 Prefix Suffix Decomposition
+
+| 面试概率 | 笔试概率 |
+| -------- | -------- |
+| 中       | 中       |
+
+前后缀分解是一种比较常见的技巧，从一道例题中学习。
+
+例题：[238. 除自身以外数组的乘积](https://leetcode.cn/problems/product-of-array-except-self/)
+
+```java
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] pre = new int[n], suf = new int[n], ret = new int[n];
+        pre[0] = 1;
+        suf[n-1] = 1;
+        for(int i = 1; i < n; i ++) {
+            pre[i] = pre[i-1] * nums[i-1];
+            suf[n-i-1] = suf[n-i] * nums[n-i];
+        }
+        for(int i = 0; i < n; i ++) {
+            ret[i] = pre[i] * suf[i];
+        }
+        return ret;
+    }
+}
+```
+
+练习题单
+
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [2256. 最小平均差](https://leetcode.cn/problems/minimum-average-difference/) | 中等 |
+| [2483. 商店的最少代价](https://leetcode.cn/problems/minimum-penalty-for-a-shop/) | 中等 |
+| [8026. 构造乘积矩阵](https://leetcode.cn/problems/construct-product-matrix/) | 中等 | todo
+
+
+#### 1.3.6 Merge Array
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2042,7 +2080,7 @@ class Solution {
 | [719. 找出第 K 小的数对距离](https://leetcode.cn/problems/find-k-th-smallest-pair-distance/) | 困难(可能超时) |
 | [264. 丑数 II](https://leetcode.cn/problems/ugly-number-ii/) | 中等           |
 
-#### 1.3.6 Array Partition
+#### 1.3.7 Array Partition
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2222,7 +2260,7 @@ class Solution {
 }
 ```
 
-#### 1.3.7 Blocks and Buckets
+#### 1.3.8 Blocks and Buckets
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2415,7 +2453,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [621. 任务调度器](https://leetcode.cn/problems/task-scheduler/) | 中等 |
 
-#### 1.3.8 Rotating Array
+#### 1.3.9 Rotating Array
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2587,7 +2625,7 @@ class Solution {
 }
 ```
 
-#### 1.3.9 Median of Array
+#### 1.3.10 Median of Array
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -2746,9 +2784,9 @@ class MedianFinder {
 }
 ```
 
-#### 1.3.10 Array Data Structure
+#### 1.3.11 Array Data Structure
 
-##### 1.3.10.1 Stack
+##### 1.3.11.1 Stack
 
 虽然很多语言都提供了栈的实现，对于一些空间要求较为严苛的比赛，使用语言内置的栈可能会超出内存限制。
 
@@ -2782,7 +2820,7 @@ public class Stack {
 }
 ```
 
-##### 1.3.10.2 Queue
+##### 1.3.11.2 Queue
 
 例题：[641. 设计循环双端队列](https://leetcode.cn/problems/design-circular-deque/)
 
@@ -2860,7 +2898,7 @@ class MyCircularDeque {
 }
 ```
 
-##### 1.3.10.3 Heap
+##### 1.3.11.3 Heap
 
 本节给出二叉堆的简单实现，在Prim算法和Dijstra算法中，会讲解反向索引堆的实现。
 
@@ -12942,9 +12980,11 @@ class Solution {
 
 #### 3.7.10 Knapsack Problem
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 选择性掌握 |
+
+##### 3.7.10.1 Complete Knapsack
 
 完全背包类型：求最大价值、求组合数、求排列数。
 
@@ -13026,6 +13066,8 @@ class Solution {
 ```
 
 结论：求最大价值类问题，内外层循环遍历顺序均可。
+
+##### 3.7.10.2 0/1 Knapsack
 
 > 零一背包之最大价值
 
@@ -13232,7 +13274,95 @@ class Solution {
 ```
 时间复杂度：$O(n·2^{\frac{n}{2}})$
 
-> 分组背包
+##### 3.7.10.3 Multiple Knapsack
+
+例题：[100029. 和带限制的子多重集合的数目](https://leetcode.cn/problems/count-of-sub-multisets-with-bounded-sum/) // todo
+
+分析：由于相同数字不做区分，本题为多重背包。区分相同数字则为零一背包。
+
+先给出暴力做法，暴力做法实际上也是解决多重背包的代表性做法，本题中由于0的存在，需要一些额外逻辑处理。
+
+最外层循环：对物品进行枚举
+
+第二层循环：对容量进行枚举，由于是一维数组，需要从后往前遍历。
+
+第三层循环：对次数进行枚举
+
+由于数据规模的原因，采用暴力做法会超时。
+
+```java
+class Solution {
+    public int countSubMultisets(List<Integer> nums, int l, int r) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int num : nums) {
+            map.merge(num, 1, Integer::sum);
+        }
+        int[] dp = new int[r+1];
+        dp[0] = 1;
+        int ans = 0, mod = 10000_00007, zero = map.getOrDefault(0, 0) + 1;
+        map.remove(0);
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            int key = entry.getKey(), value = entry.getValue();
+            for(int j = r; j >= key; j --) {
+                for(int k = 1; k <= value && k * key <= j; k ++) {
+                    dp[j] = (dp[j] + dp[j - k * key]) % mod;
+                }
+            }
+        }
+        for(int i = l; i <= r; i ++) {
+            ans = (ans + dp[i]) % mod;
+        }
+        ans = (int)(ans * (long) zero % mod);
+        return ans;
+    }
+}
+```
+现考虑对该问题进行优化。定义$f[i+1][j]$表示从前$i$种数中选择一些数，元素和恰好为$j$的方案数。若第$i$种数的值为$x$。
+
+$f[i+1][j]=\sum_{k=0}^{cnt[x]} f[i][j-kx],j-kx\ge 0$
+
+假设x=2，且存在3个，则有：
+
+$f[i+1][j-2]=f[i][j-2]+f[i][j-4]+f[i][j-6]+f[i][j-8]=f[i+1][j-2]+f[i][j]-f[i][j-8]$
+
+一般化：
+
+$f[i+1][j] = f[i+1][j-x]+f[i][j]-f[i][j-(cnt[x]+1)·x]$
+
+若$j - (cnt[x] + 1)·x<0$，则该项取值为0。
+
+```java
+class Solution {
+    public int countSubMultisets(List<Integer> nums, int l, int r) {
+        int MOD = 10000_00007;
+        Map<Integer, Integer> cnt = new HashMap<Integer, Integer>();
+        for (int x : nums) {
+            cnt.merge(x, 1, Integer::sum);
+        }
+        int[] f = new int[r + 1];
+        f[0] = cnt.getOrDefault(0, 0) + 1;
+        cnt.remove(0);
+        for (Map.Entry<Integer, Integer> e : cnt.entrySet()) {
+            int x = e.getKey(), c = e.getValue();
+            int[] newF = f.clone();
+            for (int j = x; j <= r; j++) {
+                newF[j] = (newF[j] + newF[j - x]) % MOD;
+                if (j >= (c + 1) * x) {
+                    newF[j] = (newF[j] - f[j - (c + 1) * x] + MOD) % MOD;
+                }
+            }
+            f = newF;
+        }
+        int ans = 0;
+        for (int i = l; i <= r; ++i) {
+            ans = (ans + f[i]) % MOD;
+        }
+        return ans;
+    }
+}
+```
+
+##### 3.7.10.4 Group Knapsack
 
 分组背包，物品被分为若干组，每组最多只能选一个/恰好选择一个，根据题意而定。
 
