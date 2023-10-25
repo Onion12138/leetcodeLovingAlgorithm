@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.18 20231015更新
+版本号1.0.20 20231025更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -1764,11 +1764,11 @@ class Solution {
 
 #### 1.3.5 Prefix Suffix Decomposition
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
-前后缀分解是一种比较常见的技巧，从一道例题中学习。
+前后缀分解是一种比较常见的技巧，通过维护前缀、后缀的和、乘积或者最大值，高效地解决一系列问题。从一道例题中学习这个技巧。
 
 例题：[238. 除自身以外数组的乘积](https://leetcode.cn/problems/product-of-array-except-self/)
 
@@ -1797,7 +1797,8 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [2256. 最小平均差](https://leetcode.cn/problems/minimum-average-difference/) | 中等 |
 | [2483. 商店的最少代价](https://leetcode.cn/problems/minimum-penalty-for-a-shop/) | 中等 |
-| [8026. 构造乘积矩阵](https://leetcode.cn/problems/construct-product-matrix/) | 中等 | todo
+| [2906. 构造乘积矩阵](https://leetcode.cn/problems/construct-product-matrix/) | 中等 | 
+| [2909. 元素和最小的山形三元组 II](https://leetcode.cn/problems/minimum-sum-of-mountain-triplets-ii/) | 中等 |
 
 
 #### 1.3.6 Merge Array
@@ -3192,9 +3193,9 @@ class Solution {
 
 #### 1.4.2 Palindrome String
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 >  双向扩展法
 
@@ -3290,7 +3291,7 @@ class Solution {
 
 4. 求解数组p
 
-参考一下例题
+参考以下例题
 
 例题：[5. 最长回文子串](https://leetcode.cn/problems/longest-palindromic-substring/)
 
@@ -3336,6 +3337,8 @@ class Solution {
     }
 }
 ```
+
+思考：如果求最长回文子序列，应该如何求解？参考题目[516. 最长回文子序列](https://leetcode.cn/problems/longest-palindromic-subsequence/)
 
 #### 1.4.3 Repeated Substring
 
@@ -11958,9 +11961,11 @@ class Solution {
 
 时间复杂度：$O(n\log n)$
 
-思考：若求解的是非严格递增的子序列，应该怎样修改代码？
+思考1：若求解的是非严格递增的子序列，应该怎样修改代码？
 
-思考：如何反推最长上升子序列？如何求解最长递增子序列的个数？
+思考2：如何反推最长上升子序列？
+
+思考3：如何求解最长递增子序列的个数？
 
 练习题单
 
@@ -12121,7 +12126,6 @@ class Solution {
 | [72. 编辑距离](https://leetcode.cn/problems/edit-distance/)  | 困难 |
 | [516. 最长回文子序列](https://leetcode.cn/problems/longest-palindromic-subsequence/) | 中等 |
 | [1216. 验证回文字符串 III](https://leetcode.cn/problems/valid-palindrome-iii/) | 困难 |
-|                                                              |      |
 
 ##### 3.7.3.3 Pattern Matching
 
@@ -12161,6 +12165,48 @@ class Solution {
 | 题号                                                         | 难度 |
 | ------------------------------------------------------------ | ---- |
 | [44. 通配符匹配](https://leetcode.cn/problems/wildcard-matching/) | 困难 |
+
+##### 3.7.3.4 Subsequence 
+
+例题：[940. 不同的子序列 II](https://leetcode.cn/problems/distinct-subsequences-ii/)
+
+分析：如果不需要去重的话，对于长度为n的序列，其子序列个数为$2^n$。
+
+如果需要去重，则定义$f[i][j]$表示前$i$个字符中以字符$j$结尾的不同子序列个数。
+
+$f[i][s[i]]=1+\sum_{j=0}^{25}f[i-1][j]$
+
+```java
+class Solution {
+    public int distinctSubseqII(String s) {
+        long[] f = new long[26];
+        int n = s.length(), mod = 10000_00007;
+        for(int i = 0; i < n; i++) {
+            f[s.charAt(i) - 'a'] = (1 + Arrays.stream(f).sum()) % mod;
+        }
+        return (int) (Arrays.stream(f).sum() % mod);
+    }
+}
+```
+
+优化：
+
+```java
+class Solution {
+    public int distinctSubseqII(String s) {
+        int[] f = new int[26];
+        int n = s.length(), mod = 10000_00007, sum = 0;
+        for(int i = 0; i < n; i++) {
+            int id = s.charAt(i) - 'a';
+            int other = sum - f[id];
+            f[id] = 1 + sum;
+            sum = ((f[id] + other) % mod + mod) % mod;
+        }
+        return sum;
+    }
+}
+```
+
 
 #### 3.7.4 Path 
 
@@ -13276,7 +13322,7 @@ class Solution {
 
 ##### 3.7.10.3 Multiple Knapsack
 
-例题：[100029. 和带限制的子多重集合的数目](https://leetcode.cn/problems/count-of-sub-multisets-with-bounded-sum/) // todo
+例题：[2902. 和带限制的子多重集合的数目](https://leetcode.cn/problems/count-of-sub-multisets-with-bounded-sum/)
 
 分析：由于相同数字不做区分，本题为多重背包。区分相同数字则为零一背包。
 
@@ -13636,6 +13682,58 @@ class Solution {
 ```
 时间复杂度：$O(mn)$
 
+#### 3.7.13 Partition Dynamic Programming
+
+例题：[410. 分割数组的最大值](https://leetcode.cn/problems/split-array-largest-sum/)
+
+分析：定义dp[i][j]为将数组前i个数分为j段得到的最大连续子数组和的最小值。
+
+细节：以下解法省略了第二个维度，并采用逆序遍历求解。
+
+i表示前缀和数组的右端点，从n开始逆序遍历到t，因为每一次分割的子数组是非空的。
+
+t表示前缀和数组的左端点，从t-1开始正序遍历到i。
+
+根据开区间和闭区间的不同，i和j循环能取到的值不同。本题采用左闭右开区间，求解区间[j...i)的区间和，采用pre[i]-pre[j]的方式直接计算。
+
+```java
+class Solution {
+    public int splitArray(int[] nums, int k) {
+        int n = nums.length;
+        int[] dp = new int[n+1];
+        int[] pre = new int[n+1];
+        for(int i = 0; i < n; i ++) {
+            pre[i+1] = pre[i] + nums[i];
+        }
+        for(int i = 0; i <= n; i ++) {
+            dp[i] = pre[i];  // 边界情况 k = 1
+        }
+        for(int t = 2; t <= k; t ++) {
+            for(int i = n; i >= t; i --) {
+                for(int j = t - 1; j < i; j ++) {
+                    dp[i] = Math.min(dp[i], Math.max(dp[j], pre[i] - pre[j]));
+                }
+            }
+        }
+        return dp[n];
+    }
+}
+```
+时间复杂度：$O(kn^2)$
+
+思考1：尝试用二分搜索求解本题，并对比二者时间复杂度。
+
+思考2：如果是求最大平均值和的分组，应该怎样改写代码？
+
+练习题单
+
+
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [813. 最大平均值和的分组](https://leetcode.cn/problems/largest-sum-of-averages/) | 中等 | 划分dp+前缀和 
+| [1278. 分割回文串 III](https://leetcode.cn/problems/palindrome-partitioning-iii/) | 困难 | 划分dp+回文预处理
+| [1335. 工作计划的最低难度](https://leetcode.cn/problems/minimum-difficulty-of-a-job-schedule/) | 困难 | 划分dp+最值预处理
+| [2911. 得到 K 个半回文串的最少修改次数](https://leetcode.cn/problems/minimum-changes-to-make-k-semi-palindromes/) | 困难 | 划分dp+回文串预处理+因子 
 
 
 ###  3.8 State Machine
