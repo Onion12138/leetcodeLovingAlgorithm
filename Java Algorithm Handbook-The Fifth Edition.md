@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.20 20231025更新
+版本号1.0.21 20231026更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -669,7 +669,7 @@ class Solution {
 
 #### 1.2.8 Permutation and Combination
 
-> 下一个排列
+##### 1.2.8.1 Next Permutation
 
 例题：[31. 下一个排列](https://leetcode.cn/problems/next-permutation/)
 
@@ -835,7 +835,7 @@ $m >12$时，基于枚举全排列的方法可能会超时，可以阅读**状�
 | ------------------------------------------------------------ | ---- |
 | [2850. 将石头分散到网格图的最少移动次数](https://leetcode.cn/problems/minimum-moves-to-spread-stones-over-grid/) | 中等 |
 
-> 第$k$个排列
+##### 1.2.8.2 The k-th Permutation
 
 例题：[60. 排列序列](https://leetcode.cn/problems/permutation-sequence/)
 
@@ -867,7 +867,7 @@ class Solution {
 
 $k=(\sum_{i=1}^norder(a_i)·(n-i)!)+1$
 
-> 组合数
+##### 1.2.8.3 Combination
 
 直接使用BigInteger计算
 
@@ -1032,9 +1032,9 @@ static {
 
 #### 1.3.1 Loop Invariant
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 循环不变量，是一组在循环体内、每一次迭代均保持为真的性质，通常用于证明程序或伪代码的正确性。后续讲解快速排序的划分操作时，循环不变量起到了很大的作用。
 
@@ -1373,9 +1373,9 @@ class Solution {
 真题链接：字节跳动20230827笔试 https://codefun2000.com/p/P1505
 
 #### 1.3.3 Binary Index Tree
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低 | 中 |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低 | 中 | 了解 |
 
 如果数组可修改呢？每一次修改元素，前缀和数组就需要重新计算，重新计算的时间复杂度为O(n)。
 
@@ -1803,9 +1803,9 @@ class Solution {
 
 #### 1.3.6 Merge Array
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 数组归并是归并排序算法的核心。
 
@@ -2083,9 +2083,9 @@ class Solution {
 
 #### 1.3.7 Array Partition
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 低       |
+| 面试概率 | 笔试概率 |学习建议 |
+| -------- | -------- | -------- |
+| 中       | 低       | 建议掌握 |
 
 数组划分，给定一个元素t，将数组划分成$<t,t,>t$三部分。t叫做pivot，通常是取数组中最左侧的元素。
 
@@ -2263,9 +2263,9 @@ class Solution {
 
 #### 1.3.8 Blocks and Buckets
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 了解 |
 
 > 分块
 
@@ -2456,9 +2456,9 @@ class Solution {
 
 #### 1.3.9 Rotating Array
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 例题：[189. 轮转数组](https://leetcode.cn/problems/rotate-array/)
 
@@ -2628,9 +2628,9 @@ class Solution {
 
 #### 1.3.10 Median of Array
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 从一道例题看数组中位数的性质。
 
@@ -2786,6 +2786,10 @@ class MedianFinder {
 ```
 
 #### 1.3.11 Array Data Structure
+
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 低       | 建议掌握 |
 
 ##### 1.3.11.1 Stack
 
@@ -2955,11 +2959,11 @@ public class MaxHeap {
 
 #### 1.4.1 Substring Matching
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- | 
+| 低       | 低       | 了解 |
 
-> 字符串哈希
+##### 1.4.1.1 String Hash
 
 例题：[1147. 段式回文](https://leetcode.cn/problems/longest-chunked-palindrome-decomposition/)
 
@@ -3052,7 +3056,7 @@ class Solution {
 }
 ```
 
-> Rabin Karp算法
+##### 1.4.1.2 Rabin Karp Algorithm
 
 Rabin Karp算法核心是基于滚动哈希。
 
@@ -3114,7 +3118,7 @@ class Solution {
 }
 ```
 
-> KMP算法
+##### 1.4.1.3 KMP Algorithm
 
 KMP算法核心是在于求解next数组，next[i]表示字符串[0..i]的最长border，定义为原字符串中既是前缀也是后缀的字符串（非空且不包含自身）。
 
@@ -3342,9 +3346,9 @@ class Solution {
 
 #### 1.4.3 Repeated Substring
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 低       | 了解 |
 
 例题：[459. 重复的子字符串](https://leetcode.cn/problems/repeated-substring-pattern/)
 
@@ -3841,7 +3845,7 @@ class Solution {
 
 | 题号                                                         | 难度 |
 | ------------------------------------------------------------ | ---- |
-| [147. 对链表进行插入排序](https://leetcode.cn/problems/insertion-sort-list/) | 简单 |
+| [147. 对链表进行插入排序](https://leetcode.cn/problems/insertion-sort-list/) | 中等 |
 
 ### 2.2 Stack 
 
@@ -4019,6 +4023,7 @@ class Solution {
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 中       |
+
 例题：[32. 最长有效括号](https://leetcode.cn/problems/longest-valid-parentheses/)
 
 ```java
@@ -4055,9 +4060,9 @@ class Solution {
 
 #### 2.2.2 Monotonic Stack
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 建议掌握 |
 
 先从一个简单的问题出发，学习单调栈。
 
@@ -5255,12 +5260,461 @@ class Solution {
 
 在图章节，还会继续介绍**拓扑排序**的解法。
 
+#### 2.4.5 Balanced Binary Tree
 
-#### 2.4.5 Multiple Tree
+二分搜索树容易退化为链表，导致极端情况下数据查询效率低下。
+平衡二叉树则是防止二分搜索树退化为链表的一种数据结构。
+
+考虑有如下平衡二叉树，其支持以下操作：
+
+1. 查找 contains
+2. 插入 insert
+3. 删除 delete
+4. 查找当前元素的上界和下界 lowerBound & upperBound
+5. 获取当前元素排名 rank
+
+例题：[315. 计算右侧小于当前元素的个数](https://leetcode.cn/problems/count-of-smaller-numbers-after-self/)
+
+思路：从右往左将元素插入到平衡二叉树中，然后调用rank方法获取当前元素排名即可。
+
+例题：[1649. 通过指令创建有序数组](https://leetcode.cn/problems/create-sorted-array-through-instructions/)
+
+思路：将元素插入到平衡二叉树中，然后调用rank方法获取当前元素排名，取从大到小和从小到大的排名最小值。
+
+本节介绍三种平衡二叉树，分别是AVL树、Treap、红黑树
+
+##### 2.4.5.1 AVL Tree
+
+定义节点的平衡因子为当前节点左子树的高度减去右子树的高度。
+
+```java
+public class AVLTree<K extends Comparable<K>, V> {
+    private class Node {
+        public K key;
+        public V value;
+        public Node left, right;
+        public int height;
+
+        public Node(K key, V value) {
+            this.key = key;
+            this.value = value;
+            left = right = null;
+            height = 1;
+        }
+    }
+
+    private Node root;
+    private int size;
+
+    public int getSize() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean isBalanced() {
+        return isBalanced(root);
+    }
+
+    private boolean isBalanced(Node node) {
+        if (node == null) {
+            return true;
+        }
+        int balanceFactor = getBalanceFactor(node);
+        if (Math.abs(balanceFactor) > 1) {
+            return false;
+        }
+        return isBalanced(node.left) && isBalanced(node.right);
+    }
+
+    private int getBalanceFactor(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return getHeight(node.left) - getHeight(node.right);
+    }
+
+    private int getHeight(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        return node.height;
+    }
+
+    // 对节点y进行向右旋转操作，返回旋转后新的根节点x
+    //        y                              x
+    //       / \                           /   \
+    //      x   T4     向右旋转 (y)        z     y
+    //     / \       - - - - - - - ->    / \   / \
+    //    z   T3                       T1  T2 T3 T4
+    //   / \
+    // T1   T2
+    private Node rightRotate(Node y) {
+        Node x = y.left;
+        Node t3 = x.right;
+        x.right = y;
+        y.left = t3;
+        y.height = Math.max(getHeight(y.left), getHeight(y.right)) + 1;
+        x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
+        return x;
+    }
+
+    private Node leftRotate(Node y) {
+        Node x = y.right;
+        Node t2 = x.left;
+        x.left = y;
+        y.right = t2;
+        y.height = Math.max(getHeight(y.left), getHeight(y.right)) + 1;
+        x.height = Math.max(getHeight(x.left), getHeight(x.right)) + 1;
+        return x;
+    }
+
+    public void add(K key, V value) {
+        root = add(root, key, value);
+    }
+
+    private Node add(Node node, K key, V value) {
+        if (node == null) {
+            size ++;
+            return new Node(key, value);
+        }
+        if (key.compareTo(node.key) < 0) {
+            node.left = add(node.left, key, value);
+        } else if (key.compareTo(node.key) > 0) {
+            node.right = add(node.right, key, value);
+        } else {
+            node.value = value;   // 更新操作
+        }
+        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
+        int balanceFactor = getBalanceFactor(node);   // 左 - 右
+        // LL
+        if (balanceFactor > 1 && getBalanceFactor(node.left) >= 0) {
+            return rightRotate(node);
+        }
+        // RR
+        if (balanceFactor < -1 && getBalanceFactor(node.right) <= 0) {
+            return leftRotate(node);
+        }
+        // LR
+        if (balanceFactor > 1 && getBalanceFactor(node.left) < 0) {
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
+        }
+        // RL
+        if (balanceFactor < -1 && getBalanceFactor(node.right) > 0) {
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
+        }
+        return node;
+    }
+
+    private Node getNode(Node node, K key) {
+        if (node == null) {
+            return null;
+        }
+        if (key.equals(node.key)) {
+            return node;
+        } else if (key.compareTo(node.key) < 0) {
+            return getNode(node.left, key);
+        } else {
+            return getNode(node.right, key);
+        }
+    }
+
+    public boolean contains(K key) {
+        return getNode(root, key) != null;
+    }
+
+    public V get(K key) {
+        Node node = getNode(root, key);
+        return node == null ? null : node.value;
+    }
+
+    public V minimum() {
+        return minimum(root).value;
+    }
+
+    private Node minimum(Node node) {
+        if (node.left == null) {
+            return node;
+        }
+        return minimum(node.left);
+    }
+
+    public V removeMin() {
+        V ret = minimum();
+        root = removeMin(root);
+        return ret;
+    }
+
+    private Node removeMin(Node node) {
+        if (node.left == null) {
+            Node rightNode = node.right;
+            node.right = null;
+            size --;
+            return rightNode;
+        }
+        node.left = removeMin(node.left);
+        return node;
+    }
+
+    public void remove(K key) {
+        root = remove(root, key);
+    }
+
+    private Node remove(Node node, K key) {
+        if (node == null) {
+            return null;
+        }
+        Node retNode;
+        if (key.compareTo(node.key) < 0) {
+            node.left = remove(node.left, key);
+            retNode = node;
+        } else if (key.compareTo(node.key) > 0) {
+            node.right = remove(node.right, key);
+            retNode = node;
+        } else {
+            if (node.left == null) {
+                Node rightNode = node.right;
+                node.right = null;
+                size --;
+                retNode = rightNode;
+            } else if (node.right == null) {
+                Node leftNode = node.left;
+                node.left = null;
+                size --;
+                retNode = leftNode;
+            } else {
+                Node successor = minimum(node.right);
+                successor.right = removeMin(node.right);
+                successor.left = node.left;
+                node.left = null;
+                node.right = null;
+                retNode = successor;
+            }
+        }
+        if (retNode == null) {
+            return null;
+        }
+        retNode.height = 1 + Math.max(getHeight(retNode.left), getHeight(retNode.right));
+        int balanceFactor = getBalanceFactor(retNode);   // 左 - 右
+        // LL
+        if (balanceFactor > 1 && getBalanceFactor(retNode.left) >= 0) {
+            return rightRotate(retNode);
+        }
+        // RR
+        if (balanceFactor < -1 && getBalanceFactor(retNode.right) <= 0) {
+            return leftRotate(retNode);
+        }
+        // LR
+        if (balanceFactor > 1 && getBalanceFactor(retNode.left) < 0) {
+            retNode.left = leftRotate(retNode.left);
+            return rightRotate(retNode);
+        }
+        // RL
+        if (balanceFactor < -1 && getBalanceFactor(retNode.right) > 0) {
+            retNode.right = rightRotate(retNode.right);
+            return leftRotate(retNode);
+        }
+        return retNode;
+    }
+}
+```
+
+##### 2.4.5.2 Treap
+
+```java
+class Solution {
+    public int createSortedArray(int[] instructions) {
+        Treap treap = new Treap();
+        long price = 0;
+        for(int i : instructions) {
+            treap.insert(i);
+            int[] rank = treap.rank(i);
+            price = (price + Math.min(rank[0] - 1, treap.getSize() - rank[1])) % 10000_00007;
+        }
+        return (int)price;
+    }
+}
+class Treap {
+    private static class TreeNode {
+        long value;
+        int priority;
+        int count;
+        int size;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(long value, int priority) {
+            this.value = value;
+            this.priority = priority;
+            this.count = 1;
+            this.size = 1;
+        }
+        TreeNode leftRotate() {
+            int preSize = size;
+            int curSize = (left == null ? 0 : left.size) + (right.left == null ? 0 : right.left.size) + count;
+            TreeNode root = right;
+            right = root.left;
+            root.left = this;
+            this.size = curSize;
+            root.size = preSize;
+            return root;
+        }
+        TreeNode rightRotate() {
+            int preSize = size;
+            int curSize = (right == null ? 0 : right.size) + (left.right == null ? 0 : left.right.size) + count;
+            TreeNode root = left;
+            left = root.right;
+            root.right = this;
+            this.size = curSize;
+            root.size = preSize;
+            return root;
+        }
+    }
+    private TreeNode root;
+    private final Random random;
+    public Treap() {
+        this.random = new Random();
+    }
+    public int getSize() {
+        return root == null ? 0 : root.size;
+    }
+    public void insert(long x) {
+        root = insert(root, x);
+    }
+    private TreeNode insert(TreeNode root, long x) {
+        if (root == null)
+            return new TreeNode(x, random.nextInt());
+        root.size ++;
+        if (x < root.value) {
+            root.left = insert(root.left, x);
+            if (root.left.priority > root.priority) {
+                root = root.rightRotate();
+            }
+        } else if (x > root.value) {
+            root.right = insert(root.right, x);
+            if (root.right.priority > root.priority) {
+                root = root.leftRotate();
+            }
+        } else {
+            root.count ++;
+        }
+        return root;
+    }
+    public long lowerBound(long x) { //第一个大于等于x的数(从小到大排序)
+        long ret = Long.MAX_VALUE;
+        TreeNode node = root;
+        while (node != null) {
+            if (node.value == x) {
+                return x;
+            } else if (node.value > x) {
+                ret = node.value;
+                node = node.left;
+            } else {
+                node = node.right;
+            }
+        }
+        return ret;
+    }
+    public long upperBound(long x) { //第一个大于x的数(从小到大排序)
+        long ret = Long.MAX_VALUE;
+        TreeNode node = root;
+        while (node != null) {
+            if (node.value > x) {
+                ret = node.value;
+                node = node.left;
+            } else {
+                node = node.right;
+            }
+        }
+        return ret;
+    }
+    public int[] rank(long x) { //返回x的排名，从1开始。返回数组ret，ret[0]表示第一个x的rank，ret[1]表示最后一个x的rank。
+        TreeNode node = root;
+        int ans = 0;
+        while (node != null) {
+            if (node.value > x) {
+                node = node.left;
+            } else {
+                ans += (node.left == null ? 0 : node.left.size) + node.count;
+                if (x == node.value) {
+                    return new int[]{ans - node.count + 1, ans};
+                }
+                node = node.right;
+            }
+        }
+        return new int[]{Integer.MIN_VALUE, Integer.MAX_VALUE};
+    }
+    public void delete(int val) {
+        root = delete(root, val);
+    }
+    private TreeNode delete(TreeNode root, int value) {
+        if (root == null)
+            return null;
+        if (root.value > value) {
+            root.left = delete(root.left, value);
+        } else if (root.value < value) {
+            root.right = delete(root.right, value);
+        } else {
+            if (root.count > 1) {
+                root.count --;
+                root.size --;
+                return root;
+            }
+            if (root.left == null || root.right == null) {
+                root.size --;
+                return root.left == null ? root.right : root.left;
+            } else if (root.left.priority > root.right.priority) {
+                root = root.rightRotate();
+                root.right = delete(root.right, value);
+
+            } else {
+                root = root.leftRotate();
+                root.left = delete(root.left, value);
+            }
+        }
+        root.size = (root.left == null ? 0 : root.left.size) + (root.right == null ? 0 : root.right.size) + root.count;
+        return root;
+
+    }
+    public boolean contains(long value) {
+        return contains(root, value);
+    }
+    private boolean contains(TreeNode root, long value) {
+        if (root == null)
+            return false;
+        if (root.value == value)
+            return true;
+        else if (root.value > value) {
+            return contains(root.left, value);
+        }
+        else {
+            return contains(root.right, value);
+        }
+    }
+}
+```
+
+##### 2.4.5.3 Red Black Tree
+
+红黑树是一种黑平衡的树，其有如下5条性质。
+
+1. 节点是红色或黑色。
+2. 根节点是黑色。
+3. 所有叶子节点（NULL节点）是黑色。
+4. 每个红色节点的两个子节点都是黑色。（从每个叶子到根的所有路径上不能有两个连续的红色节点）
+5. 从任一节点到每个叶子节点的所有路径包含相同数量的黑色节点。（黑平衡）
+
+红黑树的实现较为复杂，几乎不会在面试中考察其实现，故本节不给出代码。
+
+#### 2.4.6 Multiple Tree
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 中       |
+
 例题：[440. 字典序的第K小数字](https://leetcode.cn/problems/k-th-smallest-in-lexicographical-order/)
 
 分析：数字的字典序，可以看作是一颗十叉树。
@@ -5303,7 +5757,146 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [386. 字典序排数](https://leetcode.cn/problems/lexicographical-numbers/) | 中等 |
 
-#### 2.4.6 Lowest Common Ancestor
+##### 2.4.6.1 Trie
+
+从一道例题学习字典树。
+
+例题：[211. 添加与搜索单词 - 数据结构设计](https://leetcode.cn/problems/design-add-and-search-words-data-structure/)
+
+```java
+class WordDictionary {
+
+    public WordDictionary() {
+        root = new Node();
+    }
+
+    class Node {
+        Map<Character, Node> next;
+        boolean isWord;
+        Node() {
+            next = new HashMap<>();
+        }
+    }
+
+    Node root;
+    
+    public void addWord(String word) {
+        Node cur = root;
+        for(char c : word.toCharArray()) {
+            cur.next.putIfAbsent(c, new Node());
+            cur = cur.next.get(c);
+        }
+        cur.isWord = true;
+    }
+    
+    public boolean search(String word) {
+        return dfs(word, root, 0);
+    }
+
+    private boolean dfs(String word, Node node, int start) {
+        if(start == word.length()) {
+            return node.isWord;
+        }
+        char c = word.charAt(start);
+        if(c == '.') {
+            for(char ch : node.next.keySet()) {
+                if(dfs(word, node.next.get(ch), start + 1)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            if(!node.next.containsKey(c)) {
+                return false;
+            }
+            return dfs(word, node.next.get(c), start + 1);
+        }
+    }
+}
+
+```
+
+利用字典树可以进行剪枝：
+
+例题：[212. 单词搜索 II](https://leetcode.cn/problems/word-search-ii/)
+```java
+class Solution {
+
+    private Node root = new Node();
+    private Set<String> set = new HashSet<>();
+    private int[][] dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    private int m, n;
+    private boolean[][] visited;
+
+    public List<String> findWords(char[][] board, String[] words) {
+        m = board.length;
+        n = board[0].length;
+        visited = new boolean[m][n];
+        for(String word : words) {
+            addWord(word);
+        }
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j ++) {
+                if(!visited[i][j]) {
+                    dfs(board, root, i, j);
+                }
+            }
+        }
+        return new ArrayList<>(set);
+    }
+
+    private void dfs(char[][] board, Node node, int i, int j) {
+        if(!node.next.containsKey(board[i][j])) {
+            return;
+        }
+        char ch = board[i][j];
+        Node cur = node.next.get(ch);
+        if(!cur.word.equals("")) {
+            set.add(cur.word);
+        }
+        visited[i][j] = true;
+        for(int[] d : dir) {
+            int x = d[0] + i, y = d[1] + j;
+            if(0 <= x && x < m && 0 <= y && y < n && !visited[x][y]) {
+                dfs(board, cur, x, y);
+            }
+        }
+         visited[i][j] = false;
+    }
+
+    class Node {
+        String word;
+        Map<Character, Node> next;
+        Node() {
+            next = new HashMap<>();
+            word = "";
+        }
+    }
+    
+    private void addWord(String word) {
+        Node cur = root;
+        for(char c : word.toCharArray()) {
+            cur.next.putIfAbsent(c, new Node());
+            cur = cur.next.get(c);
+        }
+        cur.word = word;
+    }
+}
+```
+时间复杂度：$O(m·n·4^{10})$
+
+练习题单
+
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [208. 实现 Trie (前缀树)](https://leetcode.cn/problems/implement-trie-prefix-tree/) | 中等 |
+| [1032. 字符流](https://leetcode.cn/problems/stream-of-characters/) | 困难 |
+| [677. 键值映射](https://leetcode.cn/problems/map-sum-pairs/) | 中等 |
+| [472. 连接词](https://leetcode.cn/problems/concatenated-words/) | 困难 |
+| [745. 前缀和后缀搜索](https://leetcode.cn/problems/prefix-and-suffix-search/) | 困难 |
+
+
+#### 2.4.7 Lowest Common Ancestor
 
 | 面试概率 | 笔试概率 | 学习建议 |
 | -------- | -------- | -------- |
@@ -5349,7 +5942,7 @@ class Solution {
 
 如果树的结构未知，只有边的信息，则需要使用树上倍增求解最近公共祖先问题。
 
-#### 2.4.7 Tree Doubling
+#### 2.4.8 Tree Doubling
 
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
@@ -5507,13 +6100,13 @@ class Solution {
 ```
 
 
-#### 2.4.8 Tree Data Structure
+#### 2.4.9 Tree Data Structure
 
-##### 2.4.8.1 Segment Tree
+##### 2.4.9.1 Segment Tree
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 非竞赛可跳过 |
 
 线段树，如果区间有$n$个元素，数组来表示需要多少节点？
 
@@ -5939,152 +6532,7 @@ public class SegmentTreeDynamic {
 }
 ```
 
-
-
-##### 2.4.8.2 Trie
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 低       |
-
-从一道例题学习字典树。
-
-例题：[211. 添加与搜索单词 - 数据结构设计](https://leetcode.cn/problems/design-add-and-search-words-data-structure/)
-
-```java
-class WordDictionary {
-
-    public WordDictionary() {
-        root = new Node();
-    }
-
-    class Node {
-        Map<Character, Node> next;
-        boolean isWord;
-        Node() {
-            next = new HashMap<>();
-        }
-    }
-
-    Node root;
-    
-    public void addWord(String word) {
-        Node cur = root;
-        for(char c : word.toCharArray()) {
-            cur.next.putIfAbsent(c, new Node());
-            cur = cur.next.get(c);
-        }
-        cur.isWord = true;
-    }
-    
-    public boolean search(String word) {
-        return dfs(word, root, 0);
-    }
-
-    private boolean dfs(String word, Node node, int start) {
-        if(start == word.length()) {
-            return node.isWord;
-        }
-        char c = word.charAt(start);
-        if(c == '.') {
-            for(char ch : node.next.keySet()) {
-                if(dfs(word, node.next.get(ch), start + 1)) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            if(!node.next.containsKey(c)) {
-                return false;
-            }
-            return dfs(word, node.next.get(c), start + 1);
-        }
-    }
-}
-
-```
-
-利用字典树可以进行剪枝：
-
-例题：[212. 单词搜索 II](https://leetcode.cn/problems/word-search-ii/)
-```java
-class Solution {
-
-    private Node root = new Node();
-    private Set<String> set = new HashSet<>();
-    private int[][] dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    private int m, n;
-    private boolean[][] visited;
-
-    public List<String> findWords(char[][] board, String[] words) {
-        m = board.length;
-        n = board[0].length;
-        visited = new boolean[m][n];
-        for(String word : words) {
-            addWord(word);
-        }
-        for(int i = 0; i < m; i ++) {
-            for(int j = 0; j < n; j ++) {
-                if(!visited[i][j]) {
-                    dfs(board, root, i, j);
-                }
-            }
-        }
-        return new ArrayList<>(set);
-    }
-
-    private void dfs(char[][] board, Node node, int i, int j) {
-        if(!node.next.containsKey(board[i][j])) {
-            return;
-        }
-        char ch = board[i][j];
-        Node cur = node.next.get(ch);
-        if(!cur.word.equals("")) {
-            set.add(cur.word);
-        }
-        visited[i][j] = true;
-        for(int[] d : dir) {
-            int x = d[0] + i, y = d[1] + j;
-            if(0 <= x && x < m && 0 <= y && y < n && !visited[x][y]) {
-                dfs(board, cur, x, y);
-            }
-        }
-         visited[i][j] = false;
-    }
-
-    class Node {
-        String word;
-        Map<Character, Node> next;
-        Node() {
-            next = new HashMap<>();
-            word = "";
-        }
-    }
-    
-    private void addWord(String word) {
-        Node cur = root;
-        for(char c : word.toCharArray()) {
-            cur.next.putIfAbsent(c, new Node());
-            cur = cur.next.get(c);
-        }
-        cur.word = word;
-    }
-}
-```
-时间复杂度：$O(m·n·4^{10})$
-
-练习题单
-
-| 题号                                                         | 难度 |
-| ------------------------------------------------------------ | ---- |
-| [208. 实现 Trie (前缀树)](https://leetcode.cn/problems/implement-trie-prefix-tree/) | 中等 |
-| [1032. 字符流](https://leetcode.cn/problems/stream-of-characters/) | 困难 |
-| [677. 键值映射](https://leetcode.cn/problems/map-sum-pairs/) | 中等 |
-| [472. 连接词](https://leetcode.cn/problems/concatenated-words/) | 困难 |
-| [745. 前缀和后缀搜索](https://leetcode.cn/problems/prefix-and-suffix-search/) | 困难 |
-
-
-
-##### 2.4.8.3 Union Find
+##### 2.4.9.2 Union Find
 
 | 面试概率 | 笔试概率 | 学习建议 |
 | -------- | -------- | -------- |
@@ -6371,11 +6819,11 @@ class Solution {
 | [839. 相似字符串组](https://leetcode.cn/problems/similar-string-groups/) | 困难 |
 | [2092. 找出知晓秘密的所有专家](https://leetcode.cn/problems/find-all-people-with-secret/) | 困难 |
 
-##### 2.4.8.4 Huffman Tree
+##### 2.4.9.3 Huffman Tree
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 了解 |
 
 讲解哈夫曼树之前，先定义如下两个概念：
 
@@ -6444,187 +6892,6 @@ D - 110
 
 需要二进制长度为$80*1+10*2+2*3+8*3=130$bit
 
-##### 2.4.8.5 Treap
-
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
-
-树堆是一种比较简易的平衡树实现，可以收下模版。
-
-例题：[1649. 通过指令创建有序数组](https://leetcode.cn/problems/create-sorted-array-through-instructions/)
-
-```java
-class Solution {
-    public int createSortedArray(int[] instructions) {
-        Treap treap = new Treap();
-        long price = 0;
-        for(int i : instructions) {
-            treap.insert(i);
-            int[] rank = treap.rank(i);
-            price = (price + Math.min(rank[0] - 1, treap.getSize() - rank[1])) % 10000_00007;
-        }
-        return (int)price;
-    }
-}
-class Treap {
-    private static class TreeNode {
-        long value;
-        int priority;
-        int count;
-        int size;
-        TreeNode left;
-        TreeNode right;
-        TreeNode(long value, int priority) {
-            this.value = value;
-            this.priority = priority;
-            this.count = 1;
-            this.size = 1;
-        }
-        TreeNode leftRotate() {
-            int preSize = size;
-            int curSize = (left == null ? 0 : left.size) + (right.left == null ? 0 : right.left.size) + count;
-            TreeNode root = right;
-            right = root.left;
-            root.left = this;
-            this.size = curSize;
-            root.size = preSize;
-            return root;
-        }
-        TreeNode rightRotate() {
-            int preSize = size;
-            int curSize = (right == null ? 0 : right.size) + (left.right == null ? 0 : left.right.size) + count;
-            TreeNode root = left;
-            left = root.right;
-            root.right = this;
-            this.size = curSize;
-            root.size = preSize;
-            return root;
-        }
-    }
-    private TreeNode root;
-    private final Random random;
-    public Treap() {
-        this.random = new Random();
-    }
-    public int getSize() {
-        return root == null ? 0 : root.size;
-    }
-    public void insert(long x) {
-        root = insert(root, x);
-    }
-    private TreeNode insert(TreeNode root, long x) {
-        if (root == null)
-            return new TreeNode(x, random.nextInt());
-        root.size ++;
-        if (x < root.value) {
-            root.left = insert(root.left, x);
-            if (root.left.priority > root.priority) {
-                root = root.rightRotate();
-            }
-        } else if (x > root.value) {
-            root.right = insert(root.right, x);
-            if (root.right.priority > root.priority) {
-                root = root.leftRotate();
-            }
-        } else {
-            root.count ++;
-        }
-        return root;
-    }
-    public long lowerBound(long x) { //第一个大于等于x的数(从小到大排序)
-        long ret = Long.MAX_VALUE;
-        TreeNode node = root;
-        while (node != null) {
-            if (node.value == x) {
-                return x;
-            } else if (node.value > x) {
-                ret = node.value;
-                node = node.left;
-            } else {
-                node = node.right;
-            }
-        }
-        return ret;
-    }
-    public long upperBound(long x) { //第一个大于x的数(从小到大排序)
-        long ret = Long.MAX_VALUE;
-        TreeNode node = root;
-        while (node != null) {
-            if (node.value > x) {
-                ret = node.value;
-                node = node.left;
-            } else {
-                node = node.right;
-            }
-        }
-        return ret;
-    }
-    public int[] rank(long x) { //返回x的排名，从1开始。返回数组ret，ret[0]表示第一个x的rank，ret[1]表示最后一个x的rank。
-        TreeNode node = root;
-        int ans = 0;
-        while (node != null) {
-            if (node.value > x) {
-                node = node.left;
-            } else {
-                ans += (node.left == null ? 0 : node.left.size) + node.count;
-                if (x == node.value) {
-                    return new int[]{ans - node.count + 1, ans};
-                }
-                node = node.right;
-            }
-        }
-        return new int[]{Integer.MIN_VALUE, Integer.MAX_VALUE};
-    }
-    public void delete(int val) {
-        root = delete(root, val);
-    }
-    private TreeNode delete(TreeNode root, int value) {
-        if (root == null)
-            return null;
-        if (root.value > value) {
-            root.left = delete(root.left, value);
-        } else if (root.value < value) {
-            root.right = delete(root.right, value);
-        } else {
-            if (root.count > 1) {
-                root.count --;
-                root.size --;
-                return root;
-            }
-            if (root.left == null || root.right == null) {
-                root.size --;
-                return root.left == null ? root.right : root.left;
-            } else if (root.left.priority > root.right.priority) {
-                root = root.rightRotate();
-                root.right = delete(root.right, value);
-
-            } else {
-                root = root.leftRotate();
-                root.left = delete(root.left, value);
-            }
-        }
-        root.size = (root.left == null ? 0 : root.left.size) + (root.right == null ? 0 : root.right.size) + root.count;
-        return root;
-
-    }
-    public boolean contains(long value) {
-        return contains(root, value);
-    }
-    private boolean contains(TreeNode root, long value) {
-        if (root == null)
-            return false;
-        if (root.value == value)
-            return true;
-        else if (root.value > value) {
-            return contains(root.left, value);
-        }
-        else {
-            return contains(root.right, value);
-        }
-    }
-}
-```
 
 ### 2.5 Graph Theroy
 
@@ -11877,6 +12144,7 @@ class Solution {
 | 面试概率 | 笔试概率 |
 | -------- | -------- |
 | 中       | 中       |
+
 ##### 3.7.3.1 Longest Increasing Subsequence
 
 例题：[300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/)
@@ -11902,7 +12170,9 @@ class Solution {
 
 时间复杂度：$O(n^2)$
 
-当数据规模到达$10^5$时，需要用贪心+二分查找进行优化
+当数据规模到达$10^5$时，需要用进行时间复杂度的优化
+
+优化一：基于二分查找
 
 以测试用例[10,9,2,5,3,7,101,18]为例，解释top数组的元素
 
@@ -11961,21 +12231,145 @@ class Solution {
 
 时间复杂度：$O(n\log n)$
 
-思考1：若求解的是非严格递增的子序列，应该怎样修改代码？
+优化二：基于树状数组
+
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        // 树状数组离散化
+        int[] copy = nums.clone();
+        Arrays.sort(copy);
+        int i = 1;
+        for(int j = 1; j < copy.length; j ++) {
+            if(copy[j] != copy[i - 1]) {
+                copy[i++] = copy[j];
+            }
+        }
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int j = 0; j < i; j ++) {
+            map.put(copy[j], j + 1);
+        }
+        int n = map.size(), ans = 0;
+        tree = new int[n + 1];
+        for(i = 0; i < nums.length; i ++) {
+            int id = map.get(nums[i]);
+            // 严格上升，query(id - 1)
+            // 不下降，query(id)
+            int len = query(id - 1) + 1;
+            ans = Math.max(ans, len);
+            update(id, len);
+        }
+        return ans;
+    }
+
+    private int[] tree;
+
+    private int query(int i) {
+        int ans = 0;
+        for(; i > 0; i -= lowbit(i)) {
+            ans = Math.max(ans, tree[i]);
+        }
+        return ans;
+    }
+
+    private int lowbit(int i) {
+        return i & (-i);
+    }
+
+    private void update(int i, int value) {
+        for(; i < tree.length; i += lowbit(i)) {
+            tree[i] = Math.max(tree[i], value);
+        }
+    }
+}
+```
+时间复杂度：$O(n\log n)$
+
+思考1：对于不同的写法，如果求解的是非严格递增的子序列，应该怎样修改代码？
 
 思考2：如何反推最长上升子序列？
 
 思考3：如何求解最长递增子序列的个数？
 
+> 专题总结
+
+1. 反推最长上升子序列，使用pre数组，记录每一个状态由哪个状态转移而来，核心伪代码如下：
+```java
+int[] pre = new int[n];
+Arrays.fill(pre, -1);
+...
+if(dp[j] + 1 > dp[i]) {
+    dp[i] = dp[j] + 1;
+    pre[i] = j;
+}
+...
+while(cur != -1) {
+    cur = pre[cur];
+}
+```
+1. 求解最长递增子序列的个数，增加额外comb数组，记录以当前字符结尾的最长上升子序列的个数，核心伪代码如下：
+```java
+if(dp[j] + 1 > dp[i]) {
+    dp[i] = dp[j] + 1;
+    comb[i] = comb[j];
+}else if(dp[j] + 1 == dp[i]) {
+    comb[i] += comb[j];
+}
+```
+1. 最长等差子序列，在最长递增子序列的基础上增加一个维度d，dp[i][d]表示第i个以公差d结尾的子序列长度。
+
+如果d取值范围较小，可以用数组来实现；如果d的取值范围较大，则可以用哈希表来实现，核心伪代码如下：
+
+```java
+for(int i = 0; i < n; i ++) {
+    for(int j = 0; j < i; j ++) {
+        int d = nums[i] - nums[j];  // 如果下标为负数则需要加上偏置确保为非负数
+        dp[i][d] = dp[j][d] + 1;
+    }
+}
+```
+
+4. 等差子序列+求个数，dp[i][d]表示第i个以公差d结尾的子序列的个数。
+```java
+int cnt = 0;
+for(int i = 1; i < n; i ++) {
+    for(int j = 0; j < i; j ++) {
+        int d = nums[i] - nums[j];
+        cnt += dp[j][d];
+        dp[i][d] += dp[j][d] + 1;
+    }
+}
+```
+5. 等差子数组+求个数，可以在O(n)时间复杂度内求解。
+假设nums[i-1],nums[i]作为等差数列最后两项，答案增加为t。
+
+若nums[i+1]-nums[i]=nums[i]-nums[i-1]，答案增加t+1，在原有的等差数列基础上可以追加nums[i+1]，并额外多出了nums[i-1],nums[i],nums[i+1]这一个等差数列。若不相等，则t归零。
+
+```java
+int d = nums[1] - nums[0], t = 0, ans = 0;
+for(int i = 2; i < n; i ++) {
+    if(nums[i] - nums[i-1] == d) {
+        t ++;
+    } else {
+        d = nums[i] - nums[i-1];
+        t = 0;
+    }
+    ans += t;
+}
+```
+
 练习题单
 
-| 题号                                                         | 难度 |
-| ------------------------------------------------------------ | ---- |
-| [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes/) | 困难 |
-| [368. 最大整除子集](https://leetcode.cn/problems/largest-divisible-subset/) | 中等 |
-| [1027. 最长等差数列](https://leetcode.cn/problems/longest-arithmetic-subsequence/) | 中等 |
-| [873. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/length-of-longest-fibonacci-subsequence/) | 中等 |
-| [673. 最长递增子序列的个数](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/) | 中等 |
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [354. 俄罗斯套娃信封问题](https://leetcode.cn/problems/russian-doll-envelopes/) | 困难 | 最长上升子序列
+| [368. 最大整除子集](https://leetcode.cn/problems/largest-divisible-subset/) | 中等 | 最长上升子序列变体+反推
+| [1027. 最长等差数列](https://leetcode.cn/problems/longest-arithmetic-subsequence/) | 中等 | 最长等差数列
+| [873. 最长的斐波那契子序列的长度](https://leetcode.cn/problems/length-of-longest-fibonacci-subsequence/) | 中等 | 最长上升子序列变体
+| [673. 最长递增子序列的个数](https://leetcode.cn/problems/number-of-longest-increasing-subsequence/) | 中等 | 最长上升子序列+求个数
+| [1218. 最长定差子序列](https://leetcode.cn/problems/longest-arithmetic-subsequence-of-given-difference/) | 中等 | 最长等差数列（定差) |
+| [446. 等差数列划分 II - 子序列](https://leetcode.cn/problems/arithmetic-slices-ii-subsequence/) | 困难 | 等差子序列+求个数 |
+| [413. 等差数列划分](https://leetcode.cn/problems/arithmetic-slices/) | 中等 | 等差子数组+求个数 |
 
 ##### 3.7.3.2 Longest Common Subsequence
 
@@ -12126,6 +12520,7 @@ class Solution {
 | [72. 编辑距离](https://leetcode.cn/problems/edit-distance/)  | 困难 |
 | [516. 最长回文子序列](https://leetcode.cn/problems/longest-palindromic-subsequence/) | 中等 |
 | [1216. 验证回文字符串 III](https://leetcode.cn/problems/valid-palindrome-iii/) | 困难 |
+| [1035. 不相交的线](https://leetcode.cn/problems/uncrossed-lines/) | 中等 |
 
 ##### 3.7.3.3 Pattern Matching
 
@@ -13423,9 +13818,10 @@ class Solution {
 
 #### 3.7.11 Digital Dynamic Planning
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 了解 |
+
 例题：[1012. 至少有 1 位重复的数字](https://leetcode.cn/problems/numbers-with-repeated-digits/)
 
 ```java
