@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.21 20231026更新
+版本号1.0.22 20231028更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -257,6 +257,20 @@ class Solution {
 }
 ```
 时间复杂度：$O(n·2^n)$
+
+维护集合信息：如元素和、最值
+
+sum[i]数组表示集合状态为i时的元素和。
+
+```java
+int[] arr = new int[n];
+int[] sum = new int[1 << n];
+for(int mask = 1; mask < total; mask ++) {
+	int x = Integer.numberOfTrailingZeros(mask);
+	int y = mask - (1 << x);
+	sum[mask] = sum[y] + arr[x];
+}
+```
 
 练习题单 
 
@@ -1809,7 +1823,7 @@ class Solution {
 
 数组归并是归并排序算法的核心。
 
-> 二路归并
+##### 1.3.6.1 Two-way Merge
 
 二路归并，旨在将两个有序的数组合并为一个更大的数组，是归并排序算法的子操作。
 
@@ -1957,7 +1971,7 @@ class Solution {
 | [327. 区间和的个数](https://leetcode.cn/problems/count-of-range-sum/) | 困难 |
 | [315. 计算右侧小于当前元素的个数](https://leetcode.cn/problems/count-of-smaller-numbers-after-self/) | 困难 |
 
-> 多路归并
+##### 1.3.6.2 Multi-way Merge
 
 二路归并时，可以通过if else语句块判断元素的大小情况，从而选择移动指针。多路归并时，需要利用堆这一数据结构，高效地判断出需要移动哪个指针。
 
@@ -2089,6 +2103,8 @@ class Solution {
 
 数组划分，给定一个元素t，将数组划分成$<t,t,>t$三部分。t叫做pivot，通常是取数组中最左侧的元素。
 
+##### 1.3.7.1 One-way Partition
+
 划分操作是快速排序的核心，其中一个最简单的实现如下：
 
 ```java
@@ -2154,7 +2170,7 @@ class Solution {
 
 注：该算法的理论时间复杂度为$O(n)$，但可能因为特殊用例，如大量相同元素导致时间复杂度退化。最新增加的测试用例，该算法无法通过，需要对算法进行优化。
 
-> 二路划分
+##### 1.3.7.2 Two-way Partition
 
 二路划分的核心思想是将数组划分为三部分：$\ge t,t,\le t$。对于包含大量相同元素的情况，相同元素会较为平均地分布在两端。
 
@@ -2188,7 +2204,7 @@ private int partition(int[] nums, int l, int r) {
 }
 ```
 
-> 三路划分
+##### 1.3.7.3 Three-way Partition
 
 三路划分的核心思想是将数组划分为三部分：$> t,t,< t$。
 
@@ -2954,6 +2970,11 @@ public class MaxHeap {
 
 }
 ```
+练习题单
+
+| 题号                                                         | 难度 |  知识点 | 
+| ------------------------------------------------------------ | ---- | ---- |
+| [2233. K 次增加后的最大乘积](https://leetcode.cn/problems/maximum-product-after-k-increments/) | 中等 | heapify原地堆化 |
 
 ### 1.4 String
 
@@ -5287,6 +5308,16 @@ class Solution {
 
 定义节点的平衡因子为当前节点左子树的高度减去右子树的高度。
 
+若平衡因子的绝对值大于1，说明此时存在不平衡，需要进行平衡性调整。
+
+LL：平衡因子大于1，节点左孩子的平衡因子大于等于0，说明插入的元素在不平衡节点的左侧的左侧，此时应该进行右旋转。
+
+RR：平衡因子小于-1，节点右孩子的平衡因子小于等于0，说明插入的元素在不平衡节点的右侧的右侧，此时应该进行左旋转。
+
+LR：平衡因子大于1，节点左孩子的平衡因子小于0，说明插入的元素在不平衡节点的左侧的右侧，此时应该先对节点的左孩子进行左旋转，再对该节点进行右旋转。
+
+RL：平衡因子小于-1，节点右孩子的平衡因子大于0，说明插入的元素在不平衡节点的右侧的左侧，此时应该先对节点的右孩子进行右旋转，再对该节点进行左旋转。
+
 ```java
 public class AVLTree<K extends Comparable<K>, V> {
     private class Node {
@@ -5525,6 +5556,10 @@ public class AVLTree<K extends Comparable<K>, V> {
 
 ##### 2.4.5.2 Treap
 
+Treap每个节点有两个值，分别为键值和优先级。从优先级的角度来看，Treap是堆，任一节点的优先级大于等于其左右孩子的优先级。Treap的核心思想是利用优先级避免二叉树退化为链表。
+
+Treap的核心操作只有leftRotate和rightRotate两个操作。以下代码的实现支持重复元素插入，并用count记录数量。
+
 ```java
 class Solution {
     public int createSortedArray(int[] instructions) {
@@ -5539,7 +5574,7 @@ class Solution {
     }
 }
 class Treap {
-    private static class TreeNode {
+    private class TreeNode {
         long value;
         int priority;
         int count;
@@ -5708,6 +5743,331 @@ class Treap {
 5. 从任一节点到每个叶子节点的所有路径包含相同数量的黑色节点。（黑平衡）
 
 红黑树的实现较为复杂，几乎不会在面试中考察其实现，故本节不给出代码。
+
+##### 2.4.5.4 Classic Problems With Multiple Solutions
+
+本节根据一道经典习题，串联前缀和数组、归并排序、双指针计数、线段树、树状数组、平衡二叉树等知识点。
+
+例题：[327. 区间和的个数](https://leetcode.cn/problems/count-of-range-sum/)
+
+解法1：归并排序
+
+分析：先求解前缀和数组$pre$，实质上是寻找有多少下标$(i, j)$满足$pre[i] - pre[j] \in [lower...upper]$。
+
+```java
+class Solution {
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        int n = nums.length;
+        long[] pre = new long[n+1];
+        for(int i = 0; i < n; i ++) {
+            pre[i+1] = pre[i] + nums[i];
+        }
+        temp = new long[n + 1];
+        int ans = mergeAndCount(pre, lower, upper, 0, n);
+        return ans;
+    }
+
+    private long[] temp;
+
+    private int mergeAndCount(long[] arr, int lower, int upper, int left, int right) {
+        if(left == right) {
+            return 0;
+        }
+        int mid = left + right >> 1;
+        int leftCnt = mergeAndCount(arr, lower, upper, left, mid);
+        int rightCnt = mergeAndCount(arr, lower, upper, mid + 1, right);
+        int ans = leftCnt + rightCnt;
+        int i = left, l = mid + 1, r = mid + 1;
+        while(i <= mid) {
+            while(l <= right && arr[l] - arr[i] < lower) {
+                l ++;
+            }
+            while(r <= right && arr[r] - arr[i] <= upper) {
+                r ++;
+            }
+            ans += r - l;
+            i ++;
+        }
+        for(i = left; i <= right; i ++) {
+            temp[i] = arr[i];
+        }
+        i = left;
+        l = left;
+        r = mid + 1;
+        while(l <= mid || r <= right) {
+            if(l > mid) {
+                arr[i++] = temp[r++];
+            }else if(r > right) {
+                arr[i++] = temp[l++];
+            }else if(temp[l] <= temp[r]) {
+                arr[i++] = temp[l++];
+            }else {
+                arr[i++] = temp[r++];
+            }
+        }
+        return ans;
+    }
+}
+```
+
+解法2：树状数组
+
+分析：对于每一个前缀和pre[j]，查询在区间范围内pre[j]-lower, pre[j]-upper的个数。先查询[0, pre[j]-upper-1]的数量，再查询[0, pre[j]-lower]的数量，二者做差即可。由于数据范围过大，需要进行离散化。
+
+```java
+class Solution {
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        int n = nums.length, id = 1, ans = 0;
+        long[] pre = new long[n + 1];
+        for(int i = 0; i < n; i ++) {
+            pre[i+1] = pre[i] + nums[i];
+        }
+        Set<Long> set = new TreeSet<>();
+        for(long num : pre) {
+            set.add(num);
+            set.add(num - lower);
+            set.add(num - upper);
+        }
+        Map<Long, Integer> map = new HashMap<>();
+        for(long num : set) {
+            map.put(num, id ++);
+        }
+        int[] tree = new int[map.size() + 1];
+        for(int i = 0; i < pre.length; i ++) {
+            int left = map.get(pre[i] - upper), right = map.get(pre[i] - lower);
+            ans += query(right, tree) - query(left - 1, tree);
+            update(map.get(pre[i]), 1, tree);
+        }
+        return ans;
+    }
+
+    private void update(int i, int value, int[] tree) {
+        for(; i < tree.length; i += lowbit(i)) {
+            tree[i] += value;
+        }
+    }
+
+    private int lowbit(int i) {
+        return i & (-i);
+    }
+
+    private int query(int i, int[] tree) {
+        int ans = 0;
+        for(; i > 0; i -= lowbit(i)) {
+            ans += tree[i];
+        }
+        return ans;
+    }
+
+}
+```
+
+解法3：平衡二叉树
+
+以下代码基于Treap实现
+
+```java
+class Solution {
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        int n = nums.length, ans = 0;
+        long[] pre = new long[n+1];
+        for (int i = 0; i < n; i++) {
+            pre[i+1] = pre[i] + nums[i];
+        }
+        Treap treap = new Treap();
+        for (long num : pre) {
+            long numLeft = treap.lowerBound(num - upper);
+            int rankLeft = (numLeft == Long.MAX_VALUE ? (treap.getSize() + 1) : treap.rank(numLeft)[0]);
+            long numRight = treap.upperBound(num - lower);
+            int rankRight = (numRight == Long.MAX_VALUE ? treap.getSize() + 1 : treap.rank(numRight)[0]);
+            ans += rankRight - rankLeft;
+            treap.insert(num);
+        }
+        return ans;
+    }
+
+    class Treap {
+        private class TreeNode {
+            long value;
+            int priority;
+            int count;
+            int size;
+            TreeNode left;
+            TreeNode right;
+            TreeNode(long value, int priority) {
+                this.value = value;
+                this.priority = priority;
+                this.count = 1;
+                this.size = 1;
+            }
+            TreeNode leftRotate() {
+                int preSize = size;
+                int curSize = (left == null ? 0 : left.size) + (right.left == null ? 0 : right.left.size) + count;
+                TreeNode root = right;
+                right = root.left;
+                root.left = this;
+                this.size = curSize;
+                root.size = preSize;
+                return root;
+            }
+            TreeNode rightRotate() {
+                int preSize = size;
+                int curSize = (right == null ? 0 : right.size) + (left.right == null ? 0 : left.right.size) + count;
+                TreeNode root = left;
+                left = root.right;
+                root.right = this;
+                this.size = curSize;
+                root.size = preSize;
+                return root;
+            }
+        }
+        private TreeNode root;
+        private final Random random;
+        public Treap() {
+            this.random = new Random();
+        }
+        public int getSize() {
+            return root == null ? 0 : root.size;
+        }
+        public void insert(long x) {
+            root = insert(root, x);
+        }
+        private TreeNode insert(TreeNode root, long x) {
+            if (root == null)
+                return new TreeNode(x, random.nextInt());
+            root.size ++;
+            if (x < root.value) {
+                root.left = insert(root.left, x);
+                if (root.left.priority > root.priority) {
+                    root = root.rightRotate();
+                }
+            } else if (x > root.value) {
+                root.right = insert(root.right, x);
+                if (root.right.priority > root.priority) {
+                    root = root.leftRotate();
+                }
+            } else {
+                root.count ++;
+            }
+            return root;
+        }
+        public long lowerBound(long x) { //第一个大于等于x的数(从小到大排序)
+            long ret = Long.MAX_VALUE;
+            TreeNode node = root;
+            while (node != null) {
+                if (node.value == x) {
+                    return x;
+                } else if (node.value > x) {
+                    ret = node.value;
+                    node = node.left;
+                } else {
+                    node = node.right;
+                }
+            }
+            return ret;
+        }
+        public long upperBound(long x) { //第一个大于x的数(从小到大排序)
+            long ret = Long.MAX_VALUE;
+            TreeNode node = root;
+            while (node != null) {
+                if (node.value > x) {
+                    ret = node.value;
+                    node = node.left;
+                } else {
+                    node = node.right;
+                }
+            }
+            return ret;
+        }
+        public int[] rank(long x) { //返回x的排名，从1开始。返回数组ret，ret[0]表示第一个x的rank，ret[1]表示最后一个x的rank。
+            TreeNode node = root;
+            int ans = 0;
+            while (node != null) {
+                if (node.value > x) {
+                    node = node.left;
+                } else {
+                    ans += (node.left == null ? 0 : node.left.size) + node.count;
+                    if (x == node.value) {
+                        return new int[]{ans - node.count + 1, ans};
+                    }
+                    node = node.right;
+                }
+            }
+            return new int[]{Integer.MIN_VALUE, Integer.MAX_VALUE};
+        }
+    }
+}
+```
+
+解法4：线段树
+
+```java
+class Solution {
+    public int countRangeSum(int[] nums, int lower, int upper) {
+        int n = nums.length;
+        long[] pre = new long[n + 1];
+        for(int i = 0; i < n; i ++) {
+            pre[i+1] = pre[i] + nums[i];
+        }
+        long left = Long.MAX_VALUE, right = Long.MIN_VALUE;
+        for(long num : pre) {
+            left = Math.min(Math.min(left, num), num - upper);
+            right = Math.max(Math.max(right, num), num - lower);
+        }
+        Node root = new Node(left, right);
+        int ans = 0;
+        for(long num : pre) {
+            ans += count(root, num - upper, num - lower);
+            insert(root, num);
+        }
+        return ans;
+    }
+
+    class Node {
+        Node left, right;
+        int add;
+        long lo, hi;
+
+        public Node(long left, long right) {
+            lo = left;
+            hi = right;
+        }
+    }
+
+    private int count(Node root, long left, long right) {
+        if(root == null) {
+            return 0;
+        }
+        if(left > root.hi || right < root.lo) {
+            return 0;
+        }
+        if(left <= root.lo && root.hi <= right) {
+            return root.add;
+        }
+        return count(root.left, left, right) + count(root.right, left, right);
+    }
+
+    private void insert(Node root, long val) {
+        root.add ++;
+        if(root.lo == root.hi) {
+            return;
+        }
+        long mid = root.lo + root.hi >> 1;
+        if(val <= mid) {
+            if(root.left == null) {
+                root.left = new Node(root.lo, mid);
+            }
+            insert(root.left, val);
+        }else {
+            if(root.right == null) {
+                root.right = new Node(mid + 1, root.hi);
+            }
+            insert(root.right, val);
+        }
+    }
+}
+```
+以上四种解法，时间复杂度均为$O(n \log n)$
 
 #### 2.4.6 Multiple Tree
 
@@ -5944,9 +6304,9 @@ class Solution {
 
 #### 2.4.8 Tree Doubling
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 非竞赛可跳过 |
 
 例题：[1483. 树节点的第 K 个祖先](https://leetcode.cn/problems/kth-ancestor-of-a-tree-node/)
 
@@ -7216,6 +7576,7 @@ class Solution {
     }
 }
 ```
+
 思考：如果只需要找到一条单源路径即返回，应该怎么写代码？
 
 答案：为dfs增加返回值，标识是否寻找到单源路径。
@@ -7251,6 +7612,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [1466. 重新规划路线](https://leetcode.cn/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/) | 中等 |
 | [802. 找到最终的安全状态](https://leetcode.cn/problems/find-eventual-safe-states/) | 中等 |
+| [1971. 寻找图中是否存在路径](https://leetcode.cn/problems/find-if-path-exists-in-graph/) | 简单 |
 ##### 2.5.2.5 Depth First Search : Flood Fill
 
 例题：[529. 扫雷游戏](https://leetcode.cn/problems/minesweeper/)
@@ -9600,6 +9962,7 @@ public class LRUCache {
 | 题号                                                         | 难度 | 知识点                |
 | ------------------------------------------------------------ | ---- | --------------------- |
 | [432. 全 O(1) 的数据结构](https://leetcode.cn/problems/all-oone-data-structure/) | 困难 | 双向链表+哈希表       |
+
 #### 2.6.2 LFU
 
 例题：[460. LFU 缓存](https://leetcode.cn/problems/lfu-cache/)
@@ -9792,9 +10155,9 @@ class Solution {
 
 #### 3.2.1 Fast and Slow Pointers
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 低       |建议掌握 |
 
 在链表章节，我们介绍过快慢指针用于找环，该技巧在数组中依然适用。
 
@@ -9820,9 +10183,9 @@ class Solution {
 
 #### 3.2.2 Head and Tail Pointers
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       |必须掌握 |
 
 首尾指针可以方便地求解两数之和及其变体问题。
 
@@ -10958,9 +11321,9 @@ class Solution {
 
 ### 3.5 Binary Search
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 高       | 高       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 高       | 高       | 必须掌握 |
 
 先从一个经典问题进行引入：给定升序数组$arr[i]$，查找目标元素target，返回其下标。不存在返回-1。
 
@@ -11299,9 +11662,9 @@ class Solution {
 
 #### 3.6.1 Interval Arrangement
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 必须掌握 |
 
 区间安排问题是一类最经典的贪心问题，其目的是尽可能多地选择区间，使得区间之间不重叠。
 
@@ -11422,9 +11785,9 @@ second: [x2,y2], [x4,y4]
 
 #### 3.6.2 Covering Problem
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 建议掌握 |
 
 覆盖问题是一系列问题：给定一个区间范围和若干个子区间，选择尽可能少的区间，使得区间能够完全覆盖整个区间。
 
@@ -11507,9 +11870,9 @@ class Solution {
 
 #### 3.6.3 Maximum Number Problem
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 建议掌握 |
 
 例题：[402. 移掉 K 位数字](https://leetcode.cn/problems/remove-k-digits/)
 
@@ -11547,6 +11910,10 @@ class Solution {
 | [316. 去除重复字母](https://leetcode.cn/problems/remove-duplicate-letters/) | 中等 |
 
 #### 3.6.4 Pairing Problem
+
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 例题：[2576. 求出最多标记下标](https://leetcode.cn/problems/find-the-maximum-number-of-marked-indices/)
 
@@ -11626,6 +11993,10 @@ class Solution {
 
 
 #### 3.6.5 Regret-based Greedy
+
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 建议掌握 |
 
 在例题[122. 买卖股票的最佳时机 II](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii/)中，我们采用了贪心算法，由于可以在同一天出售，且限制了最多同时持有一只股票，贪心策略为，只要$arr[i]>arr[i-1]$，我们就进行卖出。
 
@@ -12141,9 +12512,9 @@ class Solution {
 
 #### 3.7.3 Sequence Dynamic Programming
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 ##### 3.7.3.1 Longest Increasing Subsequence
 
@@ -12521,6 +12892,8 @@ class Solution {
 | [516. 最长回文子序列](https://leetcode.cn/problems/longest-palindromic-subsequence/) | 中等 |
 | [1216. 验证回文字符串 III](https://leetcode.cn/problems/valid-palindrome-iii/) | 困难 |
 | [1035. 不相交的线](https://leetcode.cn/problems/uncrossed-lines/) | 中等 |
+| [115. 不同的子序列](https://leetcode.cn/problems/distinct-subsequences/) | 困难 |
+| [97. 交错字符串](https://leetcode.cn/problems/interleaving-string/) | 中等 |
 
 ##### 3.7.3.3 Pattern Matching
 
@@ -12605,9 +12978,9 @@ class Solution {
 
 #### 3.7.4 Path 
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 中       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 中       | 中       | 建议掌握 |
 
 例题：[174. 地下城游戏](https://leetcode.cn/problems/dungeon-game/)
 
@@ -12791,9 +13164,9 @@ class Solution {
 
 #### 3.7.6 Reroot Dynamic Programming
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 了解 |
 
 例题：[834. 树中距离之和](https://leetcode.cn/problems/sum-of-distances-in-tree/description/)
 
@@ -12909,11 +13282,12 @@ class Solution {
 | -------- | -------- |
 | [2858. 可以到达每一个节点的最少边反转次数](https://leetcode.cn/problems/minimum-edge-reversals-so-every-node-is-reachable/) |困难|
 | [2581. 统计可能的树根数目](https://leetcode.cn/problems/count-number-of-possible-root-nodes/) |困难|
+
 #### 3.7.7 Interval Dynamic Programming
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 了解 |
 
 例题：[312. 戳气球](https://leetcode.cn/problems/burst-balloons/)
 
@@ -13035,15 +13409,15 @@ class Solution {
 
 #### 3.7.8 State Compression Dynamic Programming
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- |  -------- |
+| 低       | 中       | 选择性掌握 |
 
 状态压缩DP问题主要是借助位运算，用二进制表示集合当前状态。
 
 假设集合有$n$个元素，则可以用$n$位二进制数来表示集合当前的状态。
 
-> 状态压缩之枚举子集类问题
+##### 3.7.8.1 Enumerate Subset
 
 例题：[2305. 公平分发饼干](https://leetcode.cn/problems/fair-distribution-of-cookies/)
 
@@ -13115,7 +13489,7 @@ for(int mask = 1; mask < total; mask ++) {
 | [1986. 完成任务的最少工作时间段](https://leetcode.cn/problems/minimum-number-of-work-sessions-to-finish-the-tasks/) | 中等 |
 | [1723. 完成所有工作的最短时间](https://leetcode.cn/problems/find-minimum-time-to-finish-all-jobs/) | 困难 |
 
-> 状态压缩之匹配问题
+##### 3.7.8.2 Matching
 
 例题：[1947. 最大兼容性评分和](https://leetcode.cn/problems/maximum-compatibility-score-sum/)
 
@@ -13166,7 +13540,7 @@ class Solution {
 | [526. 优美的排列](https://leetcode.cn/problems/beautiful-arrangement/) | 中等 |
 | [1947. 最大兼容性评分和](https://leetcode.cn/problems/maximum-compatibility-score-sum/) | 中等 |
 
-> 状态压缩之球装桶问题
+##### 3.7.8.3 Ball and Bucket
 
 匹配问题描述的是一对一关系，而求装桶问题，则是将$m$个球装入$n$个桶。
 
@@ -13222,7 +13596,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [473. 火柴拼正方形](https://leetcode.cn/problems/matchsticks-to-square/) | 中等 |
 
-> 状态压缩之最值类型
+##### 3.7.8.4 Maximum Value
 
 例题：[1125. 最小的必要团队](https://leetcode.cn/problems/smallest-sufficient-team/)
 
@@ -13274,9 +13648,9 @@ class Solution {
 
 #### 3.7.9 Maximize-Minimize Problem
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 了解 |
 
 例题：[486. 预测赢家](https://leetcode.cn/problems/predict-the-winner/)
 
@@ -13939,6 +14313,10 @@ class Solution {
 
 #### 3.7.12 Square And Rectangle Problem
 
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 选择性掌握 |
+
 本章为专题，探究一系列特殊的正方形/矩形问题。部分问题可以通过动态规划解决，部分问题需要结合前面的知识点。
 
 类型1：只包含1的最大正方形
@@ -14080,6 +14458,10 @@ class Solution {
 
 #### 3.7.13 Partition Dynamic Programming
 
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 选择性掌握 |
+
 例题：[410. 分割数组的最大值](https://leetcode.cn/problems/split-array-largest-sum/)
 
 分析：定义dp[i][j]为将数组前i个数分为j段得到的最大连续子数组和的最小值。
@@ -14134,9 +14516,10 @@ class Solution {
 
 ###  3.8 State Machine
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 中       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 中       | 建议掌握  |
+
 例题：[65. 有效数字](https://leetcode.cn/problems/valid-number/)
 
 分析：
@@ -14198,9 +14581,10 @@ class Solution {
 
 ### 3.9 Random Algorithm
 
-| 面试概率 | 笔试概率 |
-| -------- | -------- |
-| 低       | 低       |
+| 面试概率 | 笔试概率 | 学习建议 |
+| -------- | -------- | -------- |
+| 低       | 低       | 了解 |
+
 #### 3.9.1 Random Sampling
 
 例题：[528. 按权重随机选择](https://leetcode.cn/problems/random-pick-with-weight/)
