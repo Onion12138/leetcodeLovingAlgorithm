@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.22 20231028更新
+版本号1.0.23 20231029更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -3482,6 +3482,38 @@ class Solution {
     }
 }
 ```
+
+#### 1.4.4 Substring
+
+例题：[2262. 字符串的总引力](https://leetcode.cn/problems/total-appeal-of-a-string/)
+
+分析：对于字符c，假设其上一次出现的下标为j，则从[j+1...i]的子串引力值会增加1，一共增加i - j个(包含字符c单独组成子串)。
+
+变量sum维护以s[i]结尾的子串的引力值之和。
+
+```java
+class Solution {
+    public long appealSum(String s) {
+        long ans = 0;
+        int[] last = new int[26];
+        Arrays.fill(last, -1);
+        for(int i = 0, sum = 0; i < s.length(); i ++) {
+            int id = s.charAt(i) - 'a';
+            sum += i - last[id];
+            ans += sum;
+            last[id] = i;
+        }
+        return ans;
+    }
+}
+```
+
+练习题单
+
+
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [828. 统计子串中的唯一字符](https://leetcode.cn/problems/count-unique-characters-of-all-substrings-of-a-given-string/) | 困难 |
 
 ## Part 2 Data Structure
 
@@ -12976,6 +13008,8 @@ class Solution {
 ```
 
 
+
+
 #### 3.7.4 Path 
 
 | 面试概率 | 笔试概率 | 学习建议 |
@@ -14042,13 +14076,35 @@ Deque<Integer> group1 = new ArrayDeque<>(path[target]);
 Deque<Integer> group2 = IntStream.range(0, n).filter(e -> !path[target].contains(e)).boxed().collect(Collectors.toCollection(ArrayDeque::new));
 ```
 
+> 零一背包之恰好装满
 
-练习题单：
+如果要求零一背包恰好装满，则在初始化dp的时候，只能将dp[0]初始为合法值，而其他状态为非法值。
 
-| 题号                                                         | 难度 | 知识点                 |
-| ------------------------------------------------------------ | ---- | -------------------- |
-| [416. 分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/) | 中等 | 模版题               |
-| [494. 目标和](https://leetcode.cn/problems/target-sum/)      | 中等 | 如何建模成背包问题？ |
+以最大数量为例，dp[0]初始化为0，而其他状态初始化为负无穷。而如果可以不装满，则每个状态都是数组的默认值0。
+
+例题：[100042. 和为目标值的最长子序列的长度](https://leetcode.cn/problems/length-of-the-longest-subsequence-that-sums-to-target/) 
+
+// todo
+
+```java
+class Solution {
+    public int lengthOfLongestSubsequence(List<Integer> nums, int target) {
+        int[] f = new int[target + 1];
+        Arrays.fill(f, Integer.MIN_VALUE);
+        f[0] = 0;
+        int s = 0;
+        for (int x : nums) {
+            s = Math.min(s + x, target);  // 时间复杂度小优化
+            for (int j = s; j >= x; j--) {
+                f[j] = Math.max(f[j], f[j - x] + 1);
+            }
+        }
+        return f[target] > 0 ? f[target] : -1;
+    }
+}
+```
+
+> 零一背包进阶
 
 基于动态规划解决零一背包问题的时间复杂度为伪多项式时间复杂度，因为复杂度和$sum$的实际值相关。
 
@@ -14088,6 +14144,14 @@ class Solution {
 }
 ```
 时间复杂度：$O(n·2^{\frac{n}{2}})$
+
+
+练习题单：
+
+| 题号                                                         | 难度 | 知识点                 |
+| ------------------------------------------------------------ | ---- | -------------------- |
+| [416. 分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/) | 中等 | 模版题               |
+| [494. 目标和](https://leetcode.cn/problems/target-sum/)      | 中等 | 如何建模成背包问题？ |
 
 ##### 3.7.10.3 Multiple Knapsack
 
