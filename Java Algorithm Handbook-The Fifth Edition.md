@@ -12686,6 +12686,9 @@ class Solution {
     }
 }
 ```
+
+//todo 补充 树状数组离散化方式 https://leetcode.cn/problems/maximum-balanced-subsequence-sum/solutions/2513121/shu-zhuang-shu-zu-you-hua-dp-by-endlessc-3zf4/
+
 时间复杂度：$O(n\log n)$
 
 思考1：对于不同的写法，如果求解的是非严格递增的子序列，应该怎样修改代码？
@@ -13193,8 +13196,8 @@ class Solution {
 
 | 题号                                                         | 难度 |
 | ------------------------------------------------------------ | ---- |
-| [1373. 二叉搜索子树的最大键值和](https://leetcode.cn/problems/maximum-sum-bst-in-binary-tree/) | 困难 |
-| [979. 在二叉树中分配硬币](https://leetcode.cn/problems/distribute-coins-in-binary-tree/) | 中等 |
+| [1373. 二叉搜索子树的最大键值和](https://leetcode.cn/problems/maximum-sum-bst-in-binary-tree/) | 困难(1913) |
+| [979. 在二叉树中分配硬币](https://leetcode.cn/problems/distribute-coins-in-binary-tree/) | 中等(1709) |
 
 #### 3.7.6 Reroot Dynamic Programming
 
@@ -13314,8 +13317,8 @@ class Solution {
 
 | 题号 | 难度 |
 | -------- | -------- |
-| [2858. 可以到达每一个节点的最少边反转次数](https://leetcode.cn/problems/minimum-edge-reversals-so-every-node-is-reachable/) |困难|
-| [2581. 统计可能的树根数目](https://leetcode.cn/problems/count-number-of-possible-root-nodes/) |困难|
+| [2858. 可以到达每一个节点的最少边反转次数](https://leetcode.cn/problems/minimum-edge-reversals-so-every-node-is-reachable/) |困难(2294)|
+| [2581. 统计可能的树根数目](https://leetcode.cn/problems/count-number-of-possible-root-nodes/) |困难(2228)|
 
 #### 3.7.7 Interval Dynamic Programming
 
@@ -13435,9 +13438,9 @@ class Solution {
 
 | 题号                                                         | 难度 |
 | ------------------------------------------------------------ | ---- |
-| [1039. 多边形三角剖分的最低得分](https://leetcode.cn/problems/minimum-score-triangulation-of-polygon/) | 中等 |
-| [1547. 切棍子的最小成本](https://leetcode.cn/problems/minimum-cost-to-cut-a-stick/) | 困难 |
-| [1000. 合并石头的最低成本](https://leetcode.cn/problems/minimum-cost-to-merge-stones/) | 困难 |
+| [1039. 多边形三角剖分的最低得分](https://leetcode.cn/problems/minimum-score-triangulation-of-polygon/) | 中等(2130) |
+| [1547. 切棍子的最小成本](https://leetcode.cn/problems/minimum-cost-to-cut-a-stick/) | 困难(2116) |
+| [1000. 合并石头的最低成本](https://leetcode.cn/problems/minimum-cost-to-merge-stones/) | 困难(2422) |
 | [664. 奇怪的打印机](https://leetcode.cn/problems/strange-printer/) | 困难 |
 | [471. 编码最短长度的字符串](https://leetcode.cn/problems/encode-string-with-shortest-length/) | 困难 |
 
@@ -14082,9 +14085,7 @@ Deque<Integer> group2 = IntStream.range(0, n).filter(e -> !path[target].contains
 
 以最大数量为例，dp[0]初始化为0，而其他状态初始化为负无穷。而如果可以不装满，则每个状态都是数组的默认值0。
 
-例题：[100042. 和为目标值的最长子序列的长度](https://leetcode.cn/problems/length-of-the-longest-subsequence-that-sums-to-target/) 
-
-// todo
+例题：[2915. 和为目标值的最长子序列的长度](https://leetcode.cn/problems/length-of-the-longest-subsequence-that-sums-to-target/) 
 
 ```java
 class Solution {
