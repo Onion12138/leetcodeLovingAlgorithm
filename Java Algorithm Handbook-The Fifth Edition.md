@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.23 20231029更新
+版本号1.0.24 202311111更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -2085,6 +2085,43 @@ class Solution {
 ```
 
 时间复杂度：$O(\max(m\log m,n\log m))$
+
+以下例题和多路归并思路非常类似，用堆优化枚举子序列。
+
+例题：非负数组前k个最小的子序列累加和
+
+数组有n个非负数，给定正数k，返回数组所有子序列中累加和最小的前k个累加和。
+
+数据规模：
+
+$1 \le n \le 10^5$
+
+$1 \le nums[i] \le 10^6$
+
+$1 \le k \le 10^5$
+
+```java
+class Solution {
+    public int[] topKSum(int[] nums, int k) {
+        Arrays.sort(nums);
+        Queue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+        queue.add(new int[]{0, nums[0]});
+        int[] ans = new int[k];
+        for (int i = 1; i < k; i++) {
+            int[] cur = queue.poll();
+            int right = cur[0], sum = cur[1];
+            ans[i] = sum;
+            if (right + 1 < nums.length) {
+                queue.offer(new int[]{right + 1, sum - nums[right] + nums[right + 1]});
+                queue.offer(new int[]{right + 1, sum + nums[right + 1]});
+            }
+        }
+        return ans;
+    }
+}
+```
+
+时间复杂度：$O(n \log n + k \log k)$
 
 练习题单
 
@@ -8736,6 +8773,14 @@ class Solution {
 ```
 Floyed算法检测负权环：松弛完毕后，若发现$dis[v][v]<0$，说明存在负权环。
 
+练习题单
+
+| 题号                                                         | 难度 | 知识点                |
+| ------------------------------------------------------------ | ---- | --------------------- |
+| [1462. 课程表 IV](https://leetcode.cn/problems/course-schedule-iv/) | 中等 | Floyed算法，拓扑排序       |
+
+
+
 ##### 2.5.4.5 Shortest Path With Constraint 
 
 本节选学。
@@ -12247,6 +12292,8 @@ class Solution {
 
 本题还可以使用分治算法求解，时间复杂度$O(n \log n)$。
 
+下题是最大子数组和的进阶版本，需要记录最大子数组的位置。
+
 例题：[面试题 17.24. 最大子矩阵](https://leetcode.cn/problems/max-submatrix-lcci/)
 
 ```java
@@ -12295,6 +12342,13 @@ class Solution {
 ```
 
 时间复杂度：$O(m^2n)$
+
+练习题单
+
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [152. 乘积最大子数组](https://leetcode.cn/problems/maximum-product-subarray/) | 中等 |
+| [689. 三个无重叠子数组的最大和](https://leetcode.cn/problems/maximum-sum-of-3-non-overlapping-subarrays/description/) | 困难 |
 
 ##### 3.7.2.2 Series of Problems Related to Buying and Selling Stocks
 
@@ -14104,6 +14158,46 @@ class Solution {
     }
 }
 ```
+> 有依赖的背包
+
+例题：物品分为主件和附件两类，购买主件可以选择性买附件，购买附件前提必须购买主键。一个主件最多有两个附件。
+
+```java
+class Solution {
+    private int dependentKnapsack(int n, int[] value, int[] cost, boolean[] main, List<Integer>[] attachment) {
+        int[] dp = new int[n + 1];
+        for (int i = 0; i < value.length; i ++) {
+            if (!main[i]) {  // 只考虑主件的转移
+                continue;
+            }
+            for (int cap = n; cap >= cost[i]; cap --) {
+                dp[cap] = Math.max(dp[cap], dp[cap - cost[i]] + value[i]);
+                if (attachment[i].size() == 1) {
+                    int attach = attachment[i].get(0);
+                    if (cap >= cost[i] + cost[attach]) {
+                        dp[cap] = Math.max(dp[cap], dp[cap - cost[i] - cost[attach]] + value[i] + value[attach]);
+                    }
+                } else if (attachment[i].size() == 2) {
+                    int attach1 = attachment[i].get(0);
+                    int attach2 = attachment[i].get(1);
+                    if (cap >= cost[i] + cost[attach1]) {
+                        dp[cap] = Math.max(dp[cap], dp[cap - cost[i] - cost[attach1]] + value[i] + value[attach1]);
+                    }
+                    if (cap >= cost[i] + cost[attach2]) {
+                        dp[cap] = Math.max(dp[cap], dp[cap - cost[i] - cost[attach2]] + value[i] + value[attach2]);
+                    }
+                    if (cap >= cost[i] + cost[attach1] + cost[attach2]) {
+                        dp[cap] = Math.max(dp[cap], dp[cap - cost[i] - cost[attach1] - cost[attach2]] + value[i] + value[attach1] + value[attach2]);
+                    }
+                }
+            }
+        }
+        return dp[n];
+    }
+}
+```
+
+
 
 > 零一背包进阶
 
@@ -14145,7 +14239,6 @@ class Solution {
 }
 ```
 时间复杂度：$O(n·2^{\frac{n}{2}})$
-
 
 练习题单：
 
