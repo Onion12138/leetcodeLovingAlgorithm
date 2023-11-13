@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.24 202311111更新
+版本号1.0.25 20231113更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -1041,6 +1041,14 @@ static {
     }
 }
 ```
+#### 1.2.10 Inequality
+
+排序不等式：
+
+有两数列$a_1,a_2,...,a_n$和$b_1,b_2,...,b_n$，满足$a_1 \le a_2 \le ... \le a_n,b_1 \le b_2 \le ... \le b_n$，$c_1,c_2,...,c_n$为$b_1,b_2,...,b_n$的乱序排列，则有：
+
+$\sum_{i=1}^n a_ib_{n+1-i} \le \sum_{i=1}^na_ic_i\le \sum_{i=1}^n a_ib_i$
+
 
 ### 1.3 Array
 
@@ -6324,6 +6332,81 @@ class Solution {
 | [472. 连接词](https://leetcode.cn/problems/concatenated-words/) | 困难 |
 | [745. 前缀和后缀搜索](https://leetcode.cn/problems/prefix-and-suffix-search/) | 困难 |
 
+##### 2.4.6.2 0-1 Trie
+
+01字典树常用于解决最大异或问题。
+
+例题：[2935. 找出强数对的最大异或值 II](https://leetcode.cn/problems/maximum-strong-pair-xor-ii/)
+
+分析：先排序，假设x < y，约束条件转化为x <= y <= 2x。采用滑动窗口+01字典树实现。01字典树需要支持删除操作，用一个cnt变量辅助实现。
+
+
+```java
+class Solution {
+    public int maximumStrongPairXor(int[] nums) {
+        Arrays.sort(nums);
+        Trie trie = new Trie();
+        int ans = 0, left = 0;
+        for(int y : nums) {
+            trie.insert(y);
+            while(nums[left] * 2 < y) {
+                trie.remove(nums[left++]);
+            }
+            ans = Math.max(ans, trie.maxXor(y));
+        }
+        return ans;
+    }
+}
+class Node {
+    Node[] children = new Node[2];
+    int cnt;
+}
+class Trie {
+    private Node root = new Node();
+    private static final int HIGH_BIT = 19;
+
+    public void insert(int val) {
+        Node cur = root;
+        for(int i = HIGH_BIT; i >= 0; i --) {
+            int bit = (val >> i) & 1;
+            if(cur.children[bit] == null) {
+                cur.children[bit] = new Node();
+            }
+            cur = cur.children[bit];
+            cur.cnt ++;
+        }
+    }
+
+    public void remove(int val) {
+        Node cur = root;
+        for(int i = HIGH_BIT; i >= 0; i --) {
+            cur = cur.children[(val >> i) & 1];
+            cur.cnt --;
+        }
+    }
+
+    public int maxXor(int val) {
+        Node cur = root;
+        int ans = 0;
+        for(int i = HIGH_BIT; i >= 0; i --) {
+            int bit = (val >> i) & 1;
+            if(cur.children[bit ^ 1] != null && cur.children[bit ^ 1].cnt > 0) {
+                ans |= 1 << i;
+                bit ^= 1;
+            }
+            cur = cur.children[bit];
+        }
+        return ans;
+    }
+}
+```
+思考：根据哈希表章节介绍的两数异或的解法，如何采用哈希表求解本题？
+
+练习题单
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- | 
+| [1707. 与数组中元素的最大异或值](https://leetcode.cn/problems/maximum-xor-with-an-element-from-array/) | 困难 | 01字典树+排序 |
+
 
 #### 2.4.7 Lowest Common Ancestor
 
@@ -9933,8 +10016,68 @@ class Solution {
 
 参考题解：https://leetcode.cn/problems/path-with-minimum-effort/solutions/460667/javasi-chong-jie-fa-zui-duan-lu-zui-xiao-sheng-che/
 
-### 2.6 Data Structure Design
-#### 2.6.1 LRU
+### 2.6 Hash Table
+
+本章节探讨哈希表的经典应用。
+
+#### 2.6.1 Two Sum
+
+无序数组中寻找两个数的和为target，可以采用哈希表优化时间复杂度到O(n)。
+
+有序数组中寻找两个数的和为target，可以使用双指针法优化空间复杂度到O(1)。
+
+练习题单
+
+
+| 题号                                                         | 难度 | 知识点                |
+| ------------------------------------------------------------ | ---- | --------------------- |
+| [1. 两数之和](https://leetcode.cn/problems/two-sum/) | 简单 | 哈希表       |
+| [167. 两数之和 II - 输入有序数组](https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/) | 中等 | 双指针       |
+| [170. 两数之和 III - 数据结构设计](https://leetcode.cn/problems/two-sum-iii-data-structure-design/) | 简单 | 哈希表 |
+
+现讨论两数之和的延伸应用，两数异或。
+
+例题：[421. 数组中两个数的最大异或值](https://leetcode.cn/problems/maximum-xor-of-two-numbers-in-an-array/)
+
+分析：从最大数的最高位开始。每个数的其他位先置为零。
+问题转化为从这些数中选两个数，异或的结果为除了最高位，其他位都为零。依次类推，再查看次高位。
+
+两数之和的思路用于判断两数异或：
+
+两数之和：$a + b = target \Rightarrow a = target - b$
+
+两数异或：$a \oplus b = target \Rightarrow a = target \oplus b$
+
+```java
+class Solution {
+    public int findMaximumXOR(int[] nums) {
+        int max = Arrays.stream(nums).max().getAsInt();
+        int highBit = 31 - Integer.numberOfLeadingZeros(max);
+        int ans = 0, mask = 0;
+        Set<Integer> seen = new HashSet<>();
+        for(int i = highBit; i >= 0; i --) {
+            seen.clear();
+            mask |= 1 << i;
+            int newAns = ans | (1 << i);
+            for(int x : nums) {
+                x &= mask;
+                if(seen.contains(newAns ^ x)) {
+                    ans = newAns;
+                    break;
+                }
+                seen.add(x);
+            }
+        }
+        return ans;
+    }
+}
+```
+时间复杂度：$O(n\log U),U=\max(nums)$
+
+本题是一道非常经典的题目，还可以采用0-1字典树解决。
+
+### 2.7 Data Structure Design
+#### 2.7.1 LRU
 例题：[146. LRU 缓存](https://leetcode.cn/problems/lru-cache)
 
 分析：
@@ -10040,7 +10183,7 @@ public class LRUCache {
 | ------------------------------------------------------------ | ---- | --------------------- |
 | [432. 全 O(1) 的数据结构](https://leetcode.cn/problems/all-oone-data-structure/) | 困难 | 双向链表+哈希表       |
 
-#### 2.6.2 LFU
+#### 2.7.2 LFU
 
 例题：[460. LFU 缓存](https://leetcode.cn/problems/lfu-cache/)
 
@@ -14337,9 +14480,46 @@ class Solution {
 
 ##### 3.7.10.4 Group Knapsack
 
-分组背包，物品被分为若干组，每组最多只能选一个/恰好选择一个，根据题意而定。
+例题：[100126. 重新排列后包含指定子字符串的字符串数目](https://ssg.leetcode.cn/problems/number-of-strings-which-can-be-rearranged-to-contain-substring/) // todo
 
-该部分较为容易，读者可以选择以下题目练习。
+本题是一个经典的至少装满型的分组背包。
+
+```java
+class Solution {
+    public int stringCount(int n) {
+        memo = new Long[n+1][2][3][2];
+        return (int)dfs(n, 1, 2, 1);
+    }
+
+    private Long[][][][] memo;
+    private int mod = 10000_00007;
+
+    private long dfs(int n, int l, int e, int t) {
+        if(n == 0) {
+            return l == 0 && e == 0 && t == 0 ? 1 : 0;
+        }
+        if(memo[n][l][e][t] != null) {
+            return memo[n][l][e][t];
+        }
+        long res = 0;
+        res = (res + dfs(n - 1, 0, e, t)) % mod;
+        res = (res + dfs(n - 1, l, Math.max(e - 1, 0), t)) % mod;
+        res = (res + dfs(n - 1, l, e, 0)) % mod;
+        res = (res + dfs(n - 1, l, e, t) * 23) % mod;
+        return memo[n][l][e][t] = res;
+    }
+}
+```
+时间复杂度：$O(n)$
+
+思考：如何从数学角度求解本题？
+
+提示：$26^n-(3*25+n)·25^{n-1}+(3*24+2n)·24^{n-1}-(23+n)·23^{n-1}$，利用矩阵快速幂，时间复杂度可以达到$O(n\log n)$。
+
+
+分组背包还有其他类型，可以参考题单进行练习。
+
+练习题单
 
 | 题号                                                         | 难度 | 提示                 |
 | ------------------------------------------------------------ | ---- | -------------------- |
