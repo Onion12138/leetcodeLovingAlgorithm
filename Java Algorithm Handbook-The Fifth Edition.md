@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.26 20231115更新
+版本号1.0.27 20231117更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -1638,6 +1638,69 @@ class Solution {
         }
     }
 
+}
+```
+例题：[2736. 最大和查询](https://leetcode.cn/problems/maximum-sum-queries/)
+
+```java
+class Solution {
+    public int[] maximumSumQueries(int[] nums1, int[] nums2, int[][] queries) {
+        int n = nums1.length, m = queries.length;
+        int[][] pair = new int[n][2];
+        for(int i = 0; i < n; i ++) {
+            pair[i] = new int[]{nums1[i], nums2[i]};
+        }
+        Arrays.sort(pair, (a, b) -> Integer.compare(b[0], a[0]));
+        Arrays.sort(nums2);
+        int[][] q = new int[m][3];
+        for(int i = 0; i < m; i ++) {
+            q[i] = new int[]{queries[i][0], queries[i][1], i};
+        }
+        Arrays.sort(q, (a, b) -> Integer.compare(b[0], a[0]));
+        int j = 0;
+        int[] ret = new int[m];
+        BinaryIndexTree tree = new BinaryIndexTree(n);
+        for(int i = 0; i < m; i ++) {
+            int idx = q[i][2], x = q[i][0], y = q[i][1];
+            while(j < n && pair[j][0] >= x) {
+                int id = n - Arrays.binarySearch(nums2, pair[j][1]);
+                tree.update(id, pair[j][0] + pair[j][1]);
+                j ++;
+            }
+            int p = Arrays.binarySearch(nums2, y);
+            int id = p >= 0 ? n - p : n + p + 1;
+            ret[idx] = tree.query(id);
+        }
+        return ret;
+    }
+    class BinaryIndexTree {
+        private int[] tree;
+
+        public BinaryIndexTree(int n) {
+            tree = new int[n+1];
+            Arrays.fill(tree, -1);
+        }
+        
+        private int lowbit(int x) {
+            return x & -x;
+        }
+
+        private void update(int i, int v) {
+            while(i < tree.length) {
+                tree[i] = Math.max(tree[i], v);
+                i += lowbit(i);
+            }
+        }
+
+        private int query(int i) {
+            int ans = -1;
+            while(i > 0) {
+                ans = Math.max(ans, tree[i]);
+                i -= lowbit(i);
+            }
+            return ans;
+        }
+    }
 }
 ```
 
@@ -14411,6 +14474,97 @@ class Solution {
 
 ##### 3.7.10.3 Multiple Knapsack
 
+多重背包问题和零一背包的区别在于，每种物品可以选择的次数有一个限制，由数组c控制。
+
+$dp[i][j]$依赖于如下状态：
+
+$dp[i-1][j]$ (不选)
+
+$dp[i-1][j-w[i]] + v[i]$ (选1个)
+
+...
+
+$dp[i-1][j-k*w[i]]+v[i]*k$ (选k个)
+
+其中$k \le c[i]$，$c[i]$表示第$i$个物品能选择的最大次数，且满足$j \ge k*w[i]$
+
+时间复杂度：$O(n·w·k)$，其中n为物品数量，w为背包容量，k为每件物品的平均个数。如果不进行优化，该时间复杂度很容易超时。
+
+> 二进制优化
+
+二进制优化的思想是将其转化为零一背包问题。
+
+```java
+public class Solution {
+    public int multipleKnapsack(int capacity, int[] w, int[] v, int[] c) {
+        List<Integer> weight = new ArrayList<>();
+        List<Integer> value = new ArrayList<>();
+        for (int i = 0; i < w.length; i++) {
+            int cnt = c[i];
+            for (int j = 1; j <= cnt; j <<= 1) {
+                weight.add(j * w[i]);
+                value.add(j * v[i]);
+                cnt -= j;
+            }
+            if (cnt > 0) {
+                weight.add(cnt * w[i]);
+                value.add(cnt * v[i]);
+            }
+        }
+        int[] dp = new int[capacity + 1];
+        for (int i = 0; i < weight.size(); i++) {
+            for (int j = capacity; j >= weight.get(i); j --) {
+                dp[j] = Math.max(dp[j], dp[j - weight.get(i)] + value.get(i));
+            }
+        }
+        return dp[capacity];
+    }
+}
+```
+时间复杂度：$O(n·w·\log(k))$
+
+> 单调队列优化
+
+$dp[i][j]$依赖于如下状态中的最大值，可以用单调队列来维护。
+
+$dp[i-1][j]$ (不选)
+
+$dp[i-1][j-w[i]] + v[i]$ (选1个)
+
+...
+
+$dp[i-1][j-k*w[i]]+v[i]*k$ (选k个)
+
+同时，单调队列还要维护过期窗口。
+```java
+public class Solution {
+    public int multipleKnapsack(int capacity, int[] w, int[] v, int[] c) {
+        int n = w.length;
+        int[][] dp = new int[n + 1][capacity + 1];
+        Deque<Integer> deque = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            for (int mod = 0; mod <= Math.min(capacity, w[i] - 1); mod++) {
+                deque.clear();
+                for (int j = mod; j <= capacity; j += w[i]) {
+                    while (!deque.isEmpty() && dp[i][deque.peekLast()] + (j - deque.peekLast()) / w[i] * v[i] <= dp[i][j]) {
+                        deque.pollLast();
+                    }
+                    deque.offerLast(j);
+                    if (deque.peekFirst() == j - w[i] * (c[i] + 1)) {
+                        deque.pollFirst();
+                    }
+                    dp[i+1][j] = dp[i][deque.peekFirst()] + (j - deque.peekFirst()) / w[i] * v[i];
+                }
+            }
+        }
+        return dp[n][capacity];
+    }
+}
+```
+时间复杂度：$O(n·w)$。基于单调队列优化的时间复杂度更优。
+
+如果是求解个数问题，则需要别的优化方式。
+
 例题：[2902. 和带限制的子多重集合的数目](https://leetcode.cn/problems/count-of-sub-multisets-with-bounded-sum/)
 
 分析：由于相同数字不做区分，本题为多重背包。区分相同数字则为零一背包。
@@ -14499,7 +14653,43 @@ class Solution {
 
 ##### 3.7.10.4 Group Knapsack
 
-例题：[100126. 重新排列后包含指定子字符串的字符串数目](https://ssg.leetcode.cn/problems/number-of-strings-which-can-be-rearranged-to-contain-substring/) // todo
+分组背包是在零一背包的基础上增加了分组的限制，例如每组最多只能选择一件物品。
+
+模版：
+
+参数中capacity为背包容量，weight数组为物品重量，cost数组为物品价值，group数组为物品所属分组，取值相同的为同一个组。
+
+```java
+class Solution {
+    public int partitionKnapsack(int capacity, int[] weight, int[] cost, int[] group) {
+        int n = weight.length;
+        int[][] pair = new int[n][3];
+        for (int i = 0; i < n; i++) {
+            pair[i][0] = weight[i];
+            pair[i][1] = cost[i];
+            pair[i][2] = group[i];
+        }
+        Arrays.sort(pair, Comparator.comparingInt(a -> a[2]));
+        int[] dp = new int[capacity + 1];
+        for (int start = 0, end = 0; start < n;) {
+            while (end < n && pair[end][2] == pair[start][2]) {
+                end ++;
+            }
+            for (int k = capacity; k >= 0; k --) {
+                for (int j = start; j < end; j ++) {
+                    if (k >= pair[j][0]) {
+                        dp[k] = Math.max(dp[k], dp[k - pair[j][0]] + pair[j][1]);
+                    }
+                }
+            }
+            start = end;
+        }
+        return dp[capacity];
+    }
+}
+```
+
+例题：[2930. 重新排列后包含指定子字符串的字符串数目](https://ssg.leetcode.cn/problems/number-of-strings-which-can-be-rearranged-to-contain-substring/)
 
 本题是一个经典的至少装满型的分组背包。
 
