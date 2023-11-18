@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.27 20231117更新
+版本号1.0.28 20231118更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -13588,6 +13588,47 @@ class Solution {
 | -------- | -------- | -------- |
 | 低       | 低       | 了解 |
 
+区间dp的核心求解思路是将大范围的问题拆分成若干小范围的问题，拆分方式有两种。
+
+- 基于两侧端点拆分
+  
+例题：[1312. 让字符串成为回文串的最少插入次数](https://leetcode.cn/problems/minimum-insertion-steps-to-make-a-string-palindrome/)
+
+```java
+class Solution {
+    public int minInsertions(String s) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        for(int l = n - 1; l >= 0; l --) {
+            for(int r = l + 1; r < n; r ++) {
+                if(s.charAt(l) == s.charAt(r)) {
+                    dp[l][r] = dp[l+1][r-1];
+                }else {
+                    dp[l][r] = Math.min(dp[l+1][r], dp[l][r-1]) + 1;
+                }
+            }
+        }
+        return dp[0][n - 1];
+    }
+}
+```
+时间复杂度：$O(n^2)$
+
+思考：分析dp数组的依赖状态，理解为何要按照外层逆序，内层顺序的方式循环。
+
+---
+练习题单
+
+| 题号                                                         | 难度 |
+| ------------------------------------------------------------ | ---- |
+| [5. 最长回文子串](https://leetcode.cn/problems/longest-palindromic-substring/) | 中等 |
+| [486. 预测赢家](https://leetcode.cn/problems/predict-the-winner/) | 中等 | 
+
+  
+- 基于划分点拆分
+
+在图论章节介绍Floyed算法时，Floyed算法思想和区间动态规划很相似，从如下例题中学习区间动态规划，体会二者思路上的异同。
+
 例题：[312. 戳气球](https://leetcode.cn/problems/burst-balloons/)
 
 为了方便计算，对原数组$nums$进行处理，在其前后添加$1$，得到新数组$arr$，则$arr[1...n]=nums$
@@ -13695,7 +13736,7 @@ class Solution {
     }
 }
 ```
-
+---
 练习题单
 
 | 题号                                                         | 难度 |
@@ -13732,7 +13773,7 @@ $dp[i][j]$表示前$i$个孩子，分得饼干集合为$j$时的不公平程度�
 
 ```java
 for(int sub = mask; sub > 0; sub = (sub - 1) & mask) {
-    
+
 }
 ```
 
@@ -14525,7 +14566,7 @@ public class Solution {
 
 > 单调队列优化
 
-$dp[i][j]$依赖于如下状态中的最大值，可以用单调队列来维护。
+仔细观察$dp[i][j]$依赖的状态：
 
 $dp[i-1][j]$ (不选)
 
@@ -14535,7 +14576,8 @@ $dp[i-1][j-w[i]] + v[i]$ (选1个)
 
 $dp[i-1][j-k*w[i]]+v[i]*k$ (选k个)
 
-同时，单调队列还要维护过期窗口。
+可以发现，$dp[i][j]$依赖的状态都是对$w[i]$同余的，且当前状态转移来自于这一系列状态中的最大值。
+故可以用单调队列，维护滑动窗口最大值。
 ```java
 public class Solution {
     public int multipleKnapsack(int capacity, int[] w, int[] v, int[] c) {
@@ -14561,9 +14603,9 @@ public class Solution {
     }
 }
 ```
-时间复杂度：$O(n·w)$。基于单调队列优化的时间复杂度更优。
+时间复杂度：$O(n·w)$。基于单调队列优化的时间复杂度更优。注意，虽然是三重循环，但内两重循环时间复杂度仅为w。
 
-如果是求解个数问题，则需要别的优化方式。
+如果是求解个数问题，由于依赖的不是最大值，需要别的优化方式。
 
 例题：[2902. 和带限制的子多重集合的数目](https://leetcode.cn/problems/count-of-sub-multisets-with-bounded-sum/)
 
@@ -14650,6 +14692,8 @@ class Solution {
     }
 }
 ```
+本题的时间复杂度分析也很有意思。
+假设$n$为数组长度，$s$为元素和，上述解法的时间复杂度为$O(s\min(\sqrt{s},n))$。假设哈希表有$m$个key，则元素和至少为$1+2+...+n=\frac{n(n+1)}{2}\le s$，则哈希表最多有$\sqrt{2s}$个key，同时key的数量不能超过$n$。
 
 ##### 3.7.10.4 Group Knapsack
 
