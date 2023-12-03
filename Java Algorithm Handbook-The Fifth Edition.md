@@ -1,5 +1,5 @@
 # Algorithm Handbook - The Fifth Edition
-版本号1.0.28 20231118更新
+版本号1.0.29 20231203更新
 [TOC]
 ## Preface to the Fifth Edition
 
@@ -5421,6 +5421,12 @@ class Solution {
 
 在图章节，还会继续介绍**拓扑排序**的解法。
 
+练习题单
+
+| 题号                                                         | 难度 | 知识点 |
+| ------------------------------------------------------------ | ---- | ---- |
+| [2246. 相邻字符不同的最长路径](https://leetcode.cn/problems/longest-path-with-different-adjacent-characters/description/)      | 困难 | 树的直径变体
+
 #### 2.4.5 Balanced Binary Tree
 
 二分搜索树容易退化为链表，导致极端情况下数据查询效率低下。
@@ -10636,21 +10642,12 @@ class Solution {
         for(int i = n - 1; i < m; i ++) {
             char c = s.charAt(i);
             window[c] ++;
-            if(equals(window, need)) {
+            if(Arrays.equals(window, need)) {
                 ret.add(i - n + 1);
             }
             window[s.charAt(i - n + 1)] --;
         }
         return ret;
-    }
-
-    private boolean equals(int[] window, int[] need) {
-        for(int i = 0; i < window.length; i ++) {
-            if(window[i] != need[i]) {
-                return false;
-            }
-        }
-        return true;
     }
 }
 ```
@@ -13404,55 +13401,121 @@ class Solution {
     }
 }
 ```
+
+根据本题，总结树形动态规划更通用的解题思路：
+
+- 分析父节点需要依赖子节点的哪些信息
+- 子节点信息定义为递归返回值
+- 父节点整合子节点信息返回
+
+
 时间复杂度：$O(n)$
 
 例题：[333. 最大 BST 子树](https://leetcode.cn/problems/largest-bst-subtree/)
 
+分析：每个节点需要依赖的子节点状态/信息
+
+若当前节点不能构成最大子树，则最大子树的size取决于左右子树构成最大子树的size。
+
+若当前子树能构成最大子树，则需要满足三个条件。
+
+- 左子树也为以左子树为根的最大子树
+- 右子树也为以右子树为根的最大子树
+- 当前节点值大于左子树最大值，小于右子树最小值。
+
+因此需要记录四个信息，最大子树的根，size值，子树节点最大值和最小值。
+
 ```java
 class Solution {
 
-    class Result {
-        TreeNode node;
+    class Info {
+        boolean isBST;
         int size;
-        int max;
-        int min;
+        long max;
+        long min;
+
+        public Info(long max, long min, boolean isBST, int size) {
+            this.max = max;
+            this.min = min;
+            this.isBST = isBST;
+            this.size = size;
+        }
     }
 
     public int largestBSTSubtree(TreeNode root) {
-        Result result = dfs(root);
-        return result == null ? 0 : result.size;
+        return dfs(root).size;
     }
 
-    public Result dfs(TreeNode node) {
+    public Info dfs(TreeNode node) {
         if(node == null) {
-            return null;
+            return new Info(Long.MIN_VALUE, Long.MAX_VALUE, true, 0);
         }
-        Result left = null, right = null;
-        if(node.left != null) {
-            left = dfs(node.left);
+        Info left = dfs(node.left), right = dfs(node.right);
+        long max = Math.max(node.val, Math.max(left.max, right.max));
+        long min = Math.min(node.val, Math.min(left.min, right.min));
+        boolean isBST = left.isBST && right.isBST && left.max < node.val && node.val < right.min;
+        int size;
+        if(isBST) {
+            size = left.size + right.size + 1;
+        }else {
+            size = Math.max(left.size, right.size);
         }
-        if(node.right != null) {
-            right = dfs(node.right);
-        }
-        boolean leftValid = (left == null || left.node == node.left && left.max < node.val);
-        boolean rightValid = (right == null || right.node == node.right && right.min > node.val);
-        if(leftValid && rightValid) {
-            Result result = new Result();
-            result.node = node;
-            result.max = right == null ? node.val : right.max;
-            result.min = left == null ? node.val : left.min;
-            result.size = (left == null ? 0 : left.size) + (right == null ? 0 : right.size) + 1;
-            return result;
-        }
-        if(left != null && right != null) {
-            return left.size > right.size ? left : right;
-        }
-        return left == null ? right : left;
+        return new Info(max, min, isBST, size);
     }
-
 }
 ```
 时间复杂度：$O(n)$
+
+DFN序的应用
+
+例题：[2458. 移除子树后的二叉树高度](https://leetcode.cn/problems/height-of-binary-tree-after-subtree-removal-queries/)
+
+```java
+class Solution {
+    public int[] treeQueries(TreeNode root, int[] queries) {
+        int n = 100002, m = queries.length;
+        dfn = new int[n];
+        deep = new int[n];
+        size = new int[n];
+        dfs(root, 0);
+        int[] maxl = new int[n], maxr = new int[n];
+        for(int i = 1; i <= dfnCount; i ++) {
+            maxl[i] = Math.max(maxl[i - 1], deep[i]);
+        }
+        for(int i = dfnCount; i >= 1; i --) {
+            maxr[i] = Math.max(maxr[i + 1], deep[i]);
+        }
+        int[] ans = new int[m];
+        for(int i = 0; i < m; i ++) {
+            int left = maxl[dfn[queries[i]] - 1];
+            int right = maxr[dfn[queries[i]] + size[dfn[queries[i]]]];
+            ans[i] = Math.max(left, right);
+        }
+        return ans;
+    }
+
+    private void dfs(TreeNode root, int k) {
+        int id = ++ dfnCount;
+        dfn[root.val] = id;
+        deep[id] = k;
+        size[id] = 1;
+        if(root.left != null) {
+            dfs(root.left, k + 1);
+            size[id] += size[dfn[root.left.val]];
+        }
+        if(root.right != null) {
+            dfs(root.right, k + 1);
+            size[id] += size[dfn[root.right.val]];
+        }
+    }
+
+    private int dfnCount = 0;
+    private int[] dfn;
+    private int[] deep;
+    private int[] size;
+}
+```
+
 
 练习题单
 
@@ -13460,6 +13523,9 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [1373. 二叉搜索子树的最大键值和](https://leetcode.cn/problems/maximum-sum-bst-in-binary-tree/) | 困难(1913) |
 | [979. 在二叉树中分配硬币](https://leetcode.cn/problems/distribute-coins-in-binary-tree/) | 中等(1709) |
+| [968. 监控二叉树](https://leetcode.cn/problems/binary-tree-cameras/) | 困难 |
+| [2477. 到达首都的最少油耗](https://leetcode.cn/problems/minimum-fuel-cost-to-report-to-the-capital/) | 中等 |
+| [2322. 从树中删除边的最小分数](https://leetcode.cn/problems/minimum-score-after-removals-on-a-tree/) | 困难 |
 
 #### 3.7.6 Reroot Dynamic Programming
 
@@ -13623,6 +13689,7 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [5. 最长回文子串](https://leetcode.cn/problems/longest-palindromic-substring/) | 中等 |
 | [486. 预测赢家](https://leetcode.cn/problems/predict-the-winner/) | 中等 | 
+| [730. 统计不同回文子序列](https://leetcode.cn/problems/count-different-palindromic-subsequences/) | 困难 |
 
   
 - 基于划分点拆分
@@ -13736,6 +13803,35 @@ class Solution {
     }
 }
 ```
+
+第三种类型则是这二者的综合：
+
+例题：[664. 奇怪的打印机](https://leetcode.cn/problems/strange-printer/)
+
+```java
+class Solution {
+    public int strangePrinter(String s) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        for(int i = n - 1; i >= 0; i --) {
+            dp[i][i] = 1;
+            for(int j = i + 1; j < n; j ++) {
+                if(s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = dp[i][j - 1];
+                }else {
+                    dp[i][j] = Integer.MAX_VALUE;
+                    for(int k = i; k < j; k ++) {
+                        dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k+1][j]);
+                    }
+                }
+            }
+        }
+        return dp[0][n-1];
+    }
+}
+```
+时间复杂度：$O(n^3)$
+
 ---
 练习题单
 
@@ -13743,9 +13839,9 @@ class Solution {
 | ------------------------------------------------------------ | ---- |
 | [1039. 多边形三角剖分的最低得分](https://leetcode.cn/problems/minimum-score-triangulation-of-polygon/) | 中等(2130) |
 | [1547. 切棍子的最小成本](https://leetcode.cn/problems/minimum-cost-to-cut-a-stick/) | 困难(2116) |
-| [1000. 合并石头的最低成本](https://leetcode.cn/problems/minimum-cost-to-merge-stones/) | 困难(2422) |
-| [664. 奇怪的打印机](https://leetcode.cn/problems/strange-printer/) | 困难 |
-| [471. 编码最短长度的字符串](https://leetcode.cn/problems/encode-string-with-shortest-length/) | 困难 |
+| [471. 编码最短长度的字符串](https://leetcode.cn/problems/encode-string-with-shortest-length/) | 困难 | 
+|[546. 移除盒子](https://leetcode.cn/problems/remove-boxes/) | 困难 |
+| [1000. 合并石头的最低成本](https://leetcode.cn/problems/minimum-cost-to-merge-stones/) | 困难(2422) | 
 
 #### 3.7.8 State Compression Dynamic Programming
 
@@ -13828,6 +13924,9 @@ for(int mask = 1; mask < total; mask ++) {
 | ------------------------------------------------------------ | ---- |
 | [1986. 完成任务的最少工作时间段](https://leetcode.cn/problems/minimum-number-of-work-sessions-to-finish-the-tasks/) | 中等 |
 | [1723. 完成所有工作的最短时间](https://leetcode.cn/problems/find-minimum-time-to-finish-all-jobs/) | 困难 |
+| [465. 最优账单平衡](https://leetcode.cn/problems/optimal-account-balancing/) | 困难 |
+| [1994. 好子集的数目](https://leetcode.cn/problems/the-number-of-good-subsets/) | 困难 |
+| [1655. 分配重复整数](https://leetcode.cn/problems/distribute-repeating-integers/) | 困难 |
 
 ##### 3.7.8.2 Matching
 
@@ -13935,6 +14034,7 @@ class Solution {
 | 题号                                                         | 难度 |
 | ------------------------------------------------------------ | ---- |
 | [473. 火柴拼正方形](https://leetcode.cn/problems/matchsticks-to-square/) | 中等 |
+| [1434. 每个人戴不同帽子的方案数](https://leetcode.cn/problems/number-of-ways-to-wear-different-hats-to-each-other/) | 困难 |
 
 ##### 3.7.8.4 Maximum Value
 
